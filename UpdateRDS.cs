@@ -11,7 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
-
+// Update RDS By GabardoHost - Versão 0.0.0.1 Alfafa build
 namespace UpdateRDS
 {
     public partial class UpdateRDS : Form
@@ -77,14 +77,14 @@ namespace UpdateRDS
                 string identificadorproc = proc.Id.ToString();
 
                 // Caso o diretório de logs não exista
-                if (!Directory.Exists("LOGS"))
+                if (!Directory.Exists(@".\LOGS"))
                 {
                     //Criamos um com o nome LOGS
-                    Directory.CreateDirectory("LOGS");
+                    Directory.CreateDirectory(@".\LOGS");
                 }
 
                 // Pega a informação da localização do arquivo de log de erro
-                string caminhoarquivolog = $@"LOGS\ERRO{identificadorproc}LOG.txt";
+                string caminhoarquivolog = $@".\LOGS\ERRO{identificadorproc}LOG.txt";
 
                 // Tratamento de erro da web
                 if (errogeral == null)
@@ -389,7 +389,7 @@ namespace UpdateRDS
                 errocontanext = numcontanext - 1;
 
                 // Avisa o usuário sobre o problema com o arquivo texto de próximo som
-                throw new Exception("A URL do próximo som informada anteriormente está com problemas! " + errodaweblink + " Será feita uma nova tentativa de conexão. Nova tentativa de conexão em: " + errocontanext);
+                throw new Exception("A URL do próximo som informada anteriormente está com problemas!\n" + errodaweblink + "\nSerá feita uma nova tentativa de conexão.\nNovas tentativas de conexão a tentar novamente: " + errocontanext);
             }
 
             // Caso tenha valor de erros do som
@@ -399,7 +399,7 @@ namespace UpdateRDS
                 erroconta = numconta - 1;
 
                 // Avisa o usuário sobre o problema com o arquivo
-                throw new Exception("A URL informada anteriormente está com problemas! " + errodaweblink + " Será feita uma nova tentativa de conexão. Nova tentativa de conexão em: " + erroconta);
+                throw new Exception("A URL informada anteriormente está com problemas!\n" + errodaweblink + "\nSerá feita uma nova tentativa de conexão.\nNovas tentativas de conexão a tentar novamente: " + erroconta);
             }
             try
             {
@@ -461,7 +461,7 @@ namespace UpdateRDS
                 {
                     if (eumnext == true)
                     {
-                        string erroconexaowebexc1 = "A URL do próximo som informada anteriormente está com problemas! " + errodaweblink + " Por favor, verifique se a URL está correta e se o servidor está funcionando!";
+                        string erroconexaowebexc1 = "A URL do próximo som informada anteriormente está com problemas!\n" + errodaweblink + "\nPor favor, verifique se a URL está correta e se o servidor está funcionando!";
 
                         // Verifica se o usuário selecionou a caixa para não ser notificado
                         if (chkNaonotificarsomtray.Checked == false)
@@ -474,7 +474,7 @@ namespace UpdateRDS
                     }
                     else
                     {
-                        string erroconexaowebexc2 = "A URL informada anteriormente está com problemas! " + errodaweblink + " Por favor, verifique se a URL está correta e se o servidor está funcionando!";
+                        string erroconexaowebexc2 = "A URL informada anteriormente está com problemas!\n" + errodaweblink + "\nPor favor, verifique se a URL está correta e se o servidor está funcionando!";
                         // Verifica se o usuário selecionou a caixa para não ser notificado
                         if (chkNaonotificarsomtray.Checked == false)
                         {
@@ -491,7 +491,7 @@ namespace UpdateRDS
                     errocontanext = numcontanext + 250;
 
                     // Carrega informações para apresentar para o usuário
-                    string erroconexaowebexc3 = "A URL do próximo som informada anteriormente está com problemas! " + errodaweblink + " Será feita uma nova tentativa de conexão. Nova tentativa de conexão em: " + errocontanext;
+                    string erroconexaowebexc3 = "A URL do próximo som informada anteriormente está com problemas!\n" + errodaweblink + "\nSerá feita uma nova tentativa de conexão.\nNovas tentativas de conexão a tentar novamente: " + errocontanext;
 
                     // Verifica se o usuário selecionou a caixa para não ser notificado
                     if (chkNaonotificarsomtray.Checked == false)
@@ -508,7 +508,7 @@ namespace UpdateRDS
                     erroconta = numconta + 250;
 
                     // Carrega informações para apresentar para o usuário
-                    string erroconexaowebexc4 = "A URL informada anteriormente está com problemas! " + errodaweblink + " Será feita uma nova tentativa de conexão. Nova tentativa de conexão em: " + erroconta;
+                    string erroconexaowebexc4 = "A URL informada anteriormente está com problemas!\n" + errodaweblink + "\nSerá feita uma nova tentativa de conexão.\nNovas tentativas de conexão a tentar novamente: " + erroconta;
 
                     // Verifica se o usuário selecionou a caixa para não ser notificado
                     if (chkNaonotificarsomtray.Checked == false)
@@ -649,11 +649,11 @@ namespace UpdateRDS
                 if (eumnext == true)
                 {
                     // Avisa o usuário sobre o problema com o arquivo
-                    throw new Exception("O Caminho informado anteriormente para o arquivo de texto de próximo som está com problemas! verificar se o arquivo ainda existe!");
+                    throw new Exception("O Caminho informado anteriormente para o arquivo de texto de próximo som está com problemas!\nVerificar se o arquivo ainda existe!");
                 }
 
                 // Avisa o usuário sobre o problema com o arquivo
-                throw new Exception("O Caminho informado anteriormente para o arquivo de texto está com problemas! verificar se o arquivo ainda existe!");
+                throw new Exception("O Caminho informado anteriormente para o arquivo de texto está com problemas!\nVerificar se o arquivo ainda existe!");
             }
 
             // Pega os dados do arquivo texto com o nome da música
@@ -666,11 +666,11 @@ namespace UpdateRDS
                 if (eumnext == true)
                 {
                     // Avisa o usuário sobre o problema com o arquivo texto de próximo som
-                    throw new Exception("O arquivo texto de próximo som informado anteriormente está com problemas! verificar se o arquivo texto não está vazio!");
+                    throw new Exception("O arquivo texto de próximo som informado anteriormente está com problemas!\nVerificar se o arquivo texto não está vazio!");
                 }
 
                 // Avisa o usuário sobre o problema com o arquivo
-                throw new Exception("O arquivo texto informado anteriormente está com problemas! verificar se o arquivo texto não está vazio!");
+                throw new Exception("O arquivo texto informado anteriormente está com problemas!\nVerificar se o arquivo texto não está vazio!");
             }
 
             try
@@ -783,7 +783,7 @@ namespace UpdateRDS
             string idoupontomont = txtIdoumont.Text;
 
             // Pega as informações dos textos das caixas de preenchimento e adiciona informações na string
-            string arquivodelog = $@"LOGS\SOM{identificadorproc}LOG.txt";
+            string arquivodelog = $@".\LOGS\SOM{identificadorproc}LOG.txt";
             string urlshoutcastv1 = $"http://{ipserver}:{portaserver}/admin.cgi?mode=updinfo&song=";
             string urlshoutcastv2 = $"http://{ipserver}:{portaserver}/admin.cgi?sid={idoupontomont}&mode=updinfo&song=";
             string urlicecast = $"http://{ipserver}:{portaserver}/admin/metadata?mount=/{idoupontomont}&mode=updinfo&song=";
@@ -932,8 +932,8 @@ namespace UpdateRDS
                 urlparacarregar = urlshoutcastv1 + conteudoarquivotexto;
 
                 // Carrega icone para o aplicativo
-                Icon = new Icon("shoutcast.ico");
-                ntfIcone.Icon = new Icon("shoutcast.ico");
+                Icon = new Icon(@".\shoutcast.ico");
+                ntfIcone.Icon = new Icon(@".\shoutcast.ico");
 
                 // Verifica se é dados de Icecast, se for, realiza as condições de alteração abaixo para compatibilizar o icecast v2
                 if (rbtIcecast.Checked == true)
@@ -942,8 +942,8 @@ namespace UpdateRDS
                     urlparacarregar = urlicecast + conteudoarquivotexto;
 
                     // Carrega icone para o aplicativo
-                    Icon = new Icon("icecast.ico");
-                    ntfIcone.Icon = new Icon("icecast.ico");
+                    Icon = new Icon(@".\icecast.ico");
+                    ntfIcone.Icon = new Icon(@".\icecast.ico");
                 }
 
                 // Carrega a URL padrão para Shoutcast Server v2 apenas caso marcado pelo usuário
@@ -1031,10 +1031,10 @@ namespace UpdateRDS
                 }
 
                 // Caso o diretório de logs não exista
-                if (!Directory.Exists("LOGS"))
+                if (!Directory.Exists(@".\LOGS"))
                 {
                     //Criamos um com o nome LOGS
-                    Directory.CreateDirectory("LOGS");
+                    Directory.CreateDirectory(@".\LOGS");
                 }
 
                 // Caso o arquivo texto LOGRDS.txt ou similar exista então ele faz a condição de leitura
@@ -1194,7 +1194,7 @@ namespace UpdateRDS
             catch (Exception ex)
             {
                 // Apaga a informação da label para não dar bug na interface
-                lblInformacaoid.Text = "";
+                // lblInformacaoid.Text = "";
 
                 // Carrega na string geral os erros
                 errogeral = ex.Message;
@@ -1479,6 +1479,7 @@ namespace UpdateRDS
 
                 // Limpa a label caso venha preenchida com os dados
                 lblInformacaoid.Text = "";
+                lblInformacao.Text = "O Processo de envio foi interrompido com sucesso!\nPara retomar o envio dos dados, preencha ou faça as correções e clique no botão abaixo:";
             }
 
             // Exceção geral do botão para tratamento
@@ -1515,10 +1516,10 @@ namespace UpdateRDS
                 ValidarInformacoes();
 
                 // Caso o diretório de configuração não exista
-                if (!Directory.Exists("Config"))
+                if (!Directory.Exists(@".\Config"))
                 {
                     //Criamos um com o nome Config
-                    Directory.CreateDirectory("Config");
+                    Directory.CreateDirectory(@".\Config");
                 }
 
                 if (!Regex.IsMatch(textonomeconfiguracao, @"^[a-zA-Z0-9]+$"))
@@ -1527,7 +1528,7 @@ namespace UpdateRDS
                 }
 
                 // Caminho onde o arquivo será salvo, aqui será salvo na pasta do programa
-                string nomedoarquivoxml = $@"Config\Config-{textonomeconfiguracao}-XML.xml";
+                string nomedoarquivoxml = $@".\Config\Config-{textonomeconfiguracao}-XML.xml";
 
                 //  Esta linha indica que o arquivo xml sera salvo
                 XmlTextWriter xtw = new XmlTextWriter(nomedoarquivoxml, Encoding.UTF8)
@@ -1598,7 +1599,7 @@ namespace UpdateRDS
             try
             {
                 // Declara nome do arquivo com os adicionais
-                string nomearquivoxml = $@"Config\Config-{txtCadastrodados.Text}-XML.xml";
+                string nomearquivoxml = $@".\Config\Config-{txtCadastrodados.Text}-XML.xml";
 
                 // Se o arquivo de configuração do aplicativo existir
                 if (File.Exists(nomearquivoxml))
