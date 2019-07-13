@@ -80,6 +80,7 @@
             this.ntfIcone = new System.Windows.Forms.NotifyIcon(this.components);
             this.ofdCca = new System.Windows.Forms.OpenFileDialog();
             this.lblInformacaoid = new System.Windows.Forms.Label();
+            this.txtInformacao = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // lblTextotitulo
@@ -274,7 +275,7 @@
             // txtArquivotextosom
             // 
             this.txtArquivotextosom.Enabled = false;
-            this.txtArquivotextosom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtArquivotextosom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtArquivotextosom.Location = new System.Drawing.Point(361, 209);
             this.txtArquivotextosom.Name = "txtArquivotextosom";
             this.txtArquivotextosom.Size = new System.Drawing.Size(464, 22);
@@ -335,7 +336,7 @@
             // txtArquivotextosomnext
             // 
             this.txtArquivotextosomnext.Enabled = false;
-            this.txtArquivotextosomnext.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtArquivotextosomnext.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtArquivotextosomnext.Location = new System.Drawing.Point(441, 276);
             this.txtArquivotextosomnext.Name = "txtArquivotextosomnext";
             this.txtArquivotextosomnext.Size = new System.Drawing.Size(384, 22);
@@ -587,12 +588,27 @@
             this.lblInformacaoid.TabIndex = 0;
             this.lblInformacaoid.Text = "Aguardando carregamento de dados do aplicativo...";
             // 
+            // txtInformacao
+            // 
+            this.txtInformacao.BackColor = System.Drawing.Color.White;
+            this.txtInformacao.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtInformacao.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.txtInformacao.Enabled = false;
+            this.txtInformacao.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtInformacao.Location = new System.Drawing.Point(12, 431);
+            this.txtInformacao.Multiline = true;
+            this.txtInformacao.Name = "txtInformacao";
+            this.txtInformacao.ReadOnly = true;
+            this.txtInformacao.Size = new System.Drawing.Size(856, 99);
+            this.txtInformacao.TabIndex = 0;
+            // 
             // UpdateRDS
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.ClientSize = new System.Drawing.Size(880, 608);
+            this.ClientSize = new System.Drawing.Size(884, 612);
+            this.Controls.Add(this.txtInformacao);
             this.Controls.Add(this.lblInformacaoid);
             this.Controls.Add(this.chkDadossensiveis);
             this.Controls.Add(this.btnVerificardadosderds);
@@ -643,6 +659,8 @@
             this.Controls.Add(this.lblTextotitulo);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(900, 650);
+            this.MinimumSize = new System.Drawing.Size(900, 650);
             this.Name = "UpdateRDS";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Update RDS By GabardoHost";
@@ -705,6 +723,7 @@
         private System.Windows.Forms.NotifyIcon ntfIcone;
         private System.Windows.Forms.OpenFileDialog ofdCca;
         private System.Windows.Forms.Label lblInformacaoid;
+        private System.Windows.Forms.TextBox txtInformacao;
     }
 }
 
