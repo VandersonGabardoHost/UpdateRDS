@@ -59,5 +59,25 @@ namespace UpdateRDS.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Icon semelhante a (Ícone).
+        /// </summary>
+        internal static System.Drawing.Icon icecast {
+            get {
+                object obj = ResourceManager.GetObject("icecast", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Icon semelhante a (Ícone).
+        /// </summary>
+        internal static System.Drawing.Icon shoutcast {
+            get {
+                object obj = ResourceManager.GetObject("shoutcast", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
     }
 }

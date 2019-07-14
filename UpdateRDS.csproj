@@ -26,8 +26,8 @@
     <SupportUrl>http://www.vanderson.net.br</SupportUrl>
     <ProductName>Update RDS</ProductName>
     <PublisherName>Vanderson GabardoHost</PublisherName>
-    <ApplicationRevision>3</ApplicationRevision>
-    <ApplicationVersion>0.0.0.3</ApplicationVersion>
+    <ApplicationRevision>4</ApplicationRevision>
+    <ApplicationVersion>0.0.0.4</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>false</BootstrapperEnabled>
   </PropertyGroup>
@@ -51,7 +51,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>satellite-dish-_1_.ico</ApplicationIcon>
+    <ApplicationIcon>antena.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -102,7 +102,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="satellite-dish-_1_.ico" />
+    <None Include="bin\Debug\DataUpdateRDS\shoutcast.ico" />
+    <None Include="bin\Debug\DataUpdateRDS\icecast.ico" />
+    <Content Include="antena.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -80,7 +80,10 @@
             this.ntfIcone = new System.Windows.Forms.NotifyIcon(this.components);
             this.ofdCca = new System.Windows.Forms.OpenFileDialog();
             this.lblInformacaoid = new System.Windows.Forms.Label();
-            this.txtInformacao = new System.Windows.Forms.TextBox();
+            this.lblTextover = new System.Windows.Forms.Label();
+            this.lblTextoenv = new System.Windows.Forms.Label();
+            this.lblTextoparar = new System.Windows.Forms.Label();
+            this.lblTextoinforev = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lblTextotitulo
@@ -505,57 +508,63 @@
             // lblInformacao
             // 
             this.lblInformacao.AutoSize = true;
+            this.lblInformacao.BackColor = System.Drawing.Color.White;
+            this.lblInformacao.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblInformacao.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblInformacao.Location = new System.Drawing.Point(11, 429);
             this.lblInformacao.Name = "lblInformacao";
-            this.lblInformacao.Size = new System.Drawing.Size(199, 20);
+            this.lblInformacao.Size = new System.Drawing.Size(201, 22);
             this.lblInformacao.TabIndex = 0;
             this.lblInformacao.Text = "Carregando aplicação...";
             // 
             // btnRevisarinfo
             // 
+            this.btnRevisarinfo.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnRevisarinfo.BackgroundImage")));
+            this.btnRevisarinfo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.btnRevisarinfo.Enabled = false;
             this.btnRevisarinfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRevisarinfo.Location = new System.Drawing.Point(17, 556);
+            this.btnRevisarinfo.Location = new System.Drawing.Point(12, 572);
             this.btnRevisarinfo.Name = "btnRevisarinfo";
-            this.btnRevisarinfo.Size = new System.Drawing.Size(138, 40);
+            this.btnRevisarinfo.Size = new System.Drawing.Size(129, 62);
             this.btnRevisarinfo.TabIndex = 26;
-            this.btnRevisarinfo.Text = "Revisar informações";
             this.btnRevisarinfo.UseVisualStyleBackColor = true;
             this.btnRevisarinfo.Click += new System.EventHandler(this.BtnRevisarinfo_Click);
             // 
             // btnPararenviords
             // 
+            this.btnPararenviords.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnPararenviords.BackgroundImage")));
+            this.btnPararenviords.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnPararenviords.Enabled = false;
             this.btnPararenviords.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPararenviords.Location = new System.Drawing.Point(161, 563);
+            this.btnPararenviords.Location = new System.Drawing.Point(232, 572);
             this.btnPararenviords.Name = "btnPararenviords";
-            this.btnPararenviords.Size = new System.Drawing.Size(212, 33);
+            this.btnPararenviords.Size = new System.Drawing.Size(85, 62);
             this.btnPararenviords.TabIndex = 27;
-            this.btnPararenviords.Text = "Parar o envio de dados de RDS";
             this.btnPararenviords.UseVisualStyleBackColor = true;
             this.btnPararenviords.Click += new System.EventHandler(this.BtnPararenviords_Click);
             // 
             // btnEnviardadosrds
             // 
+            this.btnEnviardadosrds.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnEnviardadosrds.BackgroundImage")));
+            this.btnEnviardadosrds.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnEnviardadosrds.Enabled = false;
             this.btnEnviardadosrds.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEnviardadosrds.Location = new System.Drawing.Point(379, 563);
+            this.btnEnviardadosrds.Location = new System.Drawing.Point(466, 572);
             this.btnEnviardadosrds.Name = "btnEnviardadosrds";
-            this.btnEnviardadosrds.Size = new System.Drawing.Size(249, 33);
+            this.btnEnviardadosrds.Size = new System.Drawing.Size(71, 62);
             this.btnEnviardadosrds.TabIndex = 28;
-            this.btnEnviardadosrds.Text = "Enviar dados de RDS para o servidor";
             this.btnEnviardadosrds.UseVisualStyleBackColor = true;
             this.btnEnviardadosrds.Click += new System.EventHandler(this.BtnEnviardadosrds_Click);
             // 
             // btnVerificardadosderds
             // 
+            this.btnVerificardadosderds.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnVerificardadosderds.BackgroundImage")));
+            this.btnVerificardadosderds.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnVerificardadosderds.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnVerificardadosderds.Location = new System.Drawing.Point(634, 563);
+            this.btnVerificardadosderds.Location = new System.Drawing.Point(734, 572);
             this.btnVerificardadosderds.Name = "btnVerificardadosderds";
-            this.btnVerificardadosderds.Size = new System.Drawing.Size(236, 33);
+            this.btnVerificardadosderds.Size = new System.Drawing.Size(68, 62);
             this.btnVerificardadosderds.TabIndex = 29;
-            this.btnVerificardadosderds.Text = "Verificar dados de RDS para enviar";
             this.btnVerificardadosderds.UseVisualStyleBackColor = true;
             this.btnVerificardadosderds.Click += new System.EventHandler(this.BtnVerificardadosderds_Click);
             // 
@@ -588,27 +597,56 @@
             this.lblInformacaoid.TabIndex = 0;
             this.lblInformacaoid.Text = "Aguardando carregamento de dados do aplicativo...";
             // 
-            // txtInformacao
+            // lblTextover
             // 
-            this.txtInformacao.BackColor = System.Drawing.Color.White;
-            this.txtInformacao.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtInformacao.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.txtInformacao.Enabled = false;
-            this.txtInformacao.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtInformacao.Location = new System.Drawing.Point(12, 431);
-            this.txtInformacao.Multiline = true;
-            this.txtInformacao.Name = "txtInformacao";
-            this.txtInformacao.ReadOnly = true;
-            this.txtInformacao.Size = new System.Drawing.Size(856, 99);
-            this.txtInformacao.TabIndex = 0;
+            this.lblTextover.AutoSize = true;
+            this.lblTextover.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTextover.Location = new System.Drawing.Point(651, 637);
+            this.lblTextover.Name = "lblTextover";
+            this.lblTextover.Size = new System.Drawing.Size(221, 16);
+            this.lblTextover.TabIndex = 0;
+            this.lblTextover.Text = "Verificar dados de RDS para enviar";
+            // 
+            // lblTextoenv
+            // 
+            this.lblTextoenv.AutoSize = true;
+            this.lblTextoenv.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTextoenv.Location = new System.Drawing.Point(396, 637);
+            this.lblTextoenv.Name = "lblTextoenv";
+            this.lblTextoenv.Size = new System.Drawing.Size(233, 16);
+            this.lblTextoenv.TabIndex = 0;
+            this.lblTextoenv.Text = "Enviar dados de RDS para o servidor";
+            // 
+            // lblTextoparar
+            // 
+            this.lblTextoparar.AutoSize = true;
+            this.lblTextoparar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTextoparar.Location = new System.Drawing.Point(177, 637);
+            this.lblTextoparar.Name = "lblTextoparar";
+            this.lblTextoparar.Size = new System.Drawing.Size(200, 16);
+            this.lblTextoparar.TabIndex = 0;
+            this.lblTextoparar.Text = "Parar o envio de dados de RDS";
+            // 
+            // lblTextoinforev
+            // 
+            this.lblTextoinforev.AutoSize = true;
+            this.lblTextoinforev.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTextoinforev.Location = new System.Drawing.Point(15, 637);
+            this.lblTextoinforev.Name = "lblTextoinforev";
+            this.lblTextoinforev.Size = new System.Drawing.Size(132, 16);
+            this.lblTextoinforev.TabIndex = 0;
+            this.lblTextoinforev.Text = "Revisar informações";
             // 
             // UpdateRDS
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.ClientSize = new System.Drawing.Size(884, 612);
-            this.Controls.Add(this.txtInformacao);
+            this.ClientSize = new System.Drawing.Size(884, 662);
+            this.Controls.Add(this.lblTextoinforev);
+            this.Controls.Add(this.lblTextoparar);
+            this.Controls.Add(this.lblTextoenv);
+            this.Controls.Add(this.lblTextover);
             this.Controls.Add(this.lblInformacaoid);
             this.Controls.Add(this.chkDadossensiveis);
             this.Controls.Add(this.btnVerificardadosderds);
@@ -659,8 +697,8 @@
             this.Controls.Add(this.lblTextotitulo);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(900, 650);
-            this.MinimumSize = new System.Drawing.Size(900, 650);
+            this.MaximumSize = new System.Drawing.Size(900, 700);
+            this.MinimumSize = new System.Drawing.Size(900, 700);
             this.Name = "UpdateRDS";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Update RDS By GabardoHost";
@@ -723,7 +761,10 @@
         private System.Windows.Forms.NotifyIcon ntfIcone;
         private System.Windows.Forms.OpenFileDialog ofdCca;
         private System.Windows.Forms.Label lblInformacaoid;
-        private System.Windows.Forms.TextBox txtInformacao;
+        private System.Windows.Forms.Label lblTextover;
+        private System.Windows.Forms.Label lblTextoenv;
+        private System.Windows.Forms.Label lblTextoparar;
+        private System.Windows.Forms.Label lblTextoinforev;
     }
 }
 

@@ -11,7 +11,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
-// Update RDS By GabardoHost - Versão 0.0.0.3 Alfafa build
+using UpdateRDS.Properties;
+
+// Update RDS By GabardoHost - Versão 0.0.0.4 Alfafa build
 namespace UpdateRDS
 {
     public partial class UpdateRDS : Form
@@ -20,7 +22,7 @@ namespace UpdateRDS
         static string qualquerlixoaqui;
         static string errogeralgravado;
         static string errogeral;
-        static string weberrogeralgravado;
+        static string weberrogeralcode;
         static string weberrogeral;
         static bool eumnext = false;
         static string conteudotexto;
@@ -30,7 +32,7 @@ namespace UpdateRDS
         static int errfilecnext = -1;
         static int errfilec = -1;
         static string errodaweblink = null;
-        static readonly string diretoriodoaplicativo = $@"{AppDomain.CurrentDomain.BaseDirectory.ToString()}Dadosdoaplicativo\";
+        static readonly string diretoriodoaplicativo = $@"{AppDomain.CurrentDomain.BaseDirectory.ToString()}DataUpdateRDS\";
         public UpdateRDS()
         {
             InitializeComponent();
@@ -41,9 +43,6 @@ namespace UpdateRDS
         {
             try
             {
-                // Apaga label antiga
-                lblInformacao.Text = "";
-
                 // Verifica o processo do aplicativo
                 Process proc = Process.GetCurrentProcess();
 
@@ -63,11 +62,11 @@ namespace UpdateRDS
                 lblInformacaoid.Text = $"Abertura do aplicativo: {DateTime.Now.ToString()} - ID do Processo do aplicativo em execução: {identificadorproc}";
 
                 // Informa o usuário para clicar no botão para enviar dados
-                txtInformacao.Text = "Para prosseguir com o envio dos dados, preencha corretamente a tela e clique no botão abaixo:";
+                lblInformacao.Text = "Para prosseguir com o envio dos dados, preencha corretamente a tela e clique no botão abaixo:";
             }
             catch (Exception ex)
             {
-                txtInformacao.Text = ex.Message;
+                lblInformacao.Text = ex.Message;
             }
         }
 
@@ -128,15 +127,15 @@ namespace UpdateRDS
                     {
                         weberroexplic = "Este erro indica que você errou a senha ou o ID \nOu o ponto de montagem do servidor não aceita o login e senha informados!";
                     }
-                    if (weberrogeral == "Impossível conectar-se ao servidor remoto")
+                    if (weberrogeralcode == "ConnectFailure")
                     {
                         weberroexplic = $"Este erro indica que o servidor não está no ar. \nVerifique se o servidor http://{txtDominioip.Text}:{txtPorta.Text}/ está funcionando!";
                     }
-                    if (weberrogeral == $"O nome remoto não pôde ser resolvido: '{txtDominioip.Text}'")
+                    if (weberrogeralcode == "NameResolutionFailure")
                     {
                         weberroexplic = $"Verifique se não há erros de digitação do domínio informado!";
                     }
-                    else
+                    if (weberrogeral == "")
                     {
                         weberroexplic = $"Verifique se o servidor http://{txtDominioip.Text}:{txtPorta.Text}/ \nÉ o servidor correto e está funcionando e se há transmissão do encoder!";
                     }
@@ -148,7 +147,7 @@ namespace UpdateRDS
                     if (btnVerificardadosderds.Enabled == false)
                     {
                         // Exibe informação na label para o usuário sobre o problema, a exibição na label se dá devido ao fato que não se pode parar a execução desse trecho de código
-                        txtInformacao.Text = $"{mensagemerro} \nData e hora do erro: {DateTime.Now.ToString()} - Por favor, Verifique a conexão com o servidor! ";
+                        lblInformacao.Text = $"{mensagemerro} \nData e hora do erro: {DateTime.Now.ToString()} - Por favor, Verifique a conexão com o servidor! ";
                     }
                     else
                     {
@@ -178,7 +177,7 @@ namespace UpdateRDS
                     sw.WriteLine("Data e hora da execução do erro: " + DateTime.Now);
                     sw.WriteLine("Mensagem completa exibida: " + mensagemerro + ". Por favor, Verifique a conexão com o servidor! ");
                     sw.WriteLine("Mensagem técnica exibida: " + weberrogeral);
-                    sw.WriteLine("Stack Trace Completo: " + weberrogeralgravado);
+                    sw.WriteLine("Código de erro: " + weberrogeralcode);
                     sw.WriteLine("Shoutcast Server versão 1: " + rbtShoutcastv1.Checked);
                     sw.WriteLine("Shoutcast Server versão 2: " + rbtShoutcastv2.Checked);
                     sw.WriteLine("Icecast Server: " + rbtIcecast.Checked);
@@ -221,7 +220,7 @@ namespace UpdateRDS
                     if (btnVerificardadosderds.Enabled == false)
                     {
                         // Caso aconteça exceções sem tratamento, é carregado direto na label e a exibição na label se dá devido ao fato que não se pode parar a execução desse trecho de código
-                        txtInformacao.Text = errogeral;
+                        lblInformacao.Text = errogeral;
                     }
 
                     if (erroconta < 1 && errocontanext < 1)
@@ -488,12 +487,12 @@ namespace UpdateRDS
                 // Caso tenha erros e é um retorno da conexão então envia uma mensagem de reconexão para o usuário
                 if (erroconta == 0)
                 {
-                    txtInformacao.Text = "Nome do som conectado no servidor! Aguarde atualização de título...";
+                    lblInformacao.Text = "Nome do som conectado no servidor! Aguarde atualização de título...";
                     erroconta = -1;
                 }
                 if (errocontanext == 0)
                 {
-                    txtInformacao.Text = "Nome do próximo som conectado no servidor! Aguarde atualização de título...";
+                    lblInformacao.Text = "Nome do próximo som conectado no servidor! Aguarde atualização de título...";
                     errocontanext = -1;
                 }
 
@@ -720,12 +719,12 @@ namespace UpdateRDS
             // Caso tenha erros e o usuário corrigiu o arquivo de configuração, então faz a troca de informação da label
             if (errfilec == 0)
             {
-                txtInformacao.Text = "Arquivo de nome do som corrigido com sucesso! Aguarde atualização de título...";
+                lblInformacao.Text = "Arquivo de nome do som corrigido com sucesso! Aguarde atualização de título...";
                 errfilec = -1;
             }
             if (errfilecnext == 0)
             {
-                txtInformacao.Text = "Arquivo de nome do próximo som corrigido com sucesso! Aguarde atualização de título...";
+                lblInformacao.Text = "Arquivo de nome do próximo som corrigido com sucesso! Aguarde atualização de título...";
                 errfilecnext = -1;
             }
 
@@ -748,57 +747,74 @@ namespace UpdateRDS
                 throw new Exception("O Caminho informado anteriormente para o arquivo de texto está com problemas! \nVerificar se o arquivo ainda existe!");
             }
 
-            // Pega os dados do arquivo texto com o nome da música
-            FileInfo arquivotextomusica = new FileInfo(arquivotexto);
-
-            // Verifica se o arquivo texto com o nome da música tem 0 bytes, se tiver
-            if (arquivotextomusica.Length == 0)
-            {
-                // Caso seja um arquivo texto next
-                if (eumnext == true)
-                {
-                    // Avisa o usuário sobre o problema com o arquivo texto de próximo som
-                    throw new Exception("O arquivo texto de próximo som informado anteriormente está com problemas! \nVerificar se o arquivo texto não está vazio!");
-                }
-
-                // Avisa o usuário sobre o problema com o arquivo
-                throw new Exception("O arquivo texto informado anteriormente está com problemas! \nVerificar se o arquivo texto não está vazio!");
-            }
-
             try
             {
-                // Pega o arquivo para ler com o nome do áudio
-                using (StreamReader sr = new StreamReader(arquivotexto, Encoding.Default))
+                try
                 {
-                    // Carrega arquivo e faz a leitura da primeira linha do arquivo com o nome do áudio
-                    conteudotexto = sr.ReadLine().ToString();
+                    // Pega o arquivo para ler com o nome do áudio
+                    using (StreamReader sr = new StreamReader(arquivotexto, Encoding.Default))
+                    {
+                        // Carrega arquivo e faz a leitura da primeira linha do arquivo com o nome do áudio
+                        conteudotexto = sr.ReadLine().ToString();
 
-                    // Força o fechamento do arquivo para evitar erros
-                    sr.Close();
+                        // Força o fechamento do arquivo para evitar erros
+                        sr.Close();
 
-                    // Força o despejo da memória do arquivo carregado
-                    sr.Dispose();
+                        // Força o despejo da memória do arquivo carregado
+                        sr.Dispose();
+                    }
+                }
+                catch (Exception errofile)
+                {
+                    // Grava o erro aqui
+                    qualquerlixoaqui = errofile.Message;
+
+                    // Espera um tempo para tentar ler de novo o arquivo
+                    System.Threading.Thread.Sleep(2500);
+
+                    // Pega o arquivo para ler com o nome do áudio
+                    using (StreamReader sr = new StreamReader(arquivotexto, Encoding.Default))
+                    {
+                        // Carrega arquivo e faz a leitura da primeira linha do arquivo com o nome do áudio
+                        conteudotexto = sr.ReadLine().ToString();
+
+                        // Força o fechamento do arquivo para evitar erros
+                        sr.Close();
+
+                        // Força o despejo da memória do arquivo carregado
+                        sr.Dispose();
+                    }
                 }
             }
-            catch (IOException errofile)
+            catch (Exception errofilegeral)
             {
-                // Grava o erro aqui
-                qualquerlixoaqui = errofile.Message;
-
-                // Espera um tempo para tentar ler de novo o arquivo
-                System.Threading.Thread.Sleep(5000);
-
-                // Pega o arquivo para ler com o nome do áudio
-                using (StreamReader sr = new StreamReader(arquivotexto, Encoding.Default))
+                // Está sendo usado por outro processo
+                if (errofilegeral.Source == "mscorlib")
                 {
-                    // Carrega arquivo e faz a leitura da primeira linha do arquivo com o nome do áudio
-                    conteudotexto = sr.ReadLine().ToString();
+                    if (eumnext == true)
+                    {
+                        // Avisa o usuário sobre o problema com o arquivo texto de próximo som
+                        throw new Exception("O arquivo texto de próximo som informado anteriormente está com problemas! \nVerificar se o arquivo texto não está em uso por outro aplicativo ou processo do sistema!");
+                    }
+                    // Avisa o usuário sobre o problema com o arquivo
+                    throw new Exception("O arquivo texto informado anteriormente está com problemas! \nVerificar se o arquivo texto não está em uso por outro aplicativo ou processo do sistema!");
+                }
 
-                    // Força o fechamento do arquivo para evitar erros
-                    sr.Close();
+                // Pega os dados do arquivo texto com o nome da música
+                FileInfo arquivotextomusica = new FileInfo(arquivotexto);
 
-                    // Força o despejo da memória do arquivo carregado
-                    sr.Dispose();
+                // Verifica se o arquivo texto com o nome da música tem 0 bytes, se tiver
+                if (arquivotextomusica.Length == 0)
+                {
+                    // Caso seja um arquivo texto next
+                    if (eumnext == true)
+                    {
+                        // Avisa o usuário sobre o problema com o arquivo texto de próximo som
+                        throw new Exception("O arquivo texto de próximo som informado anteriormente está com problemas! \nVerificar se o arquivo texto não está vazio!");
+                    }
+
+                    // Avisa o usuário sobre o problema com o arquivo
+                    throw new Exception("O arquivo texto informado anteriormente está com problemas! \nVerificar se o arquivo texto não está vazio!");
                 }
             }
 
@@ -1049,8 +1065,8 @@ namespace UpdateRDS
                 urlparacarregar = urlshoutcastv1 + conteudoarquivotexto;
 
                 // Carrega icone para o aplicativo
-                Icon = new Icon($@"{diretoriodoaplicativo}shoutcast.ico");
-                ntfIcone.Icon = new Icon($@"{diretoriodoaplicativo}shoutcast.ico");
+                Icon = Resources.shoutcast;
+                ntfIcone.Icon = Resources.shoutcast;
 
                 // Verifica se é dados de Icecast, se for, realiza as condições de alteração abaixo para compatibilizar o icecast v2
                 if (rbtIcecast.Checked == true)
@@ -1059,8 +1075,8 @@ namespace UpdateRDS
                     urlparacarregar = urlicecast + conteudoarquivotexto;
 
                     // Carrega icone para o aplicativo
-                    Icon = new Icon($@"{diretoriodoaplicativo}icecast.ico");
-                    ntfIcone.Icon = new Icon($@"{diretoriodoaplicativo}icecast.ico");
+                    Icon = Resources.icecast;
+                    ntfIcone.Icon = Resources.icecast;
                 }
 
                 // Carrega a URL padrão para Shoutcast Server v2 apenas caso marcado pelo usuário
@@ -1161,7 +1177,7 @@ namespace UpdateRDS
                 }
 
                 // Carrega e exibe os dados na label
-                txtInformacao.Text = labeldeinformacao;
+                lblInformacao.Text = labeldeinformacao;
 
                 // String para adicionar mais informações no arquivo texto
                 dadosadicionais = $"No ar o som: {conteudoarquivotexto} \nNa data e hora: {DateTime.Now.ToString()}";
@@ -1235,7 +1251,7 @@ namespace UpdateRDS
                     // Limpa os erros anteriores caso tenha
                     errogeralgravado = null;
                     errogeral = null;
-                    weberrogeralgravado = null;
+                    weberrogeralcode = null;
                     weberrogeral = null;
 
                     // Pega as informações dos dados para fazer o processamento
@@ -1246,7 +1262,7 @@ namespace UpdateRDS
                 {
                     // Carrega na string geral os erros
                     weberrogeral = wex.Message;
-                    weberrogeralgravado = wex.StackTrace;
+                    weberrogeralcode = wex.Status.ToString();
 
                     // Chama método para gravação de arquivos texto de erro
                     InfoErroGeral();
@@ -1271,7 +1287,7 @@ namespace UpdateRDS
                 // Limpa os erros anteriores caso tenha
                 errogeralgravado = null;
                 errogeral = null;
-                weberrogeralgravado = null;
+                weberrogeralcode = null;
                 weberrogeral = null;
                 erroconta = -1;
                 errocontanext = -1;
@@ -1325,7 +1341,7 @@ namespace UpdateRDS
                 {
                     // Carrega na string geral os erros
                     weberrogeral = wex.Message;
-                    weberrogeralgravado = wex.StackTrace;
+                    weberrogeralcode = wex.Status.ToString();
 
                     // Chama método para gravação de arquivos texto de erro
                     InfoErroGeral();
@@ -1359,7 +1375,7 @@ namespace UpdateRDS
                 // Limpa os erros anteriores caso tenha
                 errogeralgravado = null;
                 errogeral = null;
-                weberrogeralgravado = null;
+                weberrogeralcode = null;
                 weberrogeral = null;
                 erroconta = -1;
                 errocontanext = -1;
@@ -1368,7 +1384,7 @@ namespace UpdateRDS
                 int tempoescolhido = Convert.ToInt32(txtTempoexec.Text + "000");
 
                 // Informa o usuário que já tem transmissão de dados para o servidor
-                txtInformacao.Text = "O RDS está verificando e transmitindo dados! Aguarde próxima atualização de título... \nOu atualize o arquivo texto manualmente para que a informação seja atualizada!";
+                lblInformacao.Text = "O RDS está verificando e transmitindo dados! Aguarde próxima atualização de título... \nOu atualize o arquivo texto manualmente para que a informação seja atualizada!";
 
                 // Desabilita botão para que não possa ser clicado novamente depois de enviar os dados
                 btnEnviardadosrds.Enabled = false;
@@ -1412,7 +1428,7 @@ namespace UpdateRDS
                 // Limpa os erros anteriores caso tenha
                 errogeralgravado = null;
                 errogeral = null;
-                weberrogeralgravado = null;
+                weberrogeralcode = null;
                 weberrogeral = null;
                 //erroconta = -1;
                 //errocontanext = -1;
@@ -1501,7 +1517,7 @@ namespace UpdateRDS
                     btnVerificardadosderds.Enabled = true;
 
                     // Limpa a label de informações e altera informações da label
-                    txtInformacao.Text = "O RDS Não está sendo transmitido para o servidor! Para continuar enviando dados, clique no botão abaixo:";
+                    lblInformacao.Text = "O RDS Não está sendo transmitido para o servidor! Para continuar enviando dados, clique no botão abaixo:";
                     lblInformacaoid.Text = "Última checagem de modificação do arquivo: " + DateTime.Now.ToString();
 
                     // Apaga os arquivos anteriores
@@ -1552,7 +1568,7 @@ namespace UpdateRDS
                 // Limpa os erros anteriores caso tenha
                 errogeralgravado = null;
                 errogeral = null;
-                weberrogeralgravado = null;
+                weberrogeralcode = null;
                 weberrogeral = null;
                 erroconta = -1;
                 errocontanext = -1;
@@ -1623,7 +1639,7 @@ namespace UpdateRDS
 
                 // Limpa a label caso venha preenchida com os dados
                 lblInformacaoid.Text = "";
-                txtInformacao.Text = "O Processo de envio foi interrompido com sucesso! \nPara retomar o envio dos dados, preencha ou faça as correções e clique no botão abaixo:";
+                lblInformacao.Text = "O Processo de envio foi interrompido com sucesso! \nPara retomar o envio dos dados, preencha ou faça as correções e clique no botão abaixo:";
                 // Verifica o processo do aplicativo
                 Process proc = Process.GetCurrentProcess();
 
@@ -1668,7 +1684,7 @@ namespace UpdateRDS
                 // Limpa os erros anteriores caso tenha
                 errogeralgravado = null;
                 errogeral = null;
-                weberrogeralgravado = null;
+                weberrogeralcode = null;
                 weberrogeral = null;
                 erroconta = -1;
                 errocontanext = -1;
@@ -1828,7 +1844,7 @@ namespace UpdateRDS
                 // Limpa os erros anteriores caso tenha
                 errogeralgravado = null;
                 errogeral = null;
-                weberrogeralgravado = null;
+                weberrogeralcode = null;
                 weberrogeral = null;
                 erroconta = -1;
                 errocontanext = -1;
@@ -1869,7 +1885,7 @@ namespace UpdateRDS
                 // Limpa os erros anteriores caso tenha
                 errogeralgravado = null;
                 errogeral = null;
-                weberrogeralgravado = null;
+                weberrogeralcode = null;
                 weberrogeral = null;
                 erroconta = -1;
                 errocontanext = -1;
@@ -1910,7 +1926,7 @@ namespace UpdateRDS
                 // Limpa os erros anteriores caso tenha
                 errogeralgravado = null;
                 errogeral = null;
-                weberrogeralgravado = null;
+                weberrogeralcode = null;
                 weberrogeral = null;
                 erroconta = -1;
                 errocontanext = -1;
@@ -1970,7 +1986,7 @@ namespace UpdateRDS
                 // Limpa os erros anteriores caso tenha
                 errogeralgravado = null;
                 errogeral = null;
-                weberrogeralgravado = null;
+                weberrogeralcode = null;
                 weberrogeral = null;
                 erroconta = -1;
                 errocontanext = -1;
@@ -2175,7 +2191,7 @@ namespace UpdateRDS
                 // Limpa os erros anteriores caso tenha
                 errogeralgravado = null;
                 errogeral = null;
-                weberrogeralgravado = null;
+                weberrogeralcode = null;
                 weberrogeral = null;
 
                 // Caso o exibir no aplicativo dados sensiveis for habilitado
@@ -2213,7 +2229,7 @@ namespace UpdateRDS
                 // Limpa os erros anteriores caso tenha
                 errogeralgravado = null;
                 errogeral = null;
-                weberrogeralgravado = null;
+                weberrogeralcode = null;
                 weberrogeral = null;
 
                 // Caso esteja minimizado, e o não minimizar não esteja marcado
@@ -2247,7 +2263,7 @@ namespace UpdateRDS
                 // Limpa os erros anteriores caso tenha
                 errogeralgravado = null;
                 errogeral = null;
-                weberrogeralgravado = null;
+                weberrogeralcode = null;
                 weberrogeral = null;
                 erroconta = -1;
                 errocontanext = -1;
