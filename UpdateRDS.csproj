@@ -26,8 +26,8 @@
     <SupportUrl>http://www.vanderson.net.br</SupportUrl>
     <ProductName>Update RDS</ProductName>
     <PublisherName>Vanderson GabardoHost</PublisherName>
-    <ApplicationRevision>4</ApplicationRevision>
-    <ApplicationVersion>0.0.0.4</ApplicationVersion>
+    <ApplicationRevision>5</ApplicationRevision>
+    <ApplicationVersion>0.0.0.5</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>false</BootstrapperEnabled>
   </PropertyGroup>
@@ -102,6 +102,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="bin\Debug\DataUpdateRDS\shoutcast.png" />
+    <None Include="bin\Debug\DataUpdateRDS\icecast.png" />
     <None Include="bin\Debug\DataUpdateRDS\shoutcast.ico" />
     <None Include="bin\Debug\DataUpdateRDS\icecast.ico" />
     <Content Include="antena.ico" />

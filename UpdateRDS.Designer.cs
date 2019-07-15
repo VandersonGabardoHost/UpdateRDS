@@ -84,6 +84,8 @@
             this.lblTextoenv = new System.Windows.Forms.Label();
             this.lblTextoparar = new System.Windows.Forms.Label();
             this.lblTextoinforev = new System.Windows.Forms.Label();
+            this.pbFront = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pbFront)).BeginInit();
             this.SuspendLayout();
             // 
             // lblTextotitulo
@@ -637,12 +639,23 @@
             this.lblTextoinforev.TabIndex = 0;
             this.lblTextoinforev.Text = "Revisar informações";
             // 
+            // pbFront
+            // 
+            this.pbFront.Image = ((System.Drawing.Image)(resources.GetObject("pbFront.Image")));
+            this.pbFront.Location = new System.Drawing.Point(195, 9);
+            this.pbFront.Name = "pbFront";
+            this.pbFront.Size = new System.Drawing.Size(56, 25);
+            this.pbFront.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbFront.TabIndex = 30;
+            this.pbFront.TabStop = false;
+            // 
             // UpdateRDS
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.ClientSize = new System.Drawing.Size(884, 662);
+            this.Controls.Add(this.pbFront);
             this.Controls.Add(this.lblTextoinforev);
             this.Controls.Add(this.lblTextoparar);
             this.Controls.Add(this.lblTextoenv);
@@ -704,6 +717,7 @@
             this.Text = "Update RDS By GabardoHost";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.UpdateRDS_FormClosing);
             this.Resize += new System.EventHandler(this.UpdateRDS_Resize);
+            ((System.ComponentModel.ISupportInitialize)(this.pbFront)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -765,6 +779,7 @@
         private System.Windows.Forms.Label lblTextoenv;
         private System.Windows.Forms.Label lblTextoparar;
         private System.Windows.Forms.Label lblTextoinforev;
+        private System.Windows.Forms.PictureBox pbFront;
     }
 }
 

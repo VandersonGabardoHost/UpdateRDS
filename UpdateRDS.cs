@@ -13,7 +13,8 @@ using System.Windows.Forms;
 using System.Xml;
 using UpdateRDS.Properties;
 
-// Update RDS By GabardoHost - Versão 0.0.0.4 Alfafa build
+// Update RDS By GabardoHost - Versão 0.0.0.5 Alfafa build
+
 namespace UpdateRDS
 {
     public partial class UpdateRDS : Form
@@ -32,7 +33,8 @@ namespace UpdateRDS
         static int errfilecnext = -1;
         static int errfilec = -1;
         static string errodaweblink = null;
-        static readonly string diretoriodoaplicativo = $@"{AppDomain.CurrentDomain.BaseDirectory.ToString()}DataUpdateRDS\";
+        static readonly string diretoriodoaplicativo = $@"{AppDomain.CurrentDomain.BaseDirectory.ToString()}UpdateRDS\";
+
         public UpdateRDS()
         {
             InitializeComponent();
@@ -287,6 +289,7 @@ namespace UpdateRDS
                 qualquerlixoaqui = ex.Message;
             }
         }
+
         public void ValidarInformacoes()
         {
             // Pega as informações dos textos das caixas de preenchimento
@@ -428,7 +431,6 @@ namespace UpdateRDS
             string identificadorproc = proc.Id.ToString();
 
             // Pega as informações dos textos das caixas de preenchimento e adiciona informações na string
-            string arquivotexto = $@"{diretoriodoaplicativo}{identificadorproc}.txt";
             string arquivotextoantigo = $@"{diretoriodoaplicativo}{identificadorproc}OLD.txt";
             string urlcompleta = txtUrlsom.Text;
             string dadoscapturadosdaurl;
@@ -437,7 +439,6 @@ namespace UpdateRDS
             if (eumnext == true)
             {
                 urlcompleta = txtUrlsomnext.Text;
-                arquivotexto = $@"{diretoriodoaplicativo}{identificadorproc}NEXT.txt";
                 arquivotextoantigo = $@"{diretoriodoaplicativo}{identificadorproc}NEXTOLD.txt";
             }
 
@@ -481,9 +482,6 @@ namespace UpdateRDS
                 rdrurlcompleta.Close();
                 rdrurlcompleta.Dispose();
 
-                // Apaga arquivo anterior pois está sobrescrevendo as linhas
-                File.Delete(arquivotexto);
-
                 // Caso tenha erros e é um retorno da conexão então envia uma mensagem de reconexão para o usuário
                 if (erroconta == 0)
                 {
@@ -495,22 +493,6 @@ namespace UpdateRDS
                     lblInformacao.Text = "Nome do próximo som conectado no servidor! Aguarde atualização de título...";
                     errocontanext = -1;
                 }
-
-                // Cria ou abre o arquivo existente para leitura
-                FileStream fs = new FileStream(arquivotexto, FileMode.OpenOrCreate);
-
-                // Grava ou salva arquivo em UTF 8 com a solicitação
-                StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
-
-                // Captura texto do arquivo texto e também dos dados adicionais para gravar no arquivo
-                sw.WriteLine(dadoscapturadosdaurl);
-
-                // Limpa a sessão
-                sw.Flush();
-                sw.Close();
-                sw.Dispose();
-                fs.Close();
-                fs.Dispose();
             }
             catch (WebException webexc)
             {
@@ -580,11 +562,8 @@ namespace UpdateRDS
                 }
             }
 
-            // Pega os dados do arquivo texto com o nome da música
-            FileInfo arquivotextomusica = new FileInfo(arquivotexto);
-
-            // Verifica se o arquivo texto com o nome da música tem 0 bytes, se tiver
-            if (arquivotextomusica.Length == 0)
+            // Verifica se o arquivo texto com o nome da música é nulo ou vazio, se for
+            if (string.IsNullOrEmpty(dadoscapturadosdaurl))
             {
                 // Caso seja um arquivo texto next
                 if (eumnext == true)
@@ -597,48 +576,34 @@ namespace UpdateRDS
                 throw new Exception("A URL informada anteriormente está com problemas! verificar se o texto da URL não está vazio!");
             }
 
-            try
-            {
-                // Pega o arquivo para ler com o nome do áudio
-                using (StreamReader sr = new StreamReader(arquivotexto, Encoding.Default))
-                {
-                    // Carrega arquivo e faz a leitura da primeira linha do arquivo com o nome do áudio
-                    conteudotexto = sr.ReadLine().ToString();
+            // Sobrescreve o conteúdo do texto com os dados capturados da URL
+            conteudotexto = dadoscapturadosdaurl;
 
-                    // Força o fechamento do arquivo para evitar erros
-                    sr.Close();
-
-                    // Força o despejo da memória do arquivo carregado
-                    sr.Dispose();
-                }
-            }
-            catch (IOException errofile)
-            {
-                // Grava o erro aqui
-                qualquerlixoaqui = errofile.Message;
-
-                // Espera um tempo para tentar ler de novo o arquivo
-                System.Threading.Thread.Sleep(5000);
-
-                // Pega o arquivo para ler com o nome do áudio
-                using (StreamReader sr = new StreamReader(arquivotexto, Encoding.Default))
-                {
-                    // Carrega arquivo e faz a leitura da primeira linha do arquivo com o nome do áudio
-                    conteudotexto = sr.ReadLine().ToString();
-
-                    // Força o fechamento do arquivo para evitar erros
-                    sr.Close();
-
-                    // Força o despejo da memória do arquivo carregado
-                    sr.Dispose();
-                }
-            }
-
-            // Caso o arquivo texto currentsong.txtPID.txt ou similar não exista então ele faz a condição de cópia
+            // Caso o arquivo texto PID.txt ou similar não exista então ele faz a condição de criação do arquivo
             if (!File.Exists(arquivotextoantigo))
             {
-                // Copia o arquivo texto
-                File.Copy(arquivotexto, arquivotextoantigo);
+                // Caso o diretório de logs não exista
+                if (!Directory.Exists($@"{diretoriodoaplicativo}"))
+                {
+                    //Criamos um com o nome LOGS
+                    Directory.CreateDirectory($@"{diretoriodoaplicativo}");
+                }
+
+                // Cria ou abre o arquivo existente para leitura
+                FileStream fs = new FileStream(arquivotextoantigo, FileMode.OpenOrCreate);
+
+                // Grava ou salva arquivo em UTF 8 com a solicitação
+                StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+
+                // Captura texto do arquivo texto e também dos dados adicionais para gravar no arquivo
+                sw.WriteLine(dadoscapturadosdaurl);
+
+                // Limpa a sessão
+                sw.Flush();
+                sw.Close();
+                sw.Dispose();
+                fs.Close();
+                fs.Dispose();
             }
 
             // Pega o arquivo antigo para ler com o nome do áudio só pra fazer a comparação abaixo
@@ -662,8 +627,21 @@ namespace UpdateRDS
                     // Apaga os arquivos anteriores
                     File.Delete(arquivotextoantigo);
 
-                    // Copia o arquivo com os dados para reuso da string
-                    File.Copy(arquivotexto, arquivotextoantigo);
+                    // Cria ou abre o arquivo existente para leitura
+                    FileStream fs = new FileStream(arquivotextoantigo, FileMode.OpenOrCreate);
+
+                    // Grava ou salva arquivo em UTF 8 com a solicitação
+                    StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+
+                    // Captura texto do arquivo texto e também dos dados adicionais para gravar no arquivo
+                    sw.WriteLine(dadoscapturadosdaurl);
+
+                    // Limpa a sessão
+                    sw.Flush();
+                    sw.Close();
+                    sw.Dispose();
+                    fs.Close();
+                    fs.Dispose();
                 }
                 catch (IOException errfile)
                 {
@@ -671,13 +649,29 @@ namespace UpdateRDS
                     qualquerlixoaqui = errfile.Message;
 
                     // Espera um tempo para apagar os arquivos
-                    System.Threading.Thread.Sleep(5000);
+                    System.Threading.Thread.Sleep(1500);
 
                     // Apaga os arquivos anteriores
                     File.Delete(arquivotextoantigo);
 
-                    // Copia o arquivo com os dados para reuso da string
-                    File.Copy(arquivotexto, arquivotextoantigo);
+                    // Espera um tempo para criar um novo arquivo
+                    System.Threading.Thread.Sleep(1500);
+
+                    // Cria ou abre o arquivo existente para leitura
+                    FileStream fs = new FileStream(arquivotextoantigo, FileMode.OpenOrCreate);
+
+                    // Grava ou salva arquivo em UTF 8 com a solicitação
+                    StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+
+                    // Captura texto do arquivo texto e também dos dados adicionais para gravar no arquivo
+                    sw.WriteLine(dadoscapturadosdaurl);
+
+                    // Limpa a sessão
+                    sw.Flush();
+                    sw.Close();
+                    sw.Dispose();
+                    fs.Close();
+                    fs.Dispose();
                 }
             }
         }
@@ -1067,7 +1061,7 @@ namespace UpdateRDS
                 // Carrega icone para o aplicativo
                 Icon = Resources.shoutcast;
                 ntfIcone.Icon = Resources.shoutcast;
-
+                pbFront.Image = Resources.shoutcast1;
                 // Verifica se é dados de Icecast, se for, realiza as condições de alteração abaixo para compatibilizar o icecast v2
                 if (rbtIcecast.Checked == true)
                 {
@@ -1077,6 +1071,7 @@ namespace UpdateRDS
                     // Carrega icone para o aplicativo
                     Icon = Resources.icecast;
                     ntfIcone.Icon = Resources.icecast;
+                    pbFront.Image = Resources.icecast1;
                 }
 
                 // Carrega a URL padrão para Shoutcast Server v2 apenas caso marcado pelo usuário
@@ -1347,15 +1342,12 @@ namespace UpdateRDS
                     InfoErroGeral();
 
                     // Apaga a informação da label para não dar bug na interface
-                    lblInformacaoid.Text = "";
+                    lblInformacaoid.Text = "Aplicativo em execução - Registro de erro na data e hora: " + DateTime.Now;
                 }
             }
             // Exceção geral da execução do código e clique do botão
             catch (Exception ex)
             {
-                // Apaga a informação da label para não dar bug na interface
-                // lblInformacaoid.Text = "";
-
                 // Carrega na string geral os erros
                 errogeral = ex.Message;
                 errogeralgravado = ex.StackTrace;
@@ -1521,9 +1513,7 @@ namespace UpdateRDS
                     lblInformacaoid.Text = "Última checagem de modificação do arquivo: " + DateTime.Now.ToString();
 
                     // Apaga os arquivos anteriores
-                    File.Delete($@"{diretoriodoaplicativo}{identificadorproc}.txt");
                     File.Delete($@"{diretoriodoaplicativo}{identificadorproc}OLD.txt");
-                    File.Delete($@"{diretoriodoaplicativo}{identificadorproc}NEXT.txt");
                     File.Delete($@"{diretoriodoaplicativo}{identificadorproc}NEXTOLD.txt");
                     File.Delete(caminhoarquivoantigo);
                     File.Delete(caminhoarquivoantigonext);
@@ -1651,9 +1641,7 @@ namespace UpdateRDS
                 string caminhoarquivoantigonext = $@"{txtArquivotextosomnext.Text}{identificadorproc}.txt";
 
                 // Apaga os arquivos antigos
-                File.Delete($@"{diretoriodoaplicativo}{identificadorproc}.txt");
                 File.Delete($@"{diretoriodoaplicativo}{identificadorproc}OLD.txt");
-                File.Delete($@"{diretoriodoaplicativo}{identificadorproc}NEXT.txt");
                 File.Delete($@"{diretoriodoaplicativo}{identificadorproc}NEXTOLD.txt");
                 File.Delete(caminhoarquivoantigo);
                 File.Delete(caminhoarquivoantigonext);
@@ -2324,25 +2312,11 @@ namespace UpdateRDS
                     File.Delete(caminhoarquivoantigonext);
                 }
 
-                // Caso o arquivo texto PID.txt ou similar exista então ele faz a condição abaixo
-                if (File.Exists($@"{diretoriodoaplicativo}{identificadorproc}.txt") && canceloufechamento == false)
-                {
-                    // Apaga os arquivos antigos
-                    File.Delete($@"{diretoriodoaplicativo}{identificadorproc}.txt");
-                }
-
-                // Caso o arquivo texto PIDOLD.txt ou similar exista então ele faz a condição abaixo
+                // Caso o arquivo texto PIDNEXT.txt ou similar exista então ele faz a condição abaixo
                 if (File.Exists($@"{diretoriodoaplicativo}{identificadorproc}OLD.txt") && canceloufechamento == false)
                 {
                     // Apaga os arquivos antigos
                     File.Delete($@"{diretoriodoaplicativo}{identificadorproc}OLD.txt");
-                }
-
-                // Caso o arquivo texto PIDNEXT.txt ou similar exista então ele faz a condição abaixo
-                if (File.Exists($@"{diretoriodoaplicativo}{identificadorproc}NEXT.txt") && canceloufechamento == false)
-                {
-                    // Apaga os arquivos antigos
-                    File.Delete($@"{diretoriodoaplicativo}{identificadorproc}NEXT.txt");
                 }
 
                 // Caso o arquivo texto PIDOLD.txt ou similar exista então ele faz a condição abaixo
