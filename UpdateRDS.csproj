@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>UpdateRDS</RootNamespace>
     <AssemblyName>Update RDS</AssemblyName>
-    <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -26,8 +26,8 @@
     <SupportUrl>http://www.vanderson.net.br</SupportUrl>
     <ProductName>Update RDS</ProductName>
     <PublisherName>Vanderson GabardoHost</PublisherName>
-    <ApplicationRevision>5</ApplicationRevision>
-    <ApplicationVersion>0.0.0.5</ApplicationVersion>
+    <ApplicationRevision>6</ApplicationRevision>
+    <ApplicationVersion>0.0.0.6</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>false</BootstrapperEnabled>
   </PropertyGroup>

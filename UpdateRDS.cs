@@ -13,7 +13,7 @@ using System.Windows.Forms;
 using System.Xml;
 using UpdateRDS.Properties;
 
-// Update RDS By GabardoHost - Versão 0.0.0.5 Alfafa build
+// Update RDS By GabardoHost - Versão 0.0.0.6 Alfafa build
 
 namespace UpdateRDS
 {
@@ -764,7 +764,7 @@ namespace UpdateRDS
                     qualquerlixoaqui = errofile.Message;
 
                     // Espera um tempo para tentar ler de novo o arquivo
-                    System.Threading.Thread.Sleep(2500);
+                    System.Threading.Thread.Sleep(1500);
 
                     // Pega o arquivo para ler com o nome do áudio
                     using (StreamReader sr = new StreamReader(arquivotexto, Encoding.Default))
@@ -864,10 +864,23 @@ namespace UpdateRDS
                 try
                 {
                     // Apaga os arquivos anteriores
-                    File.Delete(arquivotextoantigo);
+                    //File.Delete(arquivotextoantigo);
 
                     // Copia o arquivo com os dados para reuso da string
-                    File.Copy(arquivotexto, arquivotextoantigo);
+                    //File.Copy(arquivotexto, arquivotextoantigo);
+
+                    // Pega o arquivo antigo para escrever com dados novos
+                    using (StreamWriter swOld = new StreamWriter(arquivotextoantigo))
+                    {
+                        // Carrega arquivo de texto antigo e sobrescreve todos os dados que tem no arquivo
+                        swOld.WriteLine(conteudotexto);
+
+                        // Força o fechamento do arquivo
+                        swOld.Close();
+
+                        // Força o despejo da memória do arquivo carregado
+                        swOld.Dispose();
+                    }
                 }
                 catch (IOException errfile)
                 {
@@ -875,13 +888,26 @@ namespace UpdateRDS
                     qualquerlixoaqui = errfile.Message;
 
                     // Espera um tempo para apagar os arquivos
-                    System.Threading.Thread.Sleep(5000);
+                    System.Threading.Thread.Sleep(1000);
 
                     // Apaga os arquivos anteriores
-                    File.Delete(arquivotextoantigo);
+                    //File.Delete(arquivotextoantigo);
 
                     // Copia o arquivo com os dados para reuso da string
-                    File.Copy(arquivotexto, arquivotextoantigo);
+                    //File.Copy(arquivotexto, arquivotextoantigo);
+
+                    // Pega o arquivo antigo para escrever com dados novos
+                    using (StreamWriter swOld = new StreamWriter(arquivotextoantigo))
+                    {
+                        // Carrega arquivo de texto antigo e sobrescreve todos os dados que tem no arquivo
+                        swOld.WriteLine(conteudotexto);
+
+                        // Força o fechamento do arquivo
+                        swOld.Close();
+
+                        // Força o despejo da memória do arquivo carregado
+                        swOld.Dispose();
+                    }
                 }
             }
         }
@@ -911,7 +937,7 @@ namespace UpdateRDS
             string idoupontomont = txtIdoumont.Text;
 
             // Pega as informações dos textos das caixas de preenchimento e adiciona informações na string
-            string arquivodelog = $@"{diretoriodoaplicativo}LOGS\SOM{identificadorproc}LOG.txt";
+            string arquivodelog = $@"{diretoriodoaplicativo}LOGS\SOM{identificadorproc}LOG.csv";
             string urlshoutcastv1 = $"http://{ipserver}:{portaserver}/admin.cgi?mode=updinfo&song=";
             string urlshoutcastv2 = $"http://{ipserver}:{portaserver}/admin.cgi?sid={idoupontomont}&mode=updinfo&song=";
             string urlicecast = $"http://{ipserver}:{portaserver}/admin/metadata?mount=/{idoupontomont}&mode=updinfo&song=";
@@ -964,6 +990,9 @@ namespace UpdateRDS
 
             if (conteudoarquivotexto == conteudoarquivotextonextsong)
             {
+                // Espera um tempo para carregar novamente a verificação
+                System.Threading.Thread.Sleep(1500);
+
                 // Caso o usuário queira transmitir play next para servidor shoutcast v2 então entra na condição abaixo
                 if (chkTransmproxsom.Checked == true)
                 {
@@ -1132,6 +1161,65 @@ namespace UpdateRDS
                     webrespshouticecast.Close();
                 }
 
+                // Novas informações para adicionar no arquivo texto
+                string novosdadosarquivotexto = DateTime.Now.ToString() + ";" + conteudoarquivotexto;
+
+                // Caso tenha um arquvio de som next
+                if (chkTransmproxsom.Checked == true)
+                {
+                    novosdadosarquivotexto = novosdadosarquivotexto + ";" + conteudoarquivotextonextsong;
+                }
+
+                // Caso o diretório de logs não exista
+                if (!Directory.Exists($@"{diretoriodoaplicativo}LOGS"))
+                {
+                    //Criamos um com o nome LOGS
+                    Directory.CreateDirectory($@"{diretoriodoaplicativo}LOGS");
+                }
+
+                // Caso o arquivo texto LOGRDS.txt ou similar exista então ele faz a condição de leitura
+                if (File.Exists(arquivodelog))
+                {
+                    // Pega o arquivo texto para ler
+                    using (StreamReader sr = new StreamReader(arquivodelog))
+                    {
+                        // Carrega arquivo e mantém carregado todas as linhas
+                        dadosarquivotexto = sr.ReadToEnd();
+                        dadosarquivotexto = dadosarquivotexto.Substring(0, dadosarquivotexto.Length - 2);
+                    }
+                }
+
+                // Cria ou abre o arquivo existente para leitura
+                FileStream fs = new FileStream(arquivodelog, FileMode.OpenOrCreate);
+
+                // Grava ou salva arquivo em UTF 8 com a solicitação
+                StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+
+                // Captura texto do arquivo texto e também dos dados adicionais para gravar no arquivo
+                if (string.IsNullOrEmpty(dadosarquivotexto))
+                {
+                    dadosarquivotexto = "Data e Hora:;Nome do som:;Nome do próximo som:";
+                }
+
+                sw.WriteLine(dadosarquivotexto);
+                sw.WriteLine(novosdadosarquivotexto);
+
+                // Limpa a sessão
+                sw.Flush();
+                sw.Close();
+                sw.Dispose();
+                fs.Close();
+                fs.Dispose();
+
+                // Pega os dados do arquivo
+                FileInfo arquivotextolog = new FileInfo(arquivodelog);
+
+                // Move o arquivo se o arquivo tiver mais de 10 MB
+                if (arquivotextolog.Length > 10485760)
+                {
+                    File.Move(arquivodelog, arquivodelog + DateTime.Now.ToString().Replace(":", "").Replace("/", "") + ".txt");
+                }
+
                 // Caso o valor dos caracteres seja muito grande, tira uma parte para não exibir
                 if (conteudotexto.Length > 100)
                 {
@@ -1189,50 +1277,6 @@ namespace UpdateRDS
                 {
                     // Transfere dados para um balão chato haha de texto
                     ntfIcone.ShowBalloonTip(60000, "Update RDS - Atualização de título de som", dadosadicionais, ToolTipIcon.Info);
-                }
-
-                // Caso o diretório de logs não exista
-                if (!Directory.Exists($@"{diretoriodoaplicativo}LOGS"))
-                {
-                    //Criamos um com o nome LOGS
-                    Directory.CreateDirectory($@"{diretoriodoaplicativo}LOGS");
-                }
-
-                // Caso o arquivo texto LOGRDS.txt ou similar exista então ele faz a condição de leitura
-                if (File.Exists(arquivodelog))
-                {
-                    // Pega o arquivo texto para ler
-                    using (StreamReader sr = new StreamReader(arquivodelog))
-                    {
-                        // Carrega arquivo e mantém carregado todas as linhas
-                        dadosarquivotexto = sr.ReadToEnd();
-                    }
-                }
-
-                // Cria ou abre o arquivo existente para leitura
-                FileStream fs = new FileStream(arquivodelog, FileMode.OpenOrCreate);
-
-                // Grava ou salva arquivo em UTF 8 com a solicitação
-                StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
-
-                // Captura texto do arquivo texto e também dos dados adicionais para gravar no arquivo
-                sw.WriteLine(dadosarquivotexto);
-                sw.WriteLine(dadosadicionais);
-
-                // Limpa a sessão
-                sw.Flush();
-                sw.Close();
-                sw.Dispose();
-                fs.Close();
-                fs.Dispose();
-
-                // Pega os dados do arquivo
-                FileInfo arquivotextolog = new FileInfo(arquivodelog);
-
-                // Move o arquivo se o arquivo tiver mais de 10 MB
-                if (arquivotextolog.Length > 10485760)
-                {
-                    File.Move(arquivodelog, arquivodelog + DateTime.Now.ToString().Replace(":", "").Replace("/", "") + ".txt");
                 }
             }
         }
