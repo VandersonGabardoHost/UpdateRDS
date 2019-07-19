@@ -13,7 +13,7 @@ using System.Windows.Forms;
 using System.Xml;
 using UpdateRDS.Properties;
 
-/// Update RDS By GabardoHost - Versão 0.0.0.7 Alfafa build
+/// Update RDS By GabardoHost - Versão 0.0.0.8 Alfafa build
 /// @file UpdateRDS.cs
 /// <summary>
 /// Este arquivo é o código principal do aplicativo
@@ -22,8 +22,8 @@ using UpdateRDS.Properties;
 /// Mas resolvi criar um para disponibilizar para todos, pois esse programa ou vem associado a um encoder ou não tem para download, então fiz um!
 /// Minha ideia é essa, se uma coisa não existe e você precisa muito, então crie você mesmo! pode ser carro, casa, transmissor de FM, programa de PC, celular etc... CRIE VOCÊ MESMO!!!
 /// @author Vanderson Gabardo <vanderson@vanderson.net.br>
-/// @date 17/07/2019
-/// $Id: UpdateRDS.cs, v0.0.0.7 2019/07/17 22:30:00 Vanderson Gabardo $
+/// @date 18/07/2019
+/// $Id: UpdateRDS.cs, v0.0.0.8 2019/07/18 22:30:00 Vanderson Gabardo $
 
 namespace UpdateRDS
 {
@@ -31,6 +31,7 @@ namespace UpdateRDS
     {
         /// Declaração de itens para uso pelo aplicativo de forma geral
         static readonly Timer temporizadorgeral = new Timer();
+        static readonly WebProxy servidorproxydoaplicativo = new WebProxy();
         static string qualquerlixoaqui;
         static string errogeralgravado;
         static string errogeral;
@@ -138,17 +139,46 @@ namespace UpdateRDS
                     if (coderro == "401")
                         weberroexplic = "Este erro indica que você errou a senha ou o ID \nOu o ponto de montagem do servidor não aceita o login e senha informados!";
 
+                    /// Caso o erro seja 403
+                    if (coderro == "403")
+                    {
+                        weberroexplic = "Este erro indica que o servidor proibiu o acesso aos dados \nOu o ponto de montagem do servidor não aceita o acesso!";
+                        if (chkUsoproxy.Checked == true)
+                        {
+                            weberroexplic = $"Este erro indica que o servidor proxy {txtDoproxy.Text}:{txtPortaproxy.Text} proibiu o acesso! Será necessário solicitar desbloqueio para o endereço http://{txtDominioip.Text}:{txtPorta.Text}/ para que os dados sejam enviados!";
+                        }
+                    }
+
                     /// Caso o erro seja de falha de conexão
                     if (weberrogeralcode == "ConnectFailure")
-                        weberroexplic = $"Este erro indica que o servidor não está no ar. \nVerifique se o servidor http://{txtDominioip.Text}:{txtPorta.Text}/ está funcionando!";
+                    {
+                        /// Caso o proxy esteja marcado
+                        if (chkUsoproxy.Checked == true)
+                        {
+                            weberroexplic = $"Este erro indica que o servidor ou o servidor proxy não está no ar. \nVerifique se o servidor http://{txtDominioip.Text}:{txtPorta.Text}/ está funcionando e se o proxy {txtDoproxy.Text}:{txtPortaproxy.Text} está funcionando!";
+                        }
+                        else
+                            weberroexplic = $"Este erro indica que o servidor não está no ar. \nVerifique se o servidor http://{txtDominioip.Text}:{txtPorta.Text}/ está funcionando!";
+                    }
 
                     /// Caso o erro seja de resolução de nome
                     if (weberrogeralcode == "NameResolutionFailure")
                         weberroexplic = $"Verifique se não há erros de digitação do domínio informado!";
 
-                    /// Caso o erro seja genérico
-                    if (weberrogeral == "")
-                        weberroexplic = $"Verifique se o servidor http://{txtDominioip.Text}:{txtPorta.Text}/ \nÉ o servidor correto e está funcionando e se há transmissão do encoder!";
+                    /// Caso o erro seja de resolução de nome do servidor proxy
+                    if (weberrogeralcode == "ProxyNameResolutionFailure")
+                        weberroexplic = $"Verifique se não há erros de digitação na caixa de texto de domínio do servidor proxy informado!";
+
+                    /// Caso o erro seja de autenticação de proxy
+                    if (coderro == "407")
+                    {
+                        if (chkAutenticaproxy.Checked == true)
+                        {
+                            weberroexplic = $"Verifique se o servidor proxy: {txtDoproxy.Text}:{txtPortaproxy.Text}, o Login: {txtLoginproxy.Text} e a senha: {txtSenhaproxy.Text} do servidor estão corretos e se o servidor está funcionando e se há acesso nesse servidor!";
+                        }
+                        else
+                            weberroexplic = $"Verifique se o servidor proxy: {txtDoproxy.Text}:{txtPortaproxy.Text} não requer autenticação adicional para acessar o servidor, se for o caso marque a opção 'Meu servidor requer autenticação de proxy' acima!";
+                    }
 
                     /// Mensagem de erro que vai aparecer associada com o problema encontrado e data e hora completos
                     string mensagemerro = $"Título não atualizado devido a um erro ao conectar no servidor: \n{weberrogeral} \n{weberroexplic}";
@@ -191,6 +221,12 @@ namespace UpdateRDS
                     sw.WriteLine("Remover Caracteres especiais: " + chkCaracteresespeciais.Checked);
                     sw.WriteLine("Exibir no aplicativo dados sensiveis como senhas: " + chkDadossensiveis.Checked);
                     sw.WriteLine("Transmitir dados do próximo som: " + chkTransmproxsom.Checked);
+                    sw.WriteLine("Uso de servidor proxy: " + chkUsoproxy.Checked);
+                    sw.WriteLine("Uso de autenticação de servidor proxy: " + chkAutenticaproxy.Checked);
+                    sw.WriteLine("Endereço de IP ou nome de domínio do servidor proxy: " + txtDoproxy.Text);
+                    sw.WriteLine("Porta do servidor proxy: " + txtPortaproxy.Text);
+                    sw.WriteLine("Login do servidor proxy: " + txtLoginproxy.Text);
+                    sw.WriteLine("Senha do servidor proxy: " + txtSenhaproxy.Text);
                     sw.WriteLine("Tempo de execução: " + txtTempoexec.Text);
                     sw.WriteLine("Cadastro dos dados: " + txtCadastrodados.Text);
                     sw.WriteLine("Caminho completo do arquivo texto com nome do som: " + txtArquivotextosom.Text);
@@ -259,6 +295,12 @@ namespace UpdateRDS
                         sw.WriteLine("Remover Caracteres especiais: " + chkCaracteresespeciais.Checked);
                         sw.WriteLine("Exibir no aplicativo dados sensiveis como senhas: " + chkDadossensiveis.Checked);
                         sw.WriteLine("Transmitir dados do próximo som: " + chkTransmproxsom.Checked);
+                        sw.WriteLine("Uso de servidor proxy: " + chkUsoproxy.Checked);
+                        sw.WriteLine("Uso de autenticação de servidor proxy: " + chkAutenticaproxy.Checked);
+                        sw.WriteLine("Endereço de IP ou nome de domínio do servidor proxy: " + txtDoproxy.Text);
+                        sw.WriteLine("Porta do servidor proxy: " + txtPortaproxy.Text);
+                        sw.WriteLine("Login do servidor proxy: " + txtLoginproxy.Text);
+                        sw.WriteLine("Senha do servidor proxy: " + txtSenhaproxy.Text);
                         sw.WriteLine("Tempo de execução: " + txtTempoexec.Text);
                         sw.WriteLine("Cadastro dos dados: " + txtCadastrodados.Text);
                         sw.WriteLine("Caminho completo do arquivo texto com nome do som: " + txtArquivotextosom.Text);
@@ -288,6 +330,22 @@ namespace UpdateRDS
                 /// Caso gere um erro aqui, o erro acaba aqui
                 qualquerlixoaqui = ex.Message;
             }
+        }
+
+        public void DadosProxy()
+        {
+            /// Pega dados de IP ou domínio e porta do servidor proxy
+            string enderecoservidorproxy = $"http://{txtDoproxy.Text}:{txtPortaproxy.Text}";
+
+            /// Declara URI do servidor proxy para uso
+            Uri uridoproxyserver = new Uri(enderecoservidorproxy);
+
+            /// Adiciona informações do URI no endereço
+            servidorproxydoaplicativo.Address = uridoproxyserver;
+
+            /// Caso o servidor proxy tenha credenciais, Define as credenciais do usuário
+            if (chkAutenticaproxy.Checked == true)
+                servidorproxydoaplicativo.Credentials = new NetworkCredential(txtLoginproxy.Text, txtSenhaproxy.Text);
         }
 
         public void ValidarInformacoes()
@@ -368,6 +426,34 @@ namespace UpdateRDS
             /// Caso as URLs sejam as mesmas, Avisa o usuário para alterar as URLs
             if (chkUrlsom.Checked == true && chkUrlsomnext.Checked == true && txtUrlsom.Text == txtUrlsomnext.Text)
                 throw new Exception("A URL do próximo som é a mesma URL do som atual, as duas URLs não podem ser as mesmas! use URLs com textos diferentes para cadastrar no sistema!");
+
+            /// Caso o usuário tenha marcado para usar um proxy server
+            if (chkUsoproxy.Checked == true)
+            {
+                /// Valida as caixas de texto
+                if (string.IsNullOrEmpty(txtDoproxy.Text))
+                {
+                    throw new Exception("O endereço de IP ou domínio do servidor proxy não pode ser em branco, preencha os dados corretamente para continuar!");
+                }
+                if (string.IsNullOrEmpty(txtPortaproxy.Text))
+                {
+                    throw new Exception("A porta do servidor proxy não pode ser em branco, preencha os dados corretamente para continuar!");
+                }
+                if (!Regex.IsMatch(txtPortaproxy.Text, @"^[0-9]+$"))
+                    throw new Exception("Preencha a caixa de texto porta do servidor proxy apenas com números!");
+
+                if (chkAutenticaproxy.Checked == true)
+                {
+                    if (string.IsNullOrEmpty(txtLoginproxy.Text))
+                    {
+                        throw new Exception("O login do servidor proxy não pode ser em branco, preencha os dados corretamente para continuar!");
+                    }
+                    if (string.IsNullOrEmpty(txtSenhaproxy.Text))
+                    {
+                        throw new Exception("A senha do servidor proxy não pode ser em branco, preencha os dados corretamente para continuar!");
+                    }
+                }
+            }
         }
 
         private void TratamentoURLNowNext()
@@ -417,6 +503,16 @@ namespace UpdateRDS
             {
                 /// Abre sessão de webclient
                 WebClient wcurlcompleta = new WebClient();
+
+                /// Define o servidor proxy caso tenha
+                if (chkUsoproxy.Checked == true)
+                {
+                    /// Chama a função
+                    DadosProxy();
+
+                    /// Define o servidor proxy global
+                    wcurlcompleta.Proxy = servidorproxydoaplicativo;
+                }
 
                 /// Pega os dados da URL
                 Stream strurlcompleta = wcurlcompleta.OpenRead(urlcompleta);
@@ -1063,7 +1159,18 @@ namespace UpdateRDS
 
                 /// Permite redirecionamentos e não tem proxy server
                 webreqshouticecast.AllowAutoRedirect = true;
-                webreqshouticecast.Proxy = null;
+
+                /// Caso tenha uso de servidor proxy
+                if (chkUsoproxy.Checked == true)
+                {
+                    /// Chama função para ler dados do servidor proxy
+                    DadosProxy();
+
+                    /// Usa os dados processados do servidor proxy
+                    webreqshouticecast.Proxy = servidorproxydoaplicativo;
+                }
+                else
+                    webreqshouticecast.Proxy = null;
 
                 /// Caso é uma shoutcast v1 faz a condição abaixo
                 if (rbtShoutcastv1.Checked == true)
@@ -1263,6 +1370,8 @@ namespace UpdateRDS
                     rbtShoutcastv2.Enabled = false;
                     rbtIcecast.Enabled = false;
                     chkTransmproxsom.Enabled = false;
+                    chkUsoproxy.Enabled = false;
+                    chkAutenticaproxy.Enabled = false;
                     chkUrlsom.Enabled = false;
                     chkUrlsomnext.Enabled = false;
                     btnCarregadados.Enabled = false;
@@ -1270,6 +1379,10 @@ namespace UpdateRDS
                     btnResolvernomeip.Enabled = false;
                     btnLocalizatxtsomnext.Enabled = false;
                     btnLocalizatxtsom.Enabled = false;
+                    txtDoproxy.Enabled = false;
+                    txtPortaproxy.Enabled = false;
+                    txtLoginproxy.Enabled = false;
+                    txtSenhaproxy.Enabled = false;
                     txtUrlsom.Enabled = false;
                     txtUrlsomnext.Enabled = false;
                     txtTempoexec.Enabled = false;
@@ -1402,6 +1515,7 @@ namespace UpdateRDS
                     rbtShoutcastv1.Enabled = true;
                     rbtShoutcastv2.Enabled = true;
                     rbtIcecast.Enabled = true;
+                    chkUsoproxy.Enabled = true;
                     txtTempoexec.Enabled = true;
                     txtCadastrodados.Enabled = true;
                     btnSalvadados.Enabled = true;
@@ -1412,6 +1526,18 @@ namespace UpdateRDS
                     txtPorta.Enabled = true;
                     txtLoginserver.Enabled = true;
                     txtSenhaserver.Enabled = true;
+
+                    if (chkUsoproxy.Checked == true)
+                    {
+                        chkAutenticaproxy.Enabled = true;
+                        txtDoproxy.Enabled = true;
+                        txtPortaproxy.Enabled = true;
+                        if (chkAutenticaproxy.Checked == true)
+                        {
+                            txtLoginproxy.Enabled = true;
+                            txtSenhaproxy.Enabled = true;
+                        }
+                    }
 
                     /// Se o chkurl estiver marcado então habilita o botão btnLocalizacs.Enabled = true;
                     if (chkUrlsom.Checked == false)
@@ -1502,6 +1628,7 @@ namespace UpdateRDS
                 rbtShoutcastv1.Enabled = true;
                 rbtShoutcastv2.Enabled = true;
                 rbtIcecast.Enabled = true;
+                chkUsoproxy.Enabled = true;
                 txtTempoexec.Enabled = true;
                 txtCadastrodados.Enabled = true;
                 btnSalvadados.Enabled = true;
@@ -1512,6 +1639,18 @@ namespace UpdateRDS
                 txtPorta.Enabled = true;
                 txtLoginserver.Enabled = true;
                 txtSenhaserver.Enabled = true;
+
+                if (chkUsoproxy.Checked == true)
+                {
+                    chkAutenticaproxy.Enabled = true;
+                    txtDoproxy.Enabled = true;
+                    txtPortaproxy.Enabled = true;
+                    if (chkAutenticaproxy.Checked == true)
+                    {
+                        txtLoginproxy.Enabled = true;
+                        txtSenhaproxy.Enabled = true;
+                    }
+                }
 
                 /// Se o shoutcast de versão 1 estiver desabilitado, Então habilita a caixa de edição mountid
                 if (rbtShoutcastv1.Checked == false)
@@ -1638,6 +1777,12 @@ namespace UpdateRDS
                 xtw.WriteElementString("REMOVERCARACTERESESPECIAIS", chkCaracteresespeciais.Checked.ToString());
                 xtw.WriteElementString("DADOSSENSIVEISEXIBIR", chkDadossensiveis.Checked.ToString());
                 xtw.WriteElementString("TRANSMITIRDADOSPROXSOM", chkTransmproxsom.Checked.ToString());
+                xtw.WriteElementString("USOSERVIDORPROXY", chkUsoproxy.Checked.ToString());
+                xtw.WriteElementString("USOAUTENTICACAOSERVIDORPROXY", chkAutenticaproxy.Checked.ToString());
+                xtw.WriteElementString("IPDOMINIOPROXYSERVER", txtDoproxy.Text);
+                xtw.WriteElementString("PORTASERVIDORPROXY", txtPortaproxy.Text);
+                xtw.WriteElementString("LOGINPROXY", txtLoginproxy.Text);
+                xtw.WriteElementString("SENHAPROXY", txtSenhaproxy.Text);
                 xtw.WriteElementString("TEMPOCHECAGEMTEXTOURL", txtTempoexec.Text);
                 xtw.WriteElementString("TXTCADASTRODADOS", txtCadastrodados.Text);
                 xtw.WriteElementString("TXTARQUIVODETEXTOSOM", txtArquivotextosom.Text);
@@ -1707,19 +1852,25 @@ namespace UpdateRDS
                     chkCaracteresespeciais.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[7].InnerText);
                     chkDadossensiveis.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[8].InnerText);
                     chkTransmproxsom.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[9].InnerText);
-                    txtTempoexec.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[10].InnerText;
-                    txtCadastrodados.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[11].InnerText;
-                    txtArquivotextosom.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[12].InnerText;
-                    chkUrlsom.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[13].InnerText);
-                    txtUrlsom.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[14].InnerText;
-                    txtArquivotextosomnext.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[15].InnerText;
-                    chkUrlsomnext.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[16].InnerText);
-                    txtUrlsomnext.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[17].InnerText;
-                    txtDominioip.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[18].InnerText;
-                    txtPorta.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[19].InnerText;
-                    txtIdoumont.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[20].InnerText;
-                    txtLoginserver.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[21].InnerText;
-                    txtSenhaserver.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[22].InnerText;
+                    chkUsoproxy.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[10].InnerText);
+                    chkAutenticaproxy.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[11].InnerText);
+                    txtDoproxy.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[12].InnerText;
+                    txtPortaproxy.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[13].InnerText;
+                    txtLoginproxy.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[14].InnerText;
+                    txtSenhaproxy.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[15].InnerText;
+                    txtTempoexec.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[16].InnerText;
+                    txtCadastrodados.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[17].InnerText;
+                    txtArquivotextosom.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[18].InnerText;
+                    chkUrlsom.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[19].InnerText);
+                    txtUrlsom.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[20].InnerText;
+                    txtArquivotextosomnext.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[21].InnerText;
+                    chkUrlsomnext.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[22].InnerText);
+                    txtUrlsomnext.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[23].InnerText;
+                    txtDominioip.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[24].InnerText;
+                    txtPorta.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[25].InnerText;
+                    txtIdoumont.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[26].InnerText;
+                    txtLoginserver.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[27].InnerText;
+                    txtSenhaserver.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[28].InnerText;
 
                     /// Envia mensagem que os dados foram carregados com sucesso
                     MessageBox.Show("As informações foram carregadas com sucesso! Caso a configuração carregada não seja essa, verifique o nome de configuração", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -2080,10 +2231,15 @@ namespace UpdateRDS
 
                 /// Caso o exibir no aplicativo dados sensiveis for habilitado, Então ele remove a passwordchar da caixa de texto
                 if (chkDadossensiveis.Checked == true)
+                {
                     txtSenhaserver.PasswordChar = Convert.ToChar(0);
-
+                    txtSenhaproxy.PasswordChar = Convert.ToChar(0);
+                }
                 else
+                {
                     txtSenhaserver.PasswordChar = Convert.ToChar("*");
+                    txtSenhaproxy.PasswordChar = Convert.ToChar("*");
+                }
             }
             catch (Exception ex)
             {
@@ -2202,6 +2358,91 @@ namespace UpdateRDS
                 /// Caso o arquivo texto PIDOLD.txt ou similar exista então ele faz a condição abaixo, Apaga os arquivos antigos
                 if (File.Exists($@"{diretoriodoaplicativo}{identificadorproc}NEXTOLD.txt") && canceloufechamento == false)
                     File.Delete($@"{diretoriodoaplicativo}{identificadorproc}NEXTOLD.txt");
+            }
+            catch (Exception ex)
+            {
+                /// Apaga a informação da label para não dar bug na interface
+                lblInformacaoid.Text = "";
+
+                /// Carrega na string geral os erros
+                errogeral = ex.Message;
+                errogeralgravado = ex.StackTrace;
+
+                /// Chama método para gravação de arquivos texto de erro
+                InfoErroGeral();
+
+                /// Exibe exceção bruta de sistema caso não tenha mensagem personalizada
+                MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void ChkUsoproxy_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                /// Limpa os erros anteriores caso tenha
+                errogeralgravado = null;
+                errogeral = null;
+                weberrogeralcode = null;
+                weberrogeral = null;
+
+                /// Caso o uso de proxy server for habilitado, Então ele altera a caixa de texto para visível
+                if (chkUsoproxy.Checked == true)
+                {
+                    txtDoproxy.Enabled = true;
+                    txtPortaproxy.Enabled = true;
+                    chkAutenticaproxy.Enabled = true;
+                }
+                else
+                {
+                    txtDoproxy.Enabled = false;
+                    txtPortaproxy.Enabled = false;
+                    chkAutenticaproxy.Enabled = false;
+                    chkAutenticaproxy.Checked = false;
+                    txtDoproxy.Text = null;
+                    txtPortaproxy.Text = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                /// Apaga a informação da label para não dar bug na interface
+                lblInformacaoid.Text = "";
+
+                /// Carrega na string geral os erros
+                errogeral = ex.Message;
+                errogeralgravado = ex.StackTrace;
+
+                /// Chama método para gravação de arquivos texto de erro
+                InfoErroGeral();
+
+                /// Exibe exceção bruta de sistema caso não tenha mensagem personalizada
+                MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void ChkAutenticaproxy_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                /// Limpa os erros anteriores caso tenha
+                errogeralgravado = null;
+                errogeral = null;
+                weberrogeralcode = null;
+                weberrogeral = null;
+
+                /// Caso o uso de proxy server for habilitado, Então ele altera a caixa de texto para visível
+                if (chkAutenticaproxy.Checked == true)
+                {
+                    txtLoginproxy.Enabled = true;
+                    txtSenhaproxy.Enabled = true;
+                }
+                else
+                {
+                    txtLoginproxy.Enabled = false;
+                    txtSenhaproxy.Enabled = false;
+                    txtLoginproxy.Text = null;
+                    txtSenhaproxy.Text = null;
+                }
             }
             catch (Exception ex)
             {
