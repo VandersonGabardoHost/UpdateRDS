@@ -13,7 +13,7 @@ using System.Windows.Forms;
 using System.Xml;
 using UpdateRDS.Properties;
 
-/// Update RDS By GabardoHost - Versão 0.0.0.8 Alfafa build
+/// Update RDS By GabardoHost - Versão 0.0.0.9 Pré Alfa build
 /// @file UpdateRDS.cs
 /// <summary>
 /// Este arquivo é o código principal do aplicativo
@@ -23,7 +23,7 @@ using UpdateRDS.Properties;
 /// Minha ideia é essa, se uma coisa não existe e você precisa muito, então crie você mesmo! pode ser carro, casa, transmissor de FM, programa de PC, celular etc... CRIE VOCÊ MESMO!!!
 /// @author Vanderson Gabardo <vanderson@vanderson.net.br>
 /// @date 18/07/2019
-/// $Id: UpdateRDS.cs, v0.0.0.8 2019/07/18 22:30:00 Vanderson Gabardo $
+/// $Id: UpdateRDS.cs, v0.0.0.9 2019/07/18 22:30:00 Vanderson Gabardo $
 
 namespace UpdateRDS
 {
@@ -38,6 +38,7 @@ namespace UpdateRDS
         static string weberrogeralcode;
         static string weberrogeral;
         static bool eumnext = false;
+        static bool versaonova = false;
         static string conteudotexto;
         static string conteudotextoantigo;
         static int errocontanext = -1;
@@ -50,6 +51,20 @@ namespace UpdateRDS
         public UpdateRDS()
         {
             InitializeComponent();
+
+            /// Verifica ao inicializar pela versão nova do software
+            try
+            {
+                /// Chama o método para verificar
+                UpdateAppRDS();
+            }
+            catch (Exception ex)
+            {
+                /// Caso o método retorne um erro, ele acaba aqui
+                qualquerlixoaqui = ex.Message;
+            }
+
+            /// Carrega as interfaces personalizadas
             CarregarInterfacesPersonalizadas();
         }
 
@@ -329,6 +344,118 @@ namespace UpdateRDS
             {
                 /// Caso gere um erro aqui, o erro acaba aqui
                 qualquerlixoaqui = ex.Message;
+            }
+        }
+
+        public void UpdateAppRDS()
+        {
+            /// Informa versão do aplicativo para o usuário alterando a cor
+            lblVersaoapp.Text = "Versão 0.0.0.9 Pré Alfa\n(Sem verificar nova versão)";
+            lblVersaoapp.ForeColor = Color.Yellow;
+
+            /// Declara URL completa de onde vai verificar a atualização do software
+            string urlcompletaversao = "http://www.vanderson.net.br/updaterds/versao.txt";
+
+            /// Declara URL completa de onde baixar o arquivo
+            string urlcompletadownload = "http://www.vanderson.net.br/updaterds/UpdateRDSInstaller.exe";
+
+            /// Declara versão do aplicativo
+            string versaoappcurrent = "Versao 0.0.0.9";
+
+            /// Declara nova versão
+            string versaonovadoapp;
+
+            /// Abre sessão de webclient
+            WebClient wcurlcompletaversao = new WebClient();
+
+            /// Define o servidor proxy caso tenha
+            if (chkUsoproxy.Checked == true)
+            {
+                /// Chama a função
+                DadosProxy();
+
+                /// Define o servidor proxy global
+                wcurlcompletaversao.Proxy = servidorproxydoaplicativo;
+            }
+
+            /// Pega os dados da URL
+            Stream strurlcompleta = wcurlcompletaversao.OpenRead(urlcompletaversao);
+
+            /// Pega os dados armazenados do que foi capturado na URL
+            StreamReader rdrurlcompleta = new StreamReader(strurlcompleta, Encoding.Default);
+
+            /// Transfere os dados capturados da URL, a informação do texto para processamento
+            versaonovadoapp = rdrurlcompleta.ReadLine();
+
+            /// Encerra a sessão do Webclient
+            wcurlcompletaversao.Dispose();
+            strurlcompleta.Close();
+            strurlcompleta.Dispose();
+            rdrurlcompleta.Close();
+            rdrurlcompleta.Dispose();
+
+            if (versaonovadoapp != versaoappcurrent)
+            {
+                /// Define que existe uma versão nova para o aplicativo
+                versaonova = true;
+
+                /// Altera label de aviso
+                lblVersaoapp.Text = "Versão 0.0.0.9 Pré Alfa\n(DESATUALIZADO)";
+                lblVersaoapp.ForeColor = Color.Red;
+
+                /// Envia mensagem perguntando se o usuário gostaria de baixar a nova versão do aplicativo, Caso o usuário queira baixar o aplicativo
+                if (MessageBox.Show($"Há uma nova versão do aplicativo disponível para download, gostaria de baixar a nova versão do aplicativo? a sua versão de aplicativo instalada atualmente é {versaoappcurrent} e a nova versão do aplicativo para baixar é {versaonovadoapp} sendo a nova versão com correções de problemas e outras correções de interface.", "Pergunta", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    if (!File.Exists($"{diretoriodoaplicativo}UpdateRDSInstaller.exe"))
+                    {
+                        /// Abre sessão de webclient
+                        WebClient wcurlcompletadownload = new WebClient();
+
+                        /// Define o servidor proxy caso tenha
+                        if (chkUsoproxy.Checked == true)
+                        {
+                            /// Chama a função
+                            DadosProxy();
+
+                            /// Define o servidor proxy global
+                            wcurlcompletadownload.Proxy = servidorproxydoaplicativo;
+                        }
+
+                        /// Pega os dados da URL
+                        wcurlcompletadownload.DownloadFile(urlcompletadownload, $"{diretoriodoaplicativo}UpdateRDSInstaller.exe");
+
+                        /// Encerra a sessão do Webclient
+                        wcurlcompletadownload.Dispose();
+                    }
+
+                    /// Envia mensagem de que o aplicativo está baixado
+                    if (MessageBox.Show($"O aplicativo foi baixado com sucesso! Gostaria de instalar agora?", "Pergunta", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        /// Chama o aplicativo para instalação
+                        Process.Start($"{diretoriodoaplicativo}UpdateRDSInstaller.exe");
+
+                        foreach (Process processodoaplicativo in Process.GetProcessesByName("Update RDS"))
+                        {
+                            //////////////////////////////////////////////////// processodoaplicativo.Kill();
+                        }
+                    }
+                    else
+                    {
+                        /// Avisa o usuário que o programa está baixado e pronto para instalar
+                        MessageBox.Show($"O Aplicativo não foi instalado automáticamente!\nPara instalar manualmente a nova versão do aplicativo, entre no diretório {diretoriodoaplicativo} e execute o aplicativo 'UpdateRDSInstaller.exe' para instalar!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                else
+                {
+                    /// Avisa o usuário que o programa está desatualizado
+                    MessageBox.Show("O Aplicativo permanecerá desatualizado!\nPara evitar problemas de execução, ter mais novidades de atualização etc desse aplicativo, clique em 'Verificar por atualizações' mais tarde se preferir!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            else
+            {
+                lblVersaoapp.Text = "Versão 0.0.0.9 Pré Alfa\n(ATUALIZADO)";
+                lblVersaoapp.ForeColor = Color.Green;
+                versaonova = false;
             }
         }
 
@@ -2458,6 +2585,37 @@ namespace UpdateRDS
 
                 /// Exibe exceção bruta de sistema caso não tenha mensagem personalizada
                 MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void BtnVerupdate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                /// Chama método para baixar a nova versão do aplicativo
+                UpdateAppRDS();
+
+                /// Caso a versão do aplicativo esteja na versão atual
+                if (versaonova == false)
+                {
+                    /// Avisa o usuário que o programa está atualizado
+                    MessageBox.Show($"O Aplicativo instalado nesse sistema está atualizado!\nVerifique se existe uma nova versão do aplicativo novamente mais tarde!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                /// Apaga a informação da label para não dar bug na interface
+                lblInformacaoid.Text = "";
+
+                /// Carrega na string geral os erros
+                errogeral = ex.Message;
+                errogeralgravado = ex.StackTrace;
+
+                /// Chama método para gravação de arquivos texto de erro
+                InfoErroGeral();
+
+                /// Exibe exceção bruta de sistema caso não tenha mensagem personalizada
+                MessageBox.Show($"Infelizmente não foi possível verificar a atualização do aplicativo!\nNão foi possível verificar devido ao seguinte problema:\n{ex.Message}", "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }

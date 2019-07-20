@@ -95,6 +95,8 @@
             this.txtSenhaproxy = new System.Windows.Forms.TextBox();
             this.lblTextologp = new System.Windows.Forms.Label();
             this.lblTextosep = new System.Windows.Forms.Label();
+            this.lblVersaoapp = new System.Windows.Forms.Label();
+            this.btnVerupdate = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pbFront)).BeginInit();
             this.SuspendLayout();
             // 
@@ -761,12 +763,33 @@
             this.lblTextosep.TabIndex = 0;
             this.lblTextosep.Text = "Senha do servidor Proxy:";
             // 
+            // lblVersaoapp
+            // 
+            this.lblVersaoapp.AutoSize = true;
+            this.lblVersaoapp.Location = new System.Drawing.Point(593, 13);
+            this.lblVersaoapp.Name = "lblVersaoapp";
+            this.lblVersaoapp.Size = new System.Drawing.Size(23, 13);
+            this.lblVersaoapp.TabIndex = 38;
+            this.lblVersaoapp.Text = "Ver";
+            // 
+            // btnVerupdate
+            // 
+            this.btnVerupdate.Location = new System.Drawing.Point(715, 13);
+            this.btnVerupdate.Name = "btnVerupdate";
+            this.btnVerupdate.Size = new System.Drawing.Size(152, 23);
+            this.btnVerupdate.TabIndex = 39;
+            this.btnVerupdate.Text = "Verificar por atualizações";
+            this.btnVerupdate.UseVisualStyleBackColor = true;
+            this.btnVerupdate.Click += new System.EventHandler(this.BtnVerupdate_Click);
+            // 
             // UpdateRDS
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.ClientSize = new System.Drawing.Size(884, 762);
+            this.Controls.Add(this.btnVerupdate);
+            this.Controls.Add(this.lblVersaoapp);
             this.Controls.Add(this.lblTextosep);
             this.Controls.Add(this.lblTextologp);
             this.Controls.Add(this.txtSenhaproxy);
@@ -912,6 +935,8 @@
         private System.Windows.Forms.TextBox txtSenhaproxy;
         private System.Windows.Forms.Label lblTextologp;
         private System.Windows.Forms.Label lblTextosep;
+        private System.Windows.Forms.Label lblVersaoapp;
+        private System.Windows.Forms.Button btnVerupdate;
     }
 }
 
