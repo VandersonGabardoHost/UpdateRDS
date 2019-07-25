@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // conjunto de atributos. Altere estes valores de atributo para modificar as informações
 // associadas a um assembly.
 [assembly: AssemblyTitle("Update RDS")]
-[assembly: AssemblyDescription("Update RDS By GabardoHost - Versão pré Alfa")]
+[assembly: AssemblyDescription("Update RDS By GabardoHost - Versão Alfa")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("GabardoHost")]
 [assembly: AssemblyProduct("Update RDS")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // É possível especificar todos os valores ou usar como padrão os Números de Build e da Revisão
 // usando o "*" como mostrado abaixo:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.0.0.9")]
-[assembly: AssemblyFileVersion("0.0.0.9")]
+[assembly: AssemblyVersion("0.0.1")]
+[assembly: AssemblyFileVersion("0.0.1")]

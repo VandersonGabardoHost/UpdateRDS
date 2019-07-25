@@ -42,8 +42,6 @@
             this.chkCaracteresespeciais = new System.Windows.Forms.CheckBox();
             this.lblTextotempo = new System.Windows.Forms.Label();
             this.txtTempoexec = new System.Windows.Forms.TextBox();
-            this.lblTextoarqdado = new System.Windows.Forms.Label();
-            this.txtCadastrodados = new System.Windows.Forms.TextBox();
             this.btnSalvadados = new System.Windows.Forms.Button();
             this.btnCarregadados = new System.Windows.Forms.Button();
             this.lblTextoinfoseg = new System.Windows.Forms.Label();
@@ -97,6 +95,8 @@
             this.lblTextosep = new System.Windows.Forms.Label();
             this.lblVersaoapp = new System.Windows.Forms.Label();
             this.btnVerupdate = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pbFront)).BeginInit();
             this.SuspendLayout();
             // 
@@ -224,48 +224,32 @@
             // txtTempoexec
             // 
             this.txtTempoexec.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtTempoexec.Location = new System.Drawing.Point(370, 250);
+            this.txtTempoexec.Location = new System.Drawing.Point(361, 250);
             this.txtTempoexec.Name = "txtTempoexec";
-            this.txtTempoexec.Size = new System.Drawing.Size(100, 22);
+            this.txtTempoexec.Size = new System.Drawing.Size(177, 22);
             this.txtTempoexec.TabIndex = 16;
-            // 
-            // lblTextoarqdado
-            // 
-            this.lblTextoarqdado.AutoSize = true;
-            this.lblTextoarqdado.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTextoarqdado.Location = new System.Drawing.Point(12, 281);
-            this.lblTextoarqdado.Name = "lblTextoarqdado";
-            this.lblTextoarqdado.Size = new System.Drawing.Size(243, 16);
-            this.lblTextoarqdado.TabIndex = 0;
-            this.lblTextoarqdado.Text = "Cadastrar dados com o seguinte nome:";
-            // 
-            // txtCadastrodados
-            // 
-            this.txtCadastrodados.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCadastrodados.Location = new System.Drawing.Point(261, 278);
-            this.txtCadastrodados.Name = "txtCadastrodados";
-            this.txtCadastrodados.Size = new System.Drawing.Size(209, 22);
-            this.txtCadastrodados.TabIndex = 17;
             // 
             // btnSalvadados
             // 
+            this.btnSalvadados.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnSalvadados.BackgroundImage")));
+            this.btnSalvadados.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnSalvadados.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSalvadados.Location = new System.Drawing.Point(476, 276);
+            this.btnSalvadados.Location = new System.Drawing.Point(582, 643);
             this.btnSalvadados.Name = "btnSalvadados";
-            this.btnSalvadados.Size = new System.Drawing.Size(215, 26);
+            this.btnSalvadados.Size = new System.Drawing.Size(67, 48);
             this.btnSalvadados.TabIndex = 18;
-            this.btnSalvadados.Text = "Salvar dados cadastrados";
             this.btnSalvadados.UseVisualStyleBackColor = true;
             this.btnSalvadados.Click += new System.EventHandler(this.BtnSalvadados_Click);
             // 
             // btnCarregadados
             // 
+            this.btnCarregadados.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnCarregadados.BackgroundImage")));
+            this.btnCarregadados.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnCarregadados.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCarregadados.Location = new System.Drawing.Point(697, 276);
+            this.btnCarregadados.Location = new System.Drawing.Point(725, 643);
             this.btnCarregadados.Name = "btnCarregadados";
-            this.btnCarregadados.Size = new System.Drawing.Size(171, 26);
+            this.btnCarregadados.Size = new System.Drawing.Size(57, 48);
             this.btnCarregadados.TabIndex = 19;
-            this.btnCarregadados.Text = "Carregar dados cadastrados";
             this.btnCarregadados.UseVisualStyleBackColor = true;
             this.btnCarregadados.Click += new System.EventHandler(this.BtnCarregadados_Click);
             // 
@@ -273,7 +257,7 @@
             // 
             this.lblTextoinfoseg.AutoSize = true;
             this.lblTextoinfoseg.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTextoinfoseg.Location = new System.Drawing.Point(476, 253);
+            this.lblTextoinfoseg.Location = new System.Drawing.Point(544, 253);
             this.lblTextoinfoseg.Name = "lblTextoinfoseg";
             this.lblTextoinfoseg.Size = new System.Drawing.Size(328, 16);
             this.lblTextoinfoseg.TabIndex = 0;
@@ -283,7 +267,7 @@
             // 
             this.lblTextoccsom.AutoSize = true;
             this.lblTextoccsom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTextoccsom.Location = new System.Drawing.Point(12, 313);
+            this.lblTextoccsom.Location = new System.Drawing.Point(12, 290);
             this.lblTextoccsom.Name = "lblTextoccsom";
             this.lblTextoccsom.Size = new System.Drawing.Size(343, 16);
             this.lblTextoccsom.TabIndex = 0;
@@ -293,7 +277,7 @@
             // 
             this.txtArquivotextosom.Enabled = false;
             this.txtArquivotextosom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtArquivotextosom.Location = new System.Drawing.Point(361, 310);
+            this.txtArquivotextosom.Location = new System.Drawing.Point(361, 287);
             this.txtArquivotextosom.Name = "txtArquivotextosom";
             this.txtArquivotextosom.Size = new System.Drawing.Size(464, 22);
             this.txtArquivotextosom.TabIndex = 20;
@@ -302,7 +286,7 @@
             // 
             this.btnLocalizatxtsom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLocalizatxtsom.Image = ((System.Drawing.Image)(resources.GetObject("btnLocalizatxtsom.Image")));
-            this.btnLocalizatxtsom.Location = new System.Drawing.Point(831, 306);
+            this.btnLocalizatxtsom.Location = new System.Drawing.Point(831, 283);
             this.btnLocalizatxtsom.Name = "btnLocalizatxtsom";
             this.btnLocalizatxtsom.Size = new System.Drawing.Size(37, 30);
             this.btnLocalizatxtsom.TabIndex = 21;
@@ -313,17 +297,17 @@
             // 
             this.lblTextourl.AutoSize = true;
             this.lblTextourl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTextourl.Location = new System.Drawing.Point(12, 348);
+            this.lblTextourl.Location = new System.Drawing.Point(12, 325);
             this.lblTextourl.Name = "lblTextourl";
-            this.lblTextourl.Size = new System.Drawing.Size(381, 16);
+            this.lblTextourl.Size = new System.Drawing.Size(273, 16);
             this.lblTextourl.TabIndex = 0;
-            this.lblTextourl.Text = "Atualizar nome do som através de uma URL com arquivo texto:";
+            this.lblTextourl.Text = "Atualizar nome do som através de uma URL:";
             // 
             // chkUrlsom
             // 
             this.chkUrlsom.AutoSize = true;
             this.chkUrlsom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkUrlsom.Location = new System.Drawing.Point(399, 347);
+            this.chkUrlsom.Location = new System.Drawing.Point(297, 324);
             this.chkUrlsom.Name = "chkUrlsom";
             this.chkUrlsom.Size = new System.Drawing.Size(138, 20);
             this.chkUrlsom.TabIndex = 22;
@@ -335,16 +319,16 @@
             // 
             this.txtUrlsom.Enabled = false;
             this.txtUrlsom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtUrlsom.Location = new System.Drawing.Point(540, 345);
+            this.txtUrlsom.Location = new System.Drawing.Point(441, 322);
             this.txtUrlsom.Name = "txtUrlsom";
-            this.txtUrlsom.Size = new System.Drawing.Size(328, 22);
+            this.txtUrlsom.Size = new System.Drawing.Size(427, 22);
             this.txtUrlsom.TabIndex = 23;
             // 
             // lblTextosomnext
             // 
             this.lblTextosomnext.AutoSize = true;
             this.lblTextosomnext.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTextosomnext.Location = new System.Drawing.Point(12, 380);
+            this.lblTextosomnext.Location = new System.Drawing.Point(12, 357);
             this.lblTextosomnext.Name = "lblTextosomnext";
             this.lblTextosomnext.Size = new System.Drawing.Size(423, 16);
             this.lblTextosomnext.TabIndex = 0;
@@ -354,7 +338,7 @@
             // 
             this.txtArquivotextosomnext.Enabled = false;
             this.txtArquivotextosomnext.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtArquivotextosomnext.Location = new System.Drawing.Point(441, 377);
+            this.txtArquivotextosomnext.Location = new System.Drawing.Point(441, 354);
             this.txtArquivotextosomnext.Name = "txtArquivotextosomnext";
             this.txtArquivotextosomnext.Size = new System.Drawing.Size(384, 22);
             this.txtArquivotextosomnext.TabIndex = 24;
@@ -364,7 +348,7 @@
             this.btnLocalizatxtsomnext.Enabled = false;
             this.btnLocalizatxtsomnext.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLocalizatxtsomnext.Image = ((System.Drawing.Image)(resources.GetObject("btnLocalizatxtsomnext.Image")));
-            this.btnLocalizatxtsomnext.Location = new System.Drawing.Point(831, 373);
+            this.btnLocalizatxtsomnext.Location = new System.Drawing.Point(831, 350);
             this.btnLocalizatxtsomnext.Name = "btnLocalizatxtsomnext";
             this.btnLocalizatxtsomnext.Size = new System.Drawing.Size(37, 30);
             this.btnLocalizatxtsomnext.TabIndex = 25;
@@ -375,18 +359,18 @@
             // 
             this.lblTextourlnext.AutoSize = true;
             this.lblTextourlnext.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTextourlnext.Location = new System.Drawing.Point(12, 412);
+            this.lblTextourlnext.Location = new System.Drawing.Point(12, 389);
             this.lblTextourlnext.Name = "lblTextourlnext";
-            this.lblTextourlnext.Size = new System.Drawing.Size(381, 16);
+            this.lblTextourlnext.Size = new System.Drawing.Size(273, 16);
             this.lblTextourlnext.TabIndex = 0;
-            this.lblTextourlnext.Text = "Atualizar nome do som através de uma URL com arquivo texto:";
+            this.lblTextourlnext.Text = "Atualizar nome do som através de uma URL:";
             // 
             // chkUrlsomnext
             // 
             this.chkUrlsomnext.AutoSize = true;
             this.chkUrlsomnext.Enabled = false;
             this.chkUrlsomnext.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkUrlsomnext.Location = new System.Drawing.Point(399, 411);
+            this.chkUrlsomnext.Location = new System.Drawing.Point(297, 388);
             this.chkUrlsomnext.Name = "chkUrlsomnext";
             this.chkUrlsomnext.Size = new System.Drawing.Size(138, 20);
             this.chkUrlsomnext.TabIndex = 26;
@@ -398,9 +382,9 @@
             // 
             this.txtUrlsomnext.Enabled = false;
             this.txtUrlsomnext.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtUrlsomnext.Location = new System.Drawing.Point(543, 409);
+            this.txtUrlsomnext.Location = new System.Drawing.Point(441, 386);
             this.txtUrlsomnext.Name = "txtUrlsomnext";
-            this.txtUrlsomnext.Size = new System.Drawing.Size(325, 22);
+            this.txtUrlsomnext.Size = new System.Drawing.Size(427, 22);
             this.txtUrlsomnext.TabIndex = 27;
             // 
             // chkTransmproxsom
@@ -420,7 +404,7 @@
             // 
             this.lblTextoendipdom.AutoSize = true;
             this.lblTextoendipdom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTextoendipdom.Location = new System.Drawing.Point(12, 442);
+            this.lblTextoendipdom.Location = new System.Drawing.Point(12, 419);
             this.lblTextoendipdom.Name = "lblTextoendipdom";
             this.lblTextoendipdom.Size = new System.Drawing.Size(244, 16);
             this.lblTextoendipdom.TabIndex = 0;
@@ -429,7 +413,7 @@
             // txtDominioip
             // 
             this.txtDominioip.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDominioip.Location = new System.Drawing.Point(262, 439);
+            this.txtDominioip.Location = new System.Drawing.Point(262, 416);
             this.txtDominioip.Name = "txtDominioip";
             this.txtDominioip.Size = new System.Drawing.Size(466, 22);
             this.txtDominioip.TabIndex = 28;
@@ -437,7 +421,7 @@
             // btnResolvernomeip
             // 
             this.btnResolvernomeip.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnResolvernomeip.Location = new System.Drawing.Point(734, 439);
+            this.btnResolvernomeip.Location = new System.Drawing.Point(734, 416);
             this.btnResolvernomeip.Name = "btnResolvernomeip";
             this.btnResolvernomeip.Size = new System.Drawing.Size(134, 23);
             this.btnResolvernomeip.TabIndex = 29;
@@ -449,7 +433,7 @@
             // 
             this.lblTextoporta.AutoSize = true;
             this.lblTextoporta.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTextoporta.Location = new System.Drawing.Point(12, 472);
+            this.lblTextoporta.Location = new System.Drawing.Point(12, 449);
             this.lblTextoporta.Name = "lblTextoporta";
             this.lblTextoporta.Size = new System.Drawing.Size(43, 16);
             this.lblTextoporta.TabIndex = 0;
@@ -458,7 +442,7 @@
             // txtPorta
             // 
             this.txtPorta.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPorta.Location = new System.Drawing.Point(61, 469);
+            this.txtPorta.Location = new System.Drawing.Point(61, 446);
             this.txtPorta.Name = "txtPorta";
             this.txtPorta.Size = new System.Drawing.Size(100, 22);
             this.txtPorta.TabIndex = 30;
@@ -467,7 +451,7 @@
             // 
             this.lblTextoidmon.AutoSize = true;
             this.lblTextoidmon.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTextoidmon.Location = new System.Drawing.Point(167, 472);
+            this.lblTextoidmon.Location = new System.Drawing.Point(167, 449);
             this.lblTextoidmon.Name = "lblTextoidmon";
             this.lblTextoidmon.Size = new System.Drawing.Size(378, 16);
             this.lblTextoidmon.TabIndex = 0;
@@ -477,7 +461,7 @@
             // 
             this.txtIdoumont.Enabled = false;
             this.txtIdoumont.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtIdoumont.Location = new System.Drawing.Point(551, 469);
+            this.txtIdoumont.Location = new System.Drawing.Point(551, 446);
             this.txtIdoumont.Name = "txtIdoumont";
             this.txtIdoumont.Size = new System.Drawing.Size(317, 22);
             this.txtIdoumont.TabIndex = 31;
@@ -486,7 +470,7 @@
             // 
             this.lblTextologin.AutoSize = true;
             this.lblTextologin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTextologin.Location = new System.Drawing.Point(12, 508);
+            this.lblTextologin.Location = new System.Drawing.Point(12, 485);
             this.lblTextologin.Name = "lblTextologin";
             this.lblTextologin.Size = new System.Drawing.Size(115, 16);
             this.lblTextologin.TabIndex = 0;
@@ -495,7 +479,7 @@
             // txtLoginserver
             // 
             this.txtLoginserver.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLoginserver.Location = new System.Drawing.Point(133, 505);
+            this.txtLoginserver.Location = new System.Drawing.Point(133, 482);
             this.txtLoginserver.Name = "txtLoginserver";
             this.txtLoginserver.Size = new System.Drawing.Size(228, 22);
             this.txtLoginserver.TabIndex = 32;
@@ -504,7 +488,7 @@
             // 
             this.lblTextosenha.AutoSize = true;
             this.lblTextosenha.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTextosenha.Location = new System.Drawing.Point(367, 508);
+            this.lblTextosenha.Location = new System.Drawing.Point(367, 485);
             this.lblTextosenha.Name = "lblTextosenha";
             this.lblTextosenha.Size = new System.Drawing.Size(121, 16);
             this.lblTextosenha.TabIndex = 0;
@@ -513,7 +497,7 @@
             // txtSenhaserver
             // 
             this.txtSenhaserver.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSenhaserver.Location = new System.Drawing.Point(494, 505);
+            this.txtSenhaserver.Location = new System.Drawing.Point(494, 482);
             this.txtSenhaserver.Name = "txtSenhaserver";
             this.txtSenhaserver.PasswordChar = '*';
             this.txtSenhaserver.Size = new System.Drawing.Size(374, 22);
@@ -525,7 +509,7 @@
             this.lblInformacao.BackColor = System.Drawing.Color.White;
             this.lblInformacao.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblInformacao.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblInformacao.Location = new System.Drawing.Point(11, 530);
+            this.lblInformacao.Location = new System.Drawing.Point(15, 517);
             this.lblInformacao.Name = "lblInformacao";
             this.lblInformacao.Size = new System.Drawing.Size(201, 22);
             this.lblInformacao.TabIndex = 0;
@@ -537,9 +521,9 @@
             this.btnRevisarinfo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.btnRevisarinfo.Enabled = false;
             this.btnRevisarinfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRevisarinfo.Location = new System.Drawing.Point(12, 673);
+            this.btnRevisarinfo.Location = new System.Drawing.Point(69, 643);
             this.btnRevisarinfo.Name = "btnRevisarinfo";
-            this.btnRevisarinfo.Size = new System.Drawing.Size(129, 62);
+            this.btnRevisarinfo.Size = new System.Drawing.Size(58, 48);
             this.btnRevisarinfo.TabIndex = 34;
             this.btnRevisarinfo.UseVisualStyleBackColor = true;
             this.btnRevisarinfo.Click += new System.EventHandler(this.BtnRevisarinfo_Click);
@@ -550,9 +534,9 @@
             this.btnPararenviords.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnPararenviords.Enabled = false;
             this.btnPararenviords.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPararenviords.Location = new System.Drawing.Point(232, 673);
+            this.btnPararenviords.Location = new System.Drawing.Point(195, 643);
             this.btnPararenviords.Name = "btnPararenviords";
-            this.btnPararenviords.Size = new System.Drawing.Size(85, 62);
+            this.btnPararenviords.Size = new System.Drawing.Size(71, 48);
             this.btnPararenviords.TabIndex = 35;
             this.btnPararenviords.UseVisualStyleBackColor = true;
             this.btnPararenviords.Click += new System.EventHandler(this.BtnPararenviords_Click);
@@ -563,9 +547,9 @@
             this.btnEnviardadosrds.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnEnviardadosrds.Enabled = false;
             this.btnEnviardadosrds.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEnviardadosrds.Location = new System.Drawing.Point(466, 673);
+            this.btnEnviardadosrds.Location = new System.Drawing.Point(326, 643);
             this.btnEnviardadosrds.Name = "btnEnviardadosrds";
-            this.btnEnviardadosrds.Size = new System.Drawing.Size(71, 62);
+            this.btnEnviardadosrds.Size = new System.Drawing.Size(67, 48);
             this.btnEnviardadosrds.TabIndex = 36;
             this.btnEnviardadosrds.UseVisualStyleBackColor = true;
             this.btnEnviardadosrds.Click += new System.EventHandler(this.BtnEnviardadosrds_Click);
@@ -575,9 +559,9 @@
             this.btnVerificardadosderds.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnVerificardadosderds.BackgroundImage")));
             this.btnVerificardadosderds.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnVerificardadosderds.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnVerificardadosderds.Location = new System.Drawing.Point(734, 673);
+            this.btnVerificardadosderds.Location = new System.Drawing.Point(454, 643);
             this.btnVerificardadosderds.Name = "btnVerificardadosderds";
-            this.btnVerificardadosderds.Size = new System.Drawing.Size(68, 62);
+            this.btnVerificardadosderds.Size = new System.Drawing.Size(68, 48);
             this.btnVerificardadosderds.TabIndex = 37;
             this.btnVerificardadosderds.UseVisualStyleBackColor = true;
             this.btnVerificardadosderds.Click += new System.EventHandler(this.BtnVerificardadosderds_Click);
@@ -605,7 +589,7 @@
             // 
             this.lblInformacaoid.AutoSize = true;
             this.lblInformacaoid.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblInformacaoid.Location = new System.Drawing.Point(13, 634);
+            this.lblInformacaoid.Location = new System.Drawing.Point(11, 724);
             this.lblInformacaoid.Name = "lblInformacaoid";
             this.lblInformacaoid.Size = new System.Drawing.Size(373, 20);
             this.lblInformacaoid.TabIndex = 0;
@@ -615,41 +599,41 @@
             // 
             this.lblTextover.AutoSize = true;
             this.lblTextover.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTextover.Location = new System.Drawing.Point(651, 738);
+            this.lblTextover.Location = new System.Drawing.Point(438, 624);
             this.lblTextover.Name = "lblTextover";
-            this.lblTextover.Size = new System.Drawing.Size(221, 16);
+            this.lblTextover.Size = new System.Drawing.Size(102, 16);
             this.lblTextover.TabIndex = 0;
-            this.lblTextover.Text = "Verificar dados de RDS para enviar";
+            this.lblTextover.Text = "Verificar dados:";
             // 
             // lblTextoenv
             // 
             this.lblTextoenv.AutoSize = true;
             this.lblTextoenv.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTextoenv.Location = new System.Drawing.Point(396, 738);
+            this.lblTextoenv.Location = new System.Drawing.Point(313, 624);
             this.lblTextoenv.Name = "lblTextoenv";
-            this.lblTextoenv.Size = new System.Drawing.Size(233, 16);
+            this.lblTextoenv.Size = new System.Drawing.Size(91, 16);
             this.lblTextoenv.TabIndex = 0;
-            this.lblTextoenv.Text = "Enviar dados de RDS para o servidor";
+            this.lblTextoenv.Text = "Enviar dados:";
             // 
             // lblTextoparar
             // 
             this.lblTextoparar.AutoSize = true;
             this.lblTextoparar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTextoparar.Location = new System.Drawing.Point(177, 738);
+            this.lblTextoparar.Location = new System.Drawing.Point(182, 624);
             this.lblTextoparar.Name = "lblTextoparar";
-            this.lblTextoparar.Size = new System.Drawing.Size(200, 16);
+            this.lblTextoparar.Size = new System.Drawing.Size(91, 16);
             this.lblTextoparar.TabIndex = 0;
-            this.lblTextoparar.Text = "Parar o envio de dados de RDS";
+            this.lblTextoparar.Text = "Parar o envio:";
             // 
             // lblTextoinforev
             // 
             this.lblTextoinforev.AutoSize = true;
             this.lblTextoinforev.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTextoinforev.Location = new System.Drawing.Point(15, 738);
+            this.lblTextoinforev.Location = new System.Drawing.Point(28, 624);
             this.lblTextoinforev.Name = "lblTextoinforev";
-            this.lblTextoinforev.Size = new System.Drawing.Size(132, 16);
+            this.lblTextoinforev.Size = new System.Drawing.Size(135, 16);
             this.lblTextoinforev.TabIndex = 0;
-            this.lblTextoinforev.Text = "Revisar informações";
+            this.lblTextoinforev.Text = "Revisar informações:";
             // 
             // pbFront
             // 
@@ -782,12 +766,34 @@
             this.btnVerupdate.UseVisualStyleBackColor = true;
             this.btnVerupdate.Click += new System.EventHandler(this.BtnVerupdate_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(572, 624);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(92, 16);
+            this.label1.TabIndex = 40;
+            this.label1.Text = "Salvar dados:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(705, 624);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(106, 16);
+            this.label2.TabIndex = 41;
+            this.label2.Text = "Carregar dados:";
+            // 
             // UpdateRDS
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.ClientSize = new System.Drawing.Size(884, 762);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.btnVerupdate);
             this.Controls.Add(this.lblVersaoapp);
             this.Controls.Add(this.lblTextosep);
@@ -839,8 +845,6 @@
             this.Controls.Add(this.lblTextoinfoseg);
             this.Controls.Add(this.btnCarregadados);
             this.Controls.Add(this.btnSalvadados);
-            this.Controls.Add(this.txtCadastrodados);
-            this.Controls.Add(this.lblTextoarqdado);
             this.Controls.Add(this.txtTempoexec);
             this.Controls.Add(this.lblTextotempo);
             this.Controls.Add(this.chkCaracteresespeciais);
@@ -882,8 +886,6 @@
         private System.Windows.Forms.CheckBox chkCaracteresespeciais;
         private System.Windows.Forms.Label lblTextotempo;
         private System.Windows.Forms.TextBox txtTempoexec;
-        private System.Windows.Forms.Label lblTextoarqdado;
-        private System.Windows.Forms.TextBox txtCadastrodados;
         private System.Windows.Forms.Button btnSalvadados;
         private System.Windows.Forms.Button btnCarregadados;
         private System.Windows.Forms.Label lblTextoinfoseg;
@@ -937,6 +939,8 @@
         private System.Windows.Forms.Label lblTextosep;
         private System.Windows.Forms.Label lblVersaoapp;
         private System.Windows.Forms.Button btnVerupdate;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
     }
 }
 
