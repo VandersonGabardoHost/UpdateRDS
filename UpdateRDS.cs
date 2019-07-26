@@ -13,7 +13,7 @@ using System.Windows.Forms;
 using System.Xml;
 using UpdateRDS.Properties;
 
-/// Update RDS By GabardoHost - Versão 0.0.1 Alfa build
+/// Update RDS By GabardoHost - Versão 0.0.2 Alfa build
 /// @file UpdateRDS.cs
 /// <summary>
 /// Este arquivo é o código principal do aplicativo
@@ -23,7 +23,7 @@ using UpdateRDS.Properties;
 /// Minha ideia é essa, se uma coisa não existe e você precisa muito, então crie você mesmo! pode ser carro, casa, transmissor de FM, programa de PC, celular etc... CRIE VOCÊ MESMO!!!
 /// @author Vanderson Gabardo <vanderson@vanderson.net.br>
 /// @date 18/07/2019
-/// $Id: UpdateRDS.cs, v0.0.1 2019/07/25 22:30:00 Vanderson Gabardo $
+/// $Id: UpdateRDS.cs, v0.0.2 2019/07/25 22:30:00 Vanderson Gabardo $
 
 namespace UpdateRDS
 {
@@ -40,7 +40,7 @@ namespace UpdateRDS
         static string weberrogeral;
         static bool eumnext = false;
         static bool versaonova = false;
-        static readonly string versaoappcurrent = "Versao 0.0.1";
+        static readonly string versaoappcurrent = "Versao 0.0.2";
         static string conteudotexto;
         static string conteudotextoantigo;
         static int errocontanext = -1;
@@ -49,7 +49,7 @@ namespace UpdateRDS
         static int errfilec = -1;
         static string errodaweblink = null;
         //static readonly string diretoriodoaplicativo = $@"{AppDomain.CurrentDomain.BaseDirectory.ToString()}UpdateRDS\";
-        static readonly string diretoriodoaplicativo = $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\UpdateRDS\";
+        static readonly string diretoriodoaplicativo = $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Update RDS\";
 
         public UpdateRDS()
         {
@@ -350,8 +350,12 @@ namespace UpdateRDS
 
         public void UpdateAppRDS()
         {
+            /// Verifica se a pasta existe, se não existe, cria uma
+            if (!Directory.Exists(diretoriodoaplicativo))
+                Directory.CreateDirectory(diretoriodoaplicativo);
+
             /// Informa versão do aplicativo para o usuário alterando a cor
-            lblVersaoapp.Text = "Versão 0.0.1 Alfa\n(Sem verificar nova versão)";
+            lblVersaoapp.Text = "Versão 0.0.2 Alfa\n(Sem verificar nova versão)";
             lblVersaoapp.ForeColor = Color.Yellow;
 
             /// Declara URL completa de onde vai verificar a atualização do software
@@ -402,7 +406,7 @@ namespace UpdateRDS
                 versaonova = true;
 
                 /// Altera label de aviso
-                lblVersaoapp.Text = "Versão 0.0.1 Alfa\n(DESATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.0.2 Alfa\n(DESATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Red;
 
                 /// Envia mensagem perguntando se o usuário gostaria de baixar a nova versão do aplicativo, Caso o usuário queira baixar o aplicativo
@@ -458,7 +462,7 @@ namespace UpdateRDS
             }
             else
             {
-                lblVersaoapp.Text = "Versão 0.0.1 Alfa\n(ATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.0.2 Alfa\n(ATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Green;
                 versaonova = false;
             }
@@ -2697,6 +2701,29 @@ namespace UpdateRDS
 
                 /// Exibe exceção bruta de sistema caso não tenha mensagem personalizada
                 MessageBox.Show($"Infelizmente não foi possível verificar a atualização do aplicativo!\nNão foi possível verificar devido ao seguinte problema:\n{ex.Message}", "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void BtnAbrirappdata_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start("Explorer", diretoriodoaplicativo);
+            }
+            catch (Exception ex)
+            {
+                /// Apaga a informação da label para não dar bug na interface
+                lblInformacaoid.Text = "";
+
+                /// Carrega na string geral os erros
+                errogeral = ex.Message;
+                errogeralgravado = ex.StackTrace;
+
+                /// Chama método para gravação de arquivos texto de erro
+                InfoErroGeral();
+
+                /// Exibe exceção bruta de sistema caso não tenha mensagem personalizada
+                MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }

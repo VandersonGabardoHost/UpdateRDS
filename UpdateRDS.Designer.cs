@@ -95,8 +95,10 @@
             this.lblTextosep = new System.Windows.Forms.Label();
             this.lblVersaoapp = new System.Windows.Forms.Label();
             this.btnVerupdate = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lblTextosalvar = new System.Windows.Forms.Label();
+            this.lblTextocardad = new System.Windows.Forms.Label();
+            this.btnAbrirappdata = new System.Windows.Forms.Button();
+            this.lblTextoabad = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pbFront)).BeginInit();
             this.SuspendLayout();
             // 
@@ -234,9 +236,9 @@
             this.btnSalvadados.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnSalvadados.BackgroundImage")));
             this.btnSalvadados.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnSalvadados.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSalvadados.Location = new System.Drawing.Point(582, 643);
+            this.btnSalvadados.Location = new System.Drawing.Point(463, 643);
             this.btnSalvadados.Name = "btnSalvadados";
-            this.btnSalvadados.Size = new System.Drawing.Size(67, 48);
+            this.btnSalvadados.Size = new System.Drawing.Size(60, 50);
             this.btnSalvadados.TabIndex = 18;
             this.btnSalvadados.UseVisualStyleBackColor = true;
             this.btnSalvadados.Click += new System.EventHandler(this.BtnSalvadados_Click);
@@ -246,9 +248,9 @@
             this.btnCarregadados.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnCarregadados.BackgroundImage")));
             this.btnCarregadados.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnCarregadados.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCarregadados.Location = new System.Drawing.Point(725, 643);
+            this.btnCarregadados.Location = new System.Drawing.Point(617, 643);
             this.btnCarregadados.Name = "btnCarregadados";
-            this.btnCarregadados.Size = new System.Drawing.Size(57, 48);
+            this.btnCarregadados.Size = new System.Drawing.Size(60, 50);
             this.btnCarregadados.TabIndex = 19;
             this.btnCarregadados.UseVisualStyleBackColor = true;
             this.btnCarregadados.Click += new System.EventHandler(this.BtnCarregadados_Click);
@@ -521,9 +523,9 @@
             this.btnRevisarinfo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.btnRevisarinfo.Enabled = false;
             this.btnRevisarinfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRevisarinfo.Location = new System.Drawing.Point(69, 643);
+            this.btnRevisarinfo.Location = new System.Drawing.Point(45, 643);
             this.btnRevisarinfo.Name = "btnRevisarinfo";
-            this.btnRevisarinfo.Size = new System.Drawing.Size(58, 48);
+            this.btnRevisarinfo.Size = new System.Drawing.Size(60, 50);
             this.btnRevisarinfo.TabIndex = 34;
             this.btnRevisarinfo.UseVisualStyleBackColor = true;
             this.btnRevisarinfo.Click += new System.EventHandler(this.BtnRevisarinfo_Click);
@@ -534,9 +536,9 @@
             this.btnPararenviords.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnPararenviords.Enabled = false;
             this.btnPararenviords.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPararenviords.Location = new System.Drawing.Point(195, 643);
+            this.btnPararenviords.Location = new System.Drawing.Point(170, 643);
             this.btnPararenviords.Name = "btnPararenviords";
-            this.btnPararenviords.Size = new System.Drawing.Size(71, 48);
+            this.btnPararenviords.Size = new System.Drawing.Size(60, 50);
             this.btnPararenviords.TabIndex = 35;
             this.btnPararenviords.UseVisualStyleBackColor = true;
             this.btnPararenviords.Click += new System.EventHandler(this.BtnPararenviords_Click);
@@ -547,9 +549,9 @@
             this.btnEnviardadosrds.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnEnviardadosrds.Enabled = false;
             this.btnEnviardadosrds.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEnviardadosrds.Location = new System.Drawing.Point(326, 643);
+            this.btnEnviardadosrds.Location = new System.Drawing.Point(262, 643);
             this.btnEnviardadosrds.Name = "btnEnviardadosrds";
-            this.btnEnviardadosrds.Size = new System.Drawing.Size(67, 48);
+            this.btnEnviardadosrds.Size = new System.Drawing.Size(60, 50);
             this.btnEnviardadosrds.TabIndex = 36;
             this.btnEnviardadosrds.UseVisualStyleBackColor = true;
             this.btnEnviardadosrds.Click += new System.EventHandler(this.BtnEnviardadosrds_Click);
@@ -559,9 +561,9 @@
             this.btnVerificardadosderds.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnVerificardadosderds.BackgroundImage")));
             this.btnVerificardadosderds.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnVerificardadosderds.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnVerificardadosderds.Location = new System.Drawing.Point(454, 643);
+            this.btnVerificardadosderds.Location = new System.Drawing.Point(361, 643);
             this.btnVerificardadosderds.Name = "btnVerificardadosderds";
-            this.btnVerificardadosderds.Size = new System.Drawing.Size(68, 48);
+            this.btnVerificardadosderds.Size = new System.Drawing.Size(60, 50);
             this.btnVerificardadosderds.TabIndex = 37;
             this.btnVerificardadosderds.UseVisualStyleBackColor = true;
             this.btnVerificardadosderds.Click += new System.EventHandler(this.BtnVerificardadosderds_Click);
@@ -599,7 +601,7 @@
             // 
             this.lblTextover.AutoSize = true;
             this.lblTextover.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTextover.Location = new System.Drawing.Point(438, 624);
+            this.lblTextover.Location = new System.Drawing.Point(337, 624);
             this.lblTextover.Name = "lblTextover";
             this.lblTextover.Size = new System.Drawing.Size(102, 16);
             this.lblTextover.TabIndex = 0;
@@ -609,17 +611,17 @@
             // 
             this.lblTextoenv.AutoSize = true;
             this.lblTextoenv.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTextoenv.Location = new System.Drawing.Point(313, 624);
+            this.lblTextoenv.Location = new System.Drawing.Point(250, 624);
             this.lblTextoenv.Name = "lblTextoenv";
-            this.lblTextoenv.Size = new System.Drawing.Size(91, 16);
+            this.lblTextoenv.Size = new System.Drawing.Size(81, 16);
             this.lblTextoenv.TabIndex = 0;
-            this.lblTextoenv.Text = "Enviar dados:";
+            this.lblTextoenv.Text = "Enviar RDS:";
             // 
             // lblTextoparar
             // 
             this.lblTextoparar.AutoSize = true;
             this.lblTextoparar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTextoparar.Location = new System.Drawing.Point(182, 624);
+            this.lblTextoparar.Location = new System.Drawing.Point(153, 624);
             this.lblTextoparar.Name = "lblTextoparar";
             this.lblTextoparar.Size = new System.Drawing.Size(91, 16);
             this.lblTextoparar.TabIndex = 0;
@@ -629,7 +631,7 @@
             // 
             this.lblTextoinforev.AutoSize = true;
             this.lblTextoinforev.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTextoinforev.Location = new System.Drawing.Point(28, 624);
+            this.lblTextoinforev.Location = new System.Drawing.Point(12, 624);
             this.lblTextoinforev.Name = "lblTextoinforev";
             this.lblTextoinforev.Size = new System.Drawing.Size(135, 16);
             this.lblTextoinforev.TabIndex = 0;
@@ -766,25 +768,46 @@
             this.btnVerupdate.UseVisualStyleBackColor = true;
             this.btnVerupdate.Click += new System.EventHandler(this.BtnVerupdate_Click);
             // 
-            // label1
+            // lblTextosalvar
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(572, 624);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(92, 16);
-            this.label1.TabIndex = 40;
-            this.label1.Text = "Salvar dados:";
+            this.lblTextosalvar.AutoSize = true;
+            this.lblTextosalvar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTextosalvar.Location = new System.Drawing.Point(445, 624);
+            this.lblTextosalvar.Name = "lblTextosalvar";
+            this.lblTextosalvar.Size = new System.Drawing.Size(106, 16);
+            this.lblTextosalvar.TabIndex = 40;
+            this.lblTextosalvar.Text = "Salvar cadastro:";
             // 
-            // label2
+            // lblTextocardad
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(705, 624);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(106, 16);
-            this.label2.TabIndex = 41;
-            this.label2.Text = "Carregar dados:";
+            this.lblTextocardad.AutoSize = true;
+            this.lblTextocardad.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTextocardad.Location = new System.Drawing.Point(557, 624);
+            this.lblTextocardad.Name = "lblTextocardad";
+            this.lblTextocardad.Size = new System.Drawing.Size(181, 16);
+            this.lblTextocardad.TabIndex = 41;
+            this.lblTextocardad.Text = "Carregar dados de cadastro:";
+            // 
+            // btnAbrirappdata
+            // 
+            this.btnAbrirappdata.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnAbrirappdata.BackgroundImage")));
+            this.btnAbrirappdata.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnAbrirappdata.Location = new System.Drawing.Point(785, 643);
+            this.btnAbrirappdata.Name = "btnAbrirappdata";
+            this.btnAbrirappdata.Size = new System.Drawing.Size(60, 50);
+            this.btnAbrirappdata.TabIndex = 42;
+            this.btnAbrirappdata.UseVisualStyleBackColor = true;
+            this.btnAbrirappdata.Click += new System.EventHandler(this.BtnAbrirappdata_Click);
+            // 
+            // lblTextoabad
+            // 
+            this.lblTextoabad.AutoSize = true;
+            this.lblTextoabad.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTextoabad.Location = new System.Drawing.Point(744, 624);
+            this.lblTextoabad.Name = "lblTextoabad";
+            this.lblTextoabad.Size = new System.Drawing.Size(134, 16);
+            this.lblTextoabad.TabIndex = 43;
+            this.lblTextoabad.Text = "Abrir pasta de LOGS:";
             // 
             // UpdateRDS
             // 
@@ -792,8 +815,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.ClientSize = new System.Drawing.Size(884, 762);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lblTextoabad);
+            this.Controls.Add(this.btnAbrirappdata);
+            this.Controls.Add(this.lblTextocardad);
+            this.Controls.Add(this.lblTextosalvar);
             this.Controls.Add(this.btnVerupdate);
             this.Controls.Add(this.lblVersaoapp);
             this.Controls.Add(this.lblTextosep);
@@ -939,8 +964,10 @@
         private System.Windows.Forms.Label lblTextosep;
         private System.Windows.Forms.Label lblVersaoapp;
         private System.Windows.Forms.Button btnVerupdate;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblTextosalvar;
+        private System.Windows.Forms.Label lblTextocardad;
+        private System.Windows.Forms.Button btnAbrirappdata;
+        private System.Windows.Forms.Label lblTextoabad;
     }
 }
 
