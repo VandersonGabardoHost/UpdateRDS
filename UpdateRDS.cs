@@ -13,7 +13,7 @@ using System.Windows.Forms;
 using System.Xml;
 using UpdateRDS.Properties;
 
-/// Update RDS By GabardoHost - Versão 0.0.2 Alfa build
+/// Update RDS By GabardoHost - Versão 0.0.3 Alfa build
 /// @file UpdateRDS.cs
 /// <summary>
 /// Este arquivo é o código principal do aplicativo
@@ -22,15 +22,15 @@ using UpdateRDS.Properties;
 /// Mas resolvi criar um para disponibilizar para todos, pois esse programa ou vem associado a um encoder ou não tem para download, então fiz um!
 /// Minha ideia é essa, se uma coisa não existe e você precisa muito, então crie você mesmo! pode ser carro, casa, transmissor de FM, programa de PC, celular etc... CRIE VOCÊ MESMO!!!
 /// @author Vanderson Gabardo <vanderson@vanderson.net.br>
-/// @date 18/07/2019
-/// $Id: UpdateRDS.cs, v0.0.2 2019/07/25 22:30:00 Vanderson Gabardo $
+/// @date 27/07/2019
+/// $Id: UpdateRDS.cs, v0.0.3 2019/07/27 23:30:00 Vanderson Gabardo $
 
 namespace UpdateRDS
 {
     public partial class UpdateRDS : Form
     {
         /// Declaração de itens para uso pelo aplicativo de forma geral
-        static readonly Timer temporizadorgeral = new Timer();
+        static readonly Timer temporizadoricone = new Timer();
         static readonly WebProxy servidorproxydoaplicativo = new WebProxy();
         static string qualquerlixoaqui;
         static readonly string useragentdef = "Update RDS By GabardoHost - Mozilla/50MIL.0 (Windows NeanderThal) KHTML like Gecko Chrome Opera Safari Netscape Internet Exploit Firefox Godzilla Giroflex Alex Marques Print";
@@ -40,7 +40,7 @@ namespace UpdateRDS
         static string weberrogeral;
         static bool eumnext = false;
         static bool versaonova = false;
-        static readonly string versaoappcurrent = "Versao 0.0.2";
+        static readonly string versaoappcurrent = "Versao 0.0.3";
         static string conteudotexto;
         static string conteudotextoantigo;
         static int errocontanext = -1;
@@ -48,8 +48,10 @@ namespace UpdateRDS
         static int errfilecnext = -1;
         static int errfilec = -1;
         static string errodaweblink = null;
-        //static readonly string diretoriodoaplicativo = $@"{AppDomain.CurrentDomain.BaseDirectory.ToString()}UpdateRDS\";
         static readonly string diretoriodoaplicativo = $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Update RDS\";
+        static int iconealternar = 0;
+
+        public UpdateRDSInfo Updrdsfcar { get; } = new UpdateRDSInfo();
 
         public UpdateRDS()
         {
@@ -75,6 +77,7 @@ namespace UpdateRDS
         {
             try
             {
+
                 /// Verifica o processo do aplicativo
                 Process proc = Process.GetCurrentProcess();
 
@@ -82,10 +85,7 @@ namespace UpdateRDS
                 string identificadorproc = proc.Id.ToString();
 
                 /// Título do programa
-                qualquerlixoaqui = "Update RDS By GabardoHost";
-
-                /// Carrega label de título
-                lblTextotitulo.Text = qualquerlixoaqui;
+                lblTextotitulo.Text = "Update RDS By GabardoHost";
 
                 /// Transfere dados para um balão chato haha de texto
                 ntfIcone.ShowBalloonTip(60000, "Update RDS - Bem vindo!", "Aqui você pode receber notificações se quiser!", ToolTipIcon.Info);
@@ -94,12 +94,21 @@ namespace UpdateRDS
                 lblInformacaoid.Text = $"Abertura do aplicativo: {DateTime.Now.ToString()} - ID do Processo do aplicativo em execução: {identificadorproc}";
 
                 /// Informa o usuário para clicar no botão para enviar dados
-                lblInformacao.Text = "Para prosseguir com o envio dos dados, preencha corretamente a tela e clique no botão abaixo:";
+                qualquerlixoaqui = "Para prosseguir com o envio dos dados, preencha corretamente a tela de cadastro e clique no botão verificar dados da mesma tela";
+
+                /// Altera título da checkbox
+                chkEnviatitulosom.Text = "Enviar título\nde som\nSOMENTE de\nforma manual";
+
+                /// Carrega e exibe os dados na label
+                Updrdsfcar.CarregaInfo(qualquerlixoaqui);
+
+                /// Carrega interface de informações
+                Updrdsfcar.Show();
             }
             catch (Exception ex)
             {
                 /// Qualquer erro na execução do aplicativo quando carregar, gera erro direto na label
-                lblInformacao.Text = ex.Message;
+                Updrdsfcar.CarregaInfo(ex.Message);
             }
         }
 
@@ -202,8 +211,11 @@ namespace UpdateRDS
                     string mensagemerro = $"Título não atualizado devido a um erro ao conectar no servidor: \n{weberrogeral} \n{weberroexplic}";
 
                     /// Caso o botão ainda esteja visível não carregar na label de informações, Exibe informação na label para o usuário sobre o problema, a exibição na label se dá devido ao fato que não se pode parar a execução desse trecho de código
-                    if (btnVerificardadosderds.Enabled == false)
-                        lblInformacao.Text = $"{mensagemerro} \nData e hora do erro: {DateTime.Now.ToString()} - Por favor, Verifique a conexão com o servidor! ";
+                    if (btnVerificardadosderds.Visible == false)
+                    {
+                        string informacao = $"{mensagemerro} \nData e hora do erro: {DateTime.Now.ToString()} - Por favor, Verifique a conexão com o servidor! ";
+                        Updrdsfcar.CarregaInfo(informacao);
+                    }
                     else
                     {
                         /// Mensagem de erro que vai aparecer associada com o problema encontrado e data e hora completos
@@ -246,8 +258,8 @@ namespace UpdateRDS
                     sw.WriteLine("Login do servidor proxy: " + txtLoginproxy.Text);
                     sw.WriteLine("Senha do servidor proxy: " + txtSenhaproxy.Text);
                     sw.WriteLine("Tempo de execução: " + txtTempoexec.Text);
-                    sw.WriteLine("Caminho completo do arquivo texto com nome do som: " + txtArquivotextosom.Text);
-                    sw.WriteLine("Caminho completo do arquivo texto com nome do próximo som: " + txtArquivotextosomnext.Text);
+                    sw.WriteLine("Caminho completo do arquivo texto com nome do som: " + lblArquivotextosom.Text);
+                    sw.WriteLine("Caminho completo do arquivo texto com nome do próximo som: " + lblArquivotextosomnext.Text);
                     sw.WriteLine("Atualizar via URL o título do som: " + chkUrlsom.Checked);
                     sw.WriteLine("URL para atualização de título: " + txtUrlsom.Text);
                     sw.WriteLine("Atualizar via URL o título do próximo som: " + chkUrlsomnext.Checked);
@@ -274,8 +286,8 @@ namespace UpdateRDS
                     string dadosdotxterro = null;
 
                     /// Caso o botão de verificação de dados esteja visível não carrega o erro na label de informações, Caso aconteça exceções sem tratamento, é carregado direto na label e a exibição na label se dá devido ao fato que não se pode parar a execução desse trecho de código
-                    if (btnVerificardadosderds.Enabled == false)
-                        lblInformacao.Text = errogeral;
+                    if (btnVerificardadosderds.Visible == false)
+                        Updrdsfcar.CarregaInfo(errogeral);
 
                     /// Caso tenha contagem de erro e ela for menor que um
                     if (erroconta < 1 && errocontanext < 1)
@@ -319,8 +331,8 @@ namespace UpdateRDS
                         sw.WriteLine("Login do servidor proxy: " + txtLoginproxy.Text);
                         sw.WriteLine("Senha do servidor proxy: " + txtSenhaproxy.Text);
                         sw.WriteLine("Tempo de execução: " + txtTempoexec.Text);
-                        sw.WriteLine("Caminho completo do arquivo texto com nome do som: " + txtArquivotextosom.Text);
-                        sw.WriteLine("Caminho completo do arquivo texto com nome do próximo som: " + txtArquivotextosomnext.Text);
+                        sw.WriteLine("Caminho completo do arquivo texto com nome do som: " + lblArquivotextosom.Text);
+                        sw.WriteLine("Caminho completo do arquivo texto com nome do próximo som: " + lblArquivotextosomnext.Text);
                         sw.WriteLine("Atualizar via URL o título do som: " + chkUrlsom.Checked);
                         sw.WriteLine("URL para atualização de título: " + txtUrlsom.Text);
                         sw.WriteLine("Atualizar via URL o título do próximo som: " + chkUrlsomnext.Checked);
@@ -355,7 +367,7 @@ namespace UpdateRDS
                 Directory.CreateDirectory(diretoriodoaplicativo);
 
             /// Informa versão do aplicativo para o usuário alterando a cor
-            lblVersaoapp.Text = "Versão 0.0.2 Alfa\n(Sem verificar nova versão)";
+            lblVersaoapp.Text = "Versão 0.0.3 Alfa\n(Sem verificar nova versão)";
             lblVersaoapp.ForeColor = Color.Yellow;
 
             /// Declara URL completa de onde vai verificar a atualização do software
@@ -406,7 +418,7 @@ namespace UpdateRDS
                 versaonova = true;
 
                 /// Altera label de aviso
-                lblVersaoapp.Text = "Versão 0.0.2 Alfa\n(DESATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.0.3 Alfa\n(DESATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Red;
 
                 /// Envia mensagem perguntando se o usuário gostaria de baixar a nova versão do aplicativo, Caso o usuário queira baixar o aplicativo
@@ -462,7 +474,7 @@ namespace UpdateRDS
             }
             else
             {
-                lblVersaoapp.Text = "Versão 0.0.2 Alfa\n(ATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.0.3 Alfa\n(ATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Green;
                 versaonova = false;
             }
@@ -495,52 +507,89 @@ namespace UpdateRDS
             string idoupontomont = txtIdoumont.Text;
 
             /// Pega as informações dos textos das caixas de preenchimento e adiciona informações na string
-            string caminhoarquivo = $@"{txtArquivotextosom.Text}";
-            string caminhoarquivonext = $@"{txtArquivotextosomnext.Text}";
+            string caminhoarquivo = $@"{lblArquivotextosom.Text}";
+            string caminhoarquivonext = $@"{lblArquivotextosomnext.Text}";
 
             /// Verifica se é dados de Icecast, se for, realiza as condições de alteração abaixo para compatibilizar o icecast v2, Caso o usuário não preencha nenhuma informação de ponto de montagem, Então solicita para o usuário preencher
             if (rbtIcecast.Checked == true & string.IsNullOrEmpty(idoupontomont))
+            {
+                txtIdoumont.BackColor = Color.Red;
                 throw new Exception("Preencha a caixa de texto ID com números para Shoutcast Server ou ponto de montagem para Icecast Server!");
+            }
 
             /// Carrega a URL padrão para Shoutcast Server v2 apenas caso marcado pelo usuário, Se as caixas de texto estiverem preenchidas diferente de números ou sem nenhum dado, Então solicita para o usuário preencher
             if (rbtShoutcastv2.Checked == true & !Regex.IsMatch(idoupontomont, @"^[0-9]+$"))
+            {
+                txtIdoumont.BackColor = Color.Red;
                 throw new Exception("Preencha a caixa de texto ID ou ponto de montagem apenas com números para Shoutcast V2!");
+            }
 
             /// Verifica se a caixa de texto caminho completo do arquivo não está vazia, Se estiver vazia então apresenta mensagem de erro para o usuário preencher a caixa
             if (string.IsNullOrEmpty(caminhoarquivo) && chkUrlsom.Checked == false)
-                throw new Exception("Preencha a caixa de texto Caminho do arquivo texto gerado pelo automatizador com o nome do áudio!");
+            {
+                lblArquivotextosom.BackColor = Color.Red;
+                throw new Exception("Selecione o arquivo no Caminho do arquivo texto gerado pelo automatizador com o nome do áudio!");
+            }
 
             /// Se o usuário marcou para digitar um URL e está nulo ou vazio faz a condição de exceção, Se estiver vazia então apresenta mensagem de erro para o usuário preencher a caixa
             if (chkUrlsom.Checked == true && string.IsNullOrEmpty(txtUrlsom.Text))
+            {
+                txtUrlsom.BackColor = Color.Red;
                 throw new Exception("Preencha a caixa de texto URL com o link que leva ao arquivo texto ou a URL do currentsong do servidor shoutcast!");
-
+            }
+            if (chkUrlsom.Checked == true && !Uri.IsWellFormedUriString(txtUrlsom.Text, UriKind.Absolute))
+            {
+                txtUrlsom.BackColor = Color.Red;
+                throw new Exception("Preencha a caixa de texto URL com o link VÁLIDO http://link/arquivotexto.txt que leva ao arquivo texto ou a URL do currentsong do servidor shoutcast!");
+            }
             /// Caso não seja uma shoutcast v2 entra na condição abaixo
             if (chkTransmproxsom.Checked == true && rbtShoutcastv2.Checked == true)
             {
                 /// Se o usuário marcou para digitar um URL e está nulo ou vazio faz a condição de exceção, Se estiver vazia então apresenta mensagem de erro para o usuário preencher a caixa
                 if (chkUrlsomnext.Checked == true && string.IsNullOrEmpty(txtUrlsomnext.Text))
-                    throw new Exception("Preencha a caixa de texto URL com o link que leva ao arquivo texto de próximo som ou a URL do nextsong do servidor shoutcast!");
+                {
+                    txtUrlsomnext.BackColor = Color.Red;
+                    throw new Exception("Preencha a caixa de texto URL com o link que leva ao arquivo texto de próximo som ou a URL do próximo som do servidor shoutcast!");
+                }
+
+                if (chkUrlsomnext.Checked == true && !Uri.IsWellFormedUriString(txtUrlsomnext.Text, UriKind.Absolute))
+                {
+                    txtUrlsomnext.BackColor = Color.Red;
+                    throw new Exception("Preencha a caixa de texto URL com um link VÁLIDO http://link/arquivotexto.txt que leva ao arquivo texto de próximo som ou a URL do próximo som do servidor shoutcast!");
+                }
 
                 /// Verifica se a caixa de texto caminho completo do arquivo NEXT SONG não está vazia, Se estiver vazia então apresenta mensagem de erro para o usuário preencher a caixa
                 if (string.IsNullOrEmpty(caminhoarquivonext) && chkUrlsomnext.Checked == false)
-                    throw new Exception("Preencha a caixa de texto de Caminho do arquivo texto de próximo audio gerado pelo automatizador com o nome do áudio!");
+                {
+                    lblArquivotextosomnext.BackColor = Color.Red;
+                    throw new Exception("Selecione o arquivo de Caminho do arquivo texto de próximo audio gerado pelo automatizador com o nome do áudio!");
+                }
 
                 /// Caso o arquivo texto nextsong.txt ou similar não exista então ele faz a condição de exceção, Avisa o usuário que o arquivo informado não existe no diretório
                 if (!File.Exists(caminhoarquivonext) && chkUrlsomnext.Checked == false)
-                    throw new Exception("O Caminho informado para o arquivo de texto com o nome do próximo áudio está incorreto! verifique se o arquivo realmente existe!");
+                    throw new Exception("O Caminho selecionado para o arquivo de texto com o nome do próximo áudio está incorreto! verifique se o arquivo realmente existe!");
             }
 
             /// Caso o usuário não preencha a caixa de tempo para verificar uma atualização de arquivo, Então envia mensagem de erro para que seja preenchida a caixa
             if (txtTempoexec.Text == "0" || !Regex.IsMatch(txtTempoexec.Text, @"^[0-9]+$"))
+            {
+                txtTempoexec.BackColor = Color.Red;
                 throw new Exception("Preencha a caixa de tempo de verificação de arquivo APENAS COM NÚMEROS para verificar uma atualização de arquivo! NÃO PODE SER VAZIO OU ZERO!");
+            }
 
             /// Verifica se a caixa de texto endereço de IP ou nome de domínio não está vazia, Se a caixa de texto endereço de IP ou nome de domínio estiver vazia, então encaminha mensagem para o usuário resolver o problema
             if (string.IsNullOrEmpty(ipserver))
+            {
+                txtDominioip.BackColor = Color.Red;
                 throw new Exception("Preencha a caixa de texto endereço de IP ou nome de domínio!");
+            }
 
             /// Verifica se a caixa de texto porta não está vazia, Se a caixa de texto porta estiver vazia, então encaminha mensagem para o usuário resolver o problema preenchendo os dados
             if (string.IsNullOrEmpty(portaserver))
+            {
+                txtPorta.BackColor = Color.Red;
                 throw new Exception("Preencha a caixa de texto porta!");
+            }
 
             /// Verifica se a caixa de texto porta tem apenas números, Se a caixa de texto porta estiver com outros caracteres diferentes de números gera exceção e avisa o usuário
             if (!Regex.IsMatch(portaserver, @"^[0-9]+$"))
@@ -548,19 +597,29 @@ namespace UpdateRDS
 
             /// Verifica se a caixa de texto login não está vazia, Se a caixa de texto login estiver vazia, então encaminha mensagem para o usuário resolver o problema preenchendo os dados
             if (string.IsNullOrEmpty(txtLoginserver.Text))
+            {
+                txtLoginserver.BackColor = Color.Red;
                 throw new Exception("Preencha a caixa de texto login!");
+            }
 
             /// Verifica se a caixa de texto senha não está vazia, Se a caixa de texto senha estiver vazia, então encaminha mensagem para o usuário resolver o problema preenchendo os dados
             if (string.IsNullOrEmpty(txtSenhaserver.Text))
+            {
+                txtSenhaserver.BackColor = Color.Red;
                 throw new Exception("Preencha a caixa de texto senha!");
+            }
 
             /// Caso o arquivo texto currentsong.txt ou similar não exista então ele faz a condição de exceção, Avisa o usuário que o arquivo informado não existe no diretório
             if (!File.Exists(caminhoarquivo) && chkUrlsom.Checked == false)
-                throw new Exception("O Caminho informado para o arquivo de texto com o nome do áudio está incorreto! verifique se o arquivo realmente existe!");
+                throw new Exception("O Caminho selecionado para o arquivo de texto com o nome do áudio está incorreto! verifique se o arquivo realmente existe!");
 
             /// Caso o arquivo texto seja o mesmo do anterior, Avisa o usuário que o arquivo informado não pode ser o mesmo
             if (chkUrlsom.Checked == false && chkUrlsomnext.Checked == false && caminhoarquivo == caminhoarquivonext)
-                throw new Exception("O Caminho informado para o arquivo de texto com o nome do áudio é o mesmo do arquivo texto de proximo som! Você não pode colocar o mesmo arquivo, precisa ser necessariamente dois arquivos diferentes!");
+            {
+                //lblArquivotextosom.BackColor = Color.Red;
+                //lblArquivotextosomnext.BackColor = Color.Red;
+                throw new Exception("O Caminho selecionado para o arquivo de texto com o nome do áudio é o mesmo do arquivo texto de proximo som! Você não pode colocar o mesmo arquivo, precisa ser necessariamente dois arquivos diferentes!");
+            }
 
             /// Caso as URLs sejam as mesmas, Avisa o usuário para alterar as URLs
             if (chkUrlsom.Checked == true && chkUrlsomnext.Checked == true && txtUrlsom.Text == txtUrlsomnext.Text)
@@ -572,10 +631,12 @@ namespace UpdateRDS
                 /// Valida as caixas de texto
                 if (string.IsNullOrEmpty(txtDoproxy.Text))
                 {
+                    txtDoproxy.BackColor = Color.Red;
                     throw new Exception("O endereço de IP ou domínio do servidor proxy não pode ser em branco, preencha os dados corretamente para continuar!");
                 }
                 if (string.IsNullOrEmpty(txtPortaproxy.Text))
                 {
+                    txtPortaproxy.BackColor = Color.Red;
                     throw new Exception("A porta do servidor proxy não pode ser em branco, preencha os dados corretamente para continuar!");
                 }
                 if (!Regex.IsMatch(txtPortaproxy.Text, @"^[0-9]+$"))
@@ -585,10 +646,12 @@ namespace UpdateRDS
                 {
                     if (string.IsNullOrEmpty(txtLoginproxy.Text))
                     {
+                        txtLoginproxy.BackColor = Color.Red;
                         throw new Exception("O login do servidor proxy não pode ser em branco, preencha os dados corretamente para continuar!");
                     }
                     if (string.IsNullOrEmpty(txtSenhaproxy.Text))
                     {
+                        txtSenhaproxy.BackColor = Color.Red;
                         throw new Exception("A senha do servidor proxy não pode ser em branco, preencha os dados corretamente para continuar!");
                     }
                 }
@@ -597,6 +660,8 @@ namespace UpdateRDS
 
         private void TratamentoURLNowNext()
         {
+            string infolabel;
+
             /// Faz uma duplicação do número
             int numconta = erroconta;
             int numcontanext = errocontanext;
@@ -685,12 +750,20 @@ namespace UpdateRDS
                 /// Caso tenha erros e é um retorno da conexão então envia uma mensagem de reconexão para o usuário
                 if (erroconta == 0)
                 {
-                    lblInformacao.Text = "Nome do som conectado no servidor! Aguarde atualização de título...";
+                    infolabel = "Nome do som conectado no servidor! Aguarde atualização de título...";
+
+                    /// Carrega e exibe os dados na label
+                    Updrdsfcar.CarregaInfo(infolabel);
+
                     erroconta = -1;
                 }
                 if (errocontanext == 0)
                 {
-                    lblInformacao.Text = "Nome do próximo som conectado no servidor! Aguarde atualização de título...";
+                    infolabel = "Nome do próximo som conectado no servidor! Aguarde atualização de título...";
+
+                    /// Carrega e exibe os dados na label
+                    Updrdsfcar.CarregaInfo(infolabel);
+
                     errocontanext = -1;
                 }
             }
@@ -700,7 +773,7 @@ namespace UpdateRDS
                 errodaweblink = webexc.Message;
 
                 /// Caso o botão esteja habilitado
-                if (btnVerificardadosderds.Enabled == true)
+                if (btnVerificardadosderds.Visible == true)
                 {
                     /// Caso seja um arquivo de next song
                     if (eumnext == true)
@@ -837,7 +910,7 @@ namespace UpdateRDS
             }
 
             /// Verifica se o arquivo anterior é o mesmo do atual, se não for então apaga o arquivo anterior e copia o arquivo novo
-            if (conteudotexto != conteudotextoantigo || btnVerificardadosderds.Enabled == true)
+            if (conteudotexto != conteudotextoantigo || btnVerificardadosderds.Visible == true)
             {
                 try
                 {
@@ -895,6 +968,8 @@ namespace UpdateRDS
 
         private void TratamentoTextoNowNext()
         {
+            string informacoes;
+
             /// Verifica o processo do aplicativo
             Process proc = Process.GetCurrentProcess();
 
@@ -902,14 +977,14 @@ namespace UpdateRDS
             string identificadorproc = proc.Id.ToString();
 
             /// Pega as informações dos textos das caixas de preenchimento e adiciona informações na string
-            string arquivotexto = $@"{txtArquivotextosom.Text}";
-            string arquivotextoantigo = $@"{txtArquivotextosom.Text}{identificadorproc}.txt";
+            string arquivotexto = $@"{lblArquivotextosom.Text}";
+            string arquivotextoantigo = $@"{lblArquivotextosom.Text}{identificadorproc}.txt";
 
             /// Caso o arquivo a ser processado é um next song, altera as propriedades dele
             if (eumnext == true)
             {
-                arquivotexto = $@"{txtArquivotextosomnext.Text}";
-                arquivotextoantigo = $@"{txtArquivotextosomnext.Text}{identificadorproc}.txt";
+                arquivotexto = $@"{lblArquivotextosomnext.Text}";
+                arquivotextoantigo = $@"{lblArquivotextosomnext.Text}{identificadorproc}.txt";
             }
 
             /// Se o arquivo texto exista
@@ -927,12 +1002,20 @@ namespace UpdateRDS
             /// Caso tenha erros e o usuário corrigiu o arquivo de configuração, então faz a troca de informação da label
             if (errfilec == 0)
             {
-                lblInformacao.Text = "Arquivo de nome do som corrigido com sucesso! Aguarde atualização de título...";
+                informacoes = "Arquivo de nome do som corrigido com sucesso! Aguarde atualização de título...";
+
+                /// Carrega e exibe os dados na label
+                Updrdsfcar.CarregaInfo(informacoes);
+
                 errfilec = -1;
             }
             if (errfilecnext == 0)
             {
-                lblInformacao.Text = "Arquivo de nome do próximo som corrigido com sucesso! Aguarde atualização de título...";
+                informacoes = "Arquivo de nome do próximo som corrigido com sucesso! Aguarde atualização de título...";
+
+                /// Carrega e exibe os dados na label
+                Updrdsfcar.CarregaInfo(informacoes);
+
                 errfilecnext = -1;
             }
 
@@ -1064,7 +1147,7 @@ namespace UpdateRDS
             }
 
             /// Verifica se o arquivo anterior é o mesmo do atual, se não for então apaga o arquivo anterior e copia o arquivo novo
-            if (conteudotexto != conteudotextoantigo || btnVerificardadosderds.Enabled == true)
+            if (conteudotexto != conteudotextoantigo || btnVerificardadosderds.Visible == true)
             {
                 try
                 {
@@ -1237,7 +1320,7 @@ namespace UpdateRDS
             }
 
             /// Verifica se o arquivo anterior é o mesmo do atual, se não for então atualiza o nome do arquivo no servidor
-            if (conteudoarquivotexto != conteudoarquivotextoantigo || btnVerificardadosderds.Enabled == true)
+            if (conteudoarquivotexto != conteudoarquivotextoantigo || btnVerificardadosderds.Visible == true)
             {
                 /// Remove o & pelo e para não dar problemas na URL abaixo
                 conteudoarquivotexto = conteudoarquivotexto.Replace("&", "e").Replace("_", " ");
@@ -1434,7 +1517,7 @@ namespace UpdateRDS
                     conteudoarquivotextonextsong = conteudoarquivotextonextsong.Substring(0, 50) + "...";
 
                 /// Se o botão estiver visível mostra a label abaixo com o texto
-                if (btnVerificardadosderds.Enabled == true)
+                if (btnVerificardadosderds.Visible == true)
                 {
                     /// Renomeia a label para o texto
                     labeldeinformacao = $"O RDS Transmitiu agora o seguinte nome para o servidor: \n{conteudoarquivotexto} \nNa data e hora: {DateTime.Now.ToString()} \nSe estiver tudo certo com o cadastro, clique no botão abaixo para começar a transmitir os dados:";
@@ -1457,7 +1540,7 @@ namespace UpdateRDS
                 }
 
                 /// Carrega e exibe os dados na label
-                lblInformacao.Text = labeldeinformacao;
+                Updrdsfcar.CarregaInfo(labeldeinformacao);
 
                 /// String para adicionar mais informações no arquivo texto
                 dadosadicionais = $"No ar o som: {conteudoarquivotexto} \nNa data e hora: {DateTime.Now.ToString()}";
@@ -1510,6 +1593,62 @@ namespace UpdateRDS
             }
         }
 
+        private void TemporizacaoIcone_Tick(object Sender, EventArgs e)
+        {
+            try
+            {
+                /// Verifica o processo do aplicativo
+                Process proc = Process.GetCurrentProcess();
+
+                /// Passa o ID de execução por parâmetro para adicionar no nome do arquivo texto abaixo
+                string identificadorproc = proc.Id.ToString();
+
+                DirectoryInfo dir = new DirectoryInfo(diretoriodoaplicativo + @"\LOGS\");
+                if (iconealternar == 0)
+                {
+                    btnAbretelainfo.BackColor = Color.Yellow;
+                    iconealternar = 1;
+                }
+                else
+                {
+                    if (iconealternar == 1)
+                    {
+                        btnAbretelainfo.BackColor = Color.LightGreen;
+                        iconealternar = 0;
+                    }
+                }
+
+                FileInfo[] arquivostexto = dir.GetFiles();
+
+                foreach (FileInfo file in arquivostexto)
+                {
+                    if (file.Name == "ERRO" + identificadorproc + "LOG.txt")
+                    {
+                        int index = file.Name.IndexOf("LOG.txt");
+                        if (index > 0)
+                        {
+                            if (iconealternar == 0)
+                            {
+                                btnAbrirappdata.BackColor = Color.Red;
+                            }
+                            else
+                            {
+                                btnAbrirappdata.BackColor = Color.Yellow;
+                            }
+                        }
+                        if (index <= 0)
+                        {
+                            btnAbrirappdata.BackColor = Color.Empty;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                qualquerlixoaqui = ex.Message;
+            }
+        }
+
         private void BtnVerificardadosderds_Click(object sender, EventArgs e)
         {
             try
@@ -1522,6 +1661,16 @@ namespace UpdateRDS
                 erroconta = -1;
                 errocontanext = -1;
 
+                if (chkEnviatitulosom.Checked == true)
+                {
+                    if (!File.Exists(diretoriodoaplicativo + "CT.txt"))
+                    {
+                        File.WriteAllText(diretoriodoaplicativo + "CT.txt", "Update RDS Ativo de forma manual");
+                    }
+
+                    lblArquivotextosom.Text = diretoriodoaplicativo + "CT.txt";
+                }
+
                 /// Chama método para carregar as validações
                 ValidarInformacoes();
 
@@ -1532,24 +1681,30 @@ namespace UpdateRDS
                     RecInfoDosDadosCad();
 
                     /// Torna invisível o botão para verificar os dados
-                    btnVerificardadosderds.Enabled = false;
+                    btnVerificardadosderds.Visible = false;
 
                     /// Torna visível o botão para revisar dados informados
                     btnRevisarinfo.Enabled = true;
+                    btnRevisarinfo.Visible = true;
+                    lblTextoinforev.Text = "Revisar informações do cadasto:";
 
                     /// Torna visível o botão para enviar o RDS para o servidor
-                    btnEnviardadosrds.Enabled = true;
+                    btnEnviardadosrds.Visible = true;
+
+                    /// Altera texto da label de título do botão
+                    lblTextodobotao.Text = "   Enviar RDS:";
 
                     /// Desabilita as caixas e checkbox para que os dados não sejam mais alterados depois do teste da URL, links e textos
                     rbtShoutcastv1.Enabled = false;
                     rbtShoutcastv2.Enabled = false;
                     rbtIcecast.Enabled = false;
+                    chkEnviatitulosom.Enabled = false;
                     chkTransmproxsom.Enabled = false;
                     chkUsoproxy.Enabled = false;
                     chkAutenticaproxy.Enabled = false;
                     chkUrlsom.Enabled = false;
                     chkUrlsomnext.Enabled = false;
-                    btnCarregadados.Enabled = false;
+                    btnCarregadados.Visible = false;
                     btnSalvadados.Enabled = false;
                     btnResolvernomeip.Enabled = false;
                     btnLocalizatxtsomnext.Enabled = false;
@@ -1568,7 +1723,10 @@ namespace UpdateRDS
                     txtSenhaserver.Enabled = false;
 
                     /// Limpa label de informações de atualização
-                    lblInformacaoid.Text = "";
+                    lblInformacaoid.Text = "Dados de RDS enviados com sucesso! Clique no botão Enviar RDS para fazer o envio contínuo dos dados!";
+
+                    /// Envia para outro form os dados do diretório do aplicativo
+                    Updrdsfcar.AarquivoTextoSom(lblArquivotextosom.Text);
                 }
 
                 /// Exceção do web request client
@@ -1604,6 +1762,8 @@ namespace UpdateRDS
         {
             try
             {
+                string informacaolabel;
+
                 /// Limpa os erros anteriores caso tenha
                 errogeralgravado = null;
                 errogeral = null;
@@ -1616,14 +1776,20 @@ namespace UpdateRDS
                 int tempoescolhido = Convert.ToInt32(txtTempoexec.Text + "000");
 
                 /// Informa o usuário que já tem transmissão de dados para o servidor
-                lblInformacao.Text = "O RDS está verificando e transmitindo dados! Aguarde próxima atualização de título... \nOu atualize o arquivo texto manualmente para que a informação seja atualizada!";
+                informacaolabel = "O RDS está verificando e transmitindo dados! Aguarde próxima atualização de título... \nOu atualize o arquivo texto manualmente para que a informação seja atualizada!";
+
+                /// Carrega e exibe os dados na label
+                Updrdsfcar.CarregaInfo(informacaolabel);
 
                 /// Desabilita botão para que não possa ser clicado novamente depois de enviar os dados
-                btnEnviardadosrds.Enabled = false;
+                btnEnviardadosrds.Visible = false;
                 btnRevisarinfo.Enabled = false;
 
                 /// Habilita botão para parar o envio de dados para o servidor
-                btnPararenviords.Enabled = true;
+                btnPararenviords.Visible = true;
+
+                /// Altera label para o texto
+                lblTextodobotao.Text = "  Parar o envio:";
 
                 /// Habilita execução
                 temporizadorgeral.Enabled = true;
@@ -1636,6 +1802,18 @@ namespace UpdateRDS
 
                 /// Inicia o relógio
                 temporizadorgeral.Start();
+
+                /// Habilita execução
+                temporizadoricone.Enabled = true;
+
+                /// Define um intervalo para o bloco de códigos executar novamente definido para 5000 milisegundos
+                temporizadoricone.Interval = 1000;
+
+                /// Evento que ocorre a cada 5000 milisegundos para atualizar o texto do servidor
+                temporizadoricone.Tick += new EventHandler(TemporizacaoIcone_Tick);
+
+                /// Inicia o relógio
+                temporizadoricone.Start();
             }
 
             /// Exceção geral do botão
@@ -1657,6 +1835,8 @@ namespace UpdateRDS
         {
             try
             {
+                string informacaolabel;
+
                 /// Limpa os erros anteriores caso tenha
                 errogeralgravado = null;
                 errogeral = null;
@@ -1670,8 +1850,8 @@ namespace UpdateRDS
                 string identificadorproc = proc.Id.ToString();
 
                 /// Pega as informações dos textos das caixas de preenchimento e adiciona informações na string
-                string caminhoarquivoantigo = $@"{txtArquivotextosom.Text}{identificadorproc}.txt";
-                string caminhoarquivoantigonext = $@"{txtArquivotextosomnext.Text}{identificadorproc}.txt";
+                string caminhoarquivoantigo = $@"{lblArquivotextosom.Text}{identificadorproc}.txt";
+                string caminhoarquivoantigonext = $@"{lblArquivotextosomnext.Text}{identificadorproc}.txt";
 
                 /// Envia mensagem confirmando se o usuário gostaria mesmo de parar o envio de dados
                 if (MessageBox.Show("Você gostaria de parar o envio de dados? ao parar, os dados de RDS não serão enviados para o servidor!", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -1681,18 +1861,24 @@ namespace UpdateRDS
 
                     /// Faz o relógio parar de rodar
                     temporizadorgeral.Stop();
+                    temporizadoricone.Stop();
 
                     /// Desabilita o botão de parar
-                    btnPararenviords.Enabled = false;
+                    btnPararenviords.Visible = false;
+
+                    /// Oculta o botão de revisar informações
+                    btnRevisarinfo.Visible = false;
 
                     /// Reabilitação dos botões e formulário para edição
                     rbtShoutcastv1.Enabled = true;
                     rbtShoutcastv2.Enabled = true;
                     rbtIcecast.Enabled = true;
+                    chkEnviatitulosom.Enabled = true;
                     chkUsoproxy.Enabled = true;
                     txtTempoexec.Enabled = true;
                     btnSalvadados.Enabled = true;
-                    btnCarregadados.Enabled = true;
+                    btnCarregadados.Visible = true;
+                    lblTextoinforev.Text = "Carregar dados de cadastro:";
                     chkUrlsom.Enabled = true;
                     txtDominioip.Enabled = true;
                     btnResolvernomeip.Enabled = true;
@@ -1746,11 +1932,17 @@ namespace UpdateRDS
                     }
 
                     /// Habilita novamente o botão para verificação de dados
-                    btnVerificardadosderds.Enabled = true;
+                    btnVerificardadosderds.Visible = true;
+
+                    /// Altera texto da label de título do botão
+                    lblTextodobotao.Text = "Verificar dados:";
 
                     /// Limpa a label de informações e altera informações da label
-                    lblInformacao.Text = "O RDS Não está sendo transmitido para o servidor! Para continuar enviando dados, clique no botão abaixo:";
+                    informacaolabel = "O RDS Não está sendo transmitido para o servidor! Para continuar enviando dados, clique no botão abaixo:";
                     lblInformacaoid.Text = "Última checagem de modificação do arquivo: " + DateTime.Now.ToString();
+
+                    /// Carrega e exibe os dados na label
+                    Updrdsfcar.CarregaInfo(informacaolabel);
 
                     /// Apaga os arquivos anteriores
                     File.Delete($@"{diretoriodoaplicativo}{identificadorproc}OLD.txt");
@@ -1789,6 +1981,8 @@ namespace UpdateRDS
         {
             try
             {
+                string labeldeinformacao;
+
                 /// Limpa os erros anteriores caso tenha
                 errogeralgravado = null;
                 errogeral = null;
@@ -1801,10 +1995,12 @@ namespace UpdateRDS
                 rbtShoutcastv1.Enabled = true;
                 rbtShoutcastv2.Enabled = true;
                 rbtIcecast.Enabled = true;
+                chkEnviatitulosom.Enabled = true;
                 chkUsoproxy.Enabled = true;
                 txtTempoexec.Enabled = true;
                 btnSalvadados.Enabled = true;
-                btnCarregadados.Enabled = true;
+                btnCarregadados.Visible = true;
+                lblTextoinforev.Text = "Carregar dados de cadastro:";
                 chkUrlsom.Enabled = true;
                 btnResolvernomeip.Enabled = true;
                 txtDominioip.Enabled = true;
@@ -1858,15 +2054,22 @@ namespace UpdateRDS
                     txtUrlsom.Enabled = true;
 
                 /// Oculta botões para que os botões não sejam clicados indevidamente
-                btnRevisarinfo.Enabled = false;
-                btnEnviardadosrds.Enabled = false;
+                btnRevisarinfo.Visible = false;
+                btnEnviardadosrds.Visible = false;
 
                 /// Habilita novamente o botão de verificação de dados para que possa verificar novamente os dados
-                btnVerificardadosderds.Enabled = true;
+                btnVerificardadosderds.Visible = true;
+
+                /// Altera texto da label de título do botão
+                lblTextodobotao.Text = "Verificar dados:";
 
                 /// Limpa a label caso venha preenchida com os dados
                 lblInformacaoid.Text = "";
-                lblInformacao.Text = "O Processo de envio foi interrompido com sucesso! \nPara retomar o envio dos dados, preencha ou faça as correções e clique no botão abaixo:";
+                labeldeinformacao = "O Processo de envio foi interrompido com sucesso! \nPara retomar o envio dos dados, preencha ou faça as correções e clique no botão abaixo:";
+
+                /// Carrega e exibe os dados na label
+                Updrdsfcar.CarregaInfo(labeldeinformacao);
+
                 /// Verifica o processo do aplicativo
                 Process proc = Process.GetCurrentProcess();
 
@@ -1874,8 +2077,8 @@ namespace UpdateRDS
                 string identificadorproc = proc.Id.ToString();
 
                 /// Pega o caminho dos arquivos antigos para apagar ao fechar o programa
-                string caminhoarquivoantigo = $@"{txtArquivotextosom.Text}{identificadorproc}.txt";
-                string caminhoarquivoantigonext = $@"{txtArquivotextosomnext.Text}{identificadorproc}.txt";
+                string caminhoarquivoantigo = $@"{lblArquivotextosom.Text}{identificadorproc}.txt";
+                string caminhoarquivoantigonext = $@"{lblArquivotextosomnext.Text}{identificadorproc}.txt";
 
                 /// Apaga os arquivos antigos
                 File.Delete($@"{diretoriodoaplicativo}{identificadorproc}OLD.txt");
@@ -1960,10 +2163,10 @@ namespace UpdateRDS
                         xtw.WriteElementString("LOGINPROXY", txtLoginproxy.Text);
                         xtw.WriteElementString("SENHAPROXY", txtSenhaproxy.Text);
                         xtw.WriteElementString("TEMPOCHECAGEMTEXTOURL", txtTempoexec.Text);
-                        xtw.WriteElementString("TXTARQUIVODETEXTOSOM", txtArquivotextosom.Text);
+                        xtw.WriteElementString("TXTARQUIVODETEXTOSOM", lblArquivotextosom.Text);
                         xtw.WriteElementString("ATUALIZARSOMPORURL", chkUrlsom.Checked.ToString());
                         xtw.WriteElementString("TXTURLSOM", txtUrlsom.Text);
-                        xtw.WriteElementString("TXTARQUIVOPROXIMOSOM", txtArquivotextosomnext.Text);
+                        xtw.WriteElementString("TXTARQUIVOPROXIMOSOM", lblArquivotextosomnext.Text);
                         xtw.WriteElementString("URLPROXIMOSOM", chkUrlsomnext.Checked.ToString());
                         xtw.WriteElementString("TXTURLPROXIMOSOM", txtUrlsomnext.Text);
                         xtw.WriteElementString("IPOUDOMINIO", txtDominioip.Text);
@@ -1971,7 +2174,7 @@ namespace UpdateRDS
                         xtw.WriteElementString("IDOUPONTODEMONTAGEM", txtIdoumont.Text);
                         xtw.WriteElementString("LOGINDOSERVER", txtLoginserver.Text);
                         xtw.WriteElementString("SENHADOSERVER", txtSenhaserver.Text);
-                        xtw.WriteElementString("DATAEHORASALVOXML", DateTime.Now.ToString());
+                        xtw.WriteElementString("ENVTITLEMANUAL", chkEnviatitulosom.Checked.ToString());
                         xtw.WriteEndElement();
                         xtw.WriteEndDocument();
 
@@ -2070,10 +2273,10 @@ namespace UpdateRDS
                         txtLoginproxy.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[14].InnerText;
                         txtSenhaproxy.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[15].InnerText;
                         txtTempoexec.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[16].InnerText;
-                        txtArquivotextosom.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[17].InnerText;
+                        lblArquivotextosom.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[17].InnerText;
                         chkUrlsom.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[18].InnerText);
                         txtUrlsom.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[19].InnerText;
-                        txtArquivotextosomnext.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[20].InnerText;
+                        lblArquivotextosomnext.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[20].InnerText;
                         chkUrlsomnext.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[21].InnerText);
                         txtUrlsomnext.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[22].InnerText;
                         txtDominioip.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[23].InnerText;
@@ -2081,7 +2284,7 @@ namespace UpdateRDS
                         txtIdoumont.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[25].InnerText;
                         txtLoginserver.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[26].InnerText;
                         txtSenhaserver.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[27].InnerText;
-                        qualquerlixoaqui = oXML.SelectSingleNode("Configuracao").ChildNodes[28].InnerText;
+                        chkEnviatitulosom.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[28].InnerText);
 
                         /// Envia mensagem que os dados foram carregados com sucesso
                         MessageBox.Show("As informações foram carregadas com sucesso!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -2104,6 +2307,18 @@ namespace UpdateRDS
 
                 /// Exibe exceção bruta de sistema caso não tenha mensagem personalizada
                 MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void BtnAbretelainfo_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Updrdsfcar.Show();
+            }
+            catch (Exception ex)
+            {
+                qualquerlixoaqui = ex.Message;
             }
         }
 
@@ -2130,7 +2345,7 @@ namespace UpdateRDS
                 DialogResult dr = ofdCca.ShowDialog();
 
                 if (dr == DialogResult.OK)
-                    txtArquivotextosom.Text = ofdCca.FileName;
+                    lblArquivotextosom.Text = ofdCca.FileName;
             }
             catch (Exception ex)
             {
@@ -2169,7 +2384,7 @@ namespace UpdateRDS
                 DialogResult dr = ofdCca.ShowDialog();
 
                 if (dr == DialogResult.OK)
-                    txtArquivotextosomnext.Text = ofdCca.FileName;
+                    lblArquivotextosomnext.Text = ofdCca.FileName;
             }
             catch (Exception ex)
             {
@@ -2300,11 +2515,18 @@ namespace UpdateRDS
                     /// Desabilita a caixa de texto e limpa a caixa de texto
                     txtIdoumont.Enabled = false;
                     txtIdoumont.Text = "";
+                    txtIdoumont.BackColor = Color.Empty;
                 }
 
-                /// Caso não tenha mantido marcada a versão 1, habilita a caixa de texto para edição
+                /// Caso não tenha mantido marcada a versão 1
                 else
+                {
+                    /// Habilita a caixa de texto para edição
                     txtIdoumont.Enabled = true;
+
+                    /// Altera cor da caixa de texto
+                    txtIdoumont.BackColor = Color.LightYellow;
+                }
             }
             catch (Exception ex)
             {
@@ -2319,15 +2541,20 @@ namespace UpdateRDS
             {
                 /// Caso o usuário mantenha a versão 2 marcada, Habilita a caixa de texto
                 if (rbtShoutcastv2.Checked == true)
+                {
                     chkTransmproxsom.Enabled = true;
-
+                    if (!string.IsNullOrEmpty(txtIdoumont.Text) && !Regex.IsMatch(txtIdoumont.Text, @"^[0-9]+$"))
+                    {
+                        txtIdoumont.BackColor = Color.Red;
+                    }
+                }
                 else
                 {
                     /// Caso não tenha mantido marcada a versão 2, desabilita a caixa de texto para edição e limpa a caixa de texto
                     chkTransmproxsom.Checked = false;
                     chkTransmproxsom.Enabled = false;
                     btnLocalizatxtsomnext.Enabled = false;
-                    txtArquivotextosomnext.Text = "";
+                    lblArquivotextosomnext.Text = "";
                 }
             }
             catch (Exception ex)
@@ -2349,12 +2576,16 @@ namespace UpdateRDS
 
                     /// Habilita checkbox para URL
                     chkUrlsomnext.Enabled = true;
+
+                    /// Altera cor da label
+                    lblArquivotextosomnext.BackColor = Color.LightYellow;
                 }
                 else
                 {
                     /// Caso não tenha mantido marcado, desabilita o botão e checkbox da URL e limpa a caixa de texto
                     btnLocalizatxtsomnext.Enabled = false;
-                    txtArquivotextosomnext.Text = "";
+                    lblArquivotextosomnext.Text = "";
+                    lblArquivotextosomnext.BackColor = Color.Empty;
                     txtUrlsomnext.Text = "";
                     chkUrlsomnext.Enabled = false;
                     chkUrlsomnext.Checked = false;
@@ -2381,7 +2612,12 @@ namespace UpdateRDS
                     btnLocalizatxtsom.Enabled = false;
 
                     /// Limpa caixa de texto
-                    txtArquivotextosom.Text = "";
+                    lblArquivotextosom.Text = "";
+
+                    /// Altera a cor da caixa
+                    lblArquivotextosom.BackColor = Color.Empty;
+
+                    txtUrlsom.BackColor = Color.LightYellow;
                 }
                 else
                 {
@@ -2389,6 +2625,12 @@ namespace UpdateRDS
                     btnLocalizatxtsom.Enabled = true;
                     txtUrlsom.Enabled = false;
                     txtUrlsom.Text = "";
+                    lblArquivotextosom.BackColor = Color.LightYellow;
+                    if (!string.IsNullOrEmpty(lblArquivotextosom.Text))
+                    {
+                        lblArquivotextosom.BackColor = Color.LightGreen;
+                    }
+                    txtUrlsom.BackColor = Color.Empty;
                 }
             }
             catch (Exception ex)
@@ -2411,17 +2653,31 @@ namespace UpdateRDS
                     /// Desabilita botão
                     btnLocalizatxtsomnext.Enabled = false;
 
-                    /// Limpa caixa de texto
-                    txtArquivotextosomnext.Text = "";
+                    /// Limpa texto da label
+                    lblArquivotextosomnext.Text = "";
+
+                    /// Altera cor da label
+                    lblArquivotextosomnext.BackColor = Color.Empty;
+
+                    /// altera cor da caixa de texto
+                    txtUrlsomnext.BackColor = Color.LightYellow;
                 }
                 else
                 {
                     /// Caso não tenha mantido marcado, Habilita o botão e limpa a caixa de texto
                     if (chkTransmproxsom.Checked == true)
+                    {
+                        /// Altera cor da label
+                        lblArquivotextosomnext.BackColor = Color.LightYellow;
+                        if (!string.IsNullOrEmpty(lblArquivotextosomnext.Text))
+                        {
+                            lblArquivotextosomnext.BackColor = Color.LightGreen;
+                        }
                         btnLocalizatxtsomnext.Enabled = true;
-
+                    }
                     txtUrlsomnext.Enabled = false;
                     txtUrlsomnext.Text = "";
+                    txtUrlsomnext.BackColor = Color.Empty;
                 }
             }
             catch (Exception ex)
@@ -2517,7 +2773,7 @@ namespace UpdateRDS
                 bool canceloufechamento = false;
 
                 /// Caso o botão de verificação de dados não estiver mais disponível
-                if (btnVerificardadosderds.Enabled == false)
+                if (btnVerificardadosderds.Visible == false)
                 {
                     /// Então envia mensagem confirmando se o usuário gostaria mesmo de fechar o aplicativo
                     if (MessageBox.Show("Você gostaria MESMO de fechar esse programa? ao fechar o aplicativo, os dados de RDS não serão enviados para o servidor!", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
@@ -2550,14 +2806,14 @@ namespace UpdateRDS
                 string identificadorproc = proc.Id.ToString();
 
                 /// Pega o caminho dos arquivos antigos para apagar ao fechar o programa
-                string caminhoarquivoantigo = $@"{txtArquivotextosom.Text}{identificadorproc}.txt";
+                string caminhoarquivoantigo = $@"{lblArquivotextosom.Text}{identificadorproc}.txt";
 
                 /// Caso o arquivo texto currentsong.txtPID.txt ou similar exista então ele faz a condição abaixo, Apaga os arquivos antigos
                 if (File.Exists(caminhoarquivoantigo) && canceloufechamento == false)
                     File.Delete(caminhoarquivoantigo);
 
                 /// Pega o caminho dos arquivos NEXT SONG antigos para apagar ao fechar o programa
-                string caminhoarquivoantigonext = $@"{txtArquivotextosomnext.Text}{identificadorproc}.txt";
+                string caminhoarquivoantigonext = $@"{lblArquivotextosomnext.Text}{identificadorproc}.txt";
 
                 /// Caso o arquivo texto nextsong.txtPID.txt ou similar exista então ele faz a condição abaixo, Apaga os arquivos antigos
                 if (File.Exists(caminhoarquivoantigonext) && canceloufechamento == false)
@@ -2604,9 +2860,13 @@ namespace UpdateRDS
                     txtDoproxy.Enabled = true;
                     txtPortaproxy.Enabled = true;
                     chkAutenticaproxy.Enabled = true;
+                    txtDoproxy.BackColor = Color.LightYellow;
+                    txtPortaproxy.BackColor = Color.LightYellow;
                 }
                 else
                 {
+                    txtDoproxy.BackColor = Color.Empty;
+                    txtPortaproxy.BackColor = Color.Empty;
                     txtDoproxy.Enabled = false;
                     txtPortaproxy.Enabled = false;
                     chkAutenticaproxy.Enabled = false;
@@ -2647,6 +2907,8 @@ namespace UpdateRDS
                 {
                     txtLoginproxy.Enabled = true;
                     txtSenhaproxy.Enabled = true;
+                    txtLoginproxy.BackColor = Color.LightYellow;
+                    txtSenhaproxy.BackColor = Color.LightYellow;
                 }
                 else
                 {
@@ -2654,6 +2916,8 @@ namespace UpdateRDS
                     txtSenhaproxy.Enabled = false;
                     txtLoginproxy.Text = null;
                     txtSenhaproxy.Text = null;
+                    txtLoginproxy.BackColor = Color.Empty;
+                    txtSenhaproxy.BackColor = Color.Empty;
                 }
             }
             catch (Exception ex)
@@ -2724,6 +2988,328 @@ namespace UpdateRDS
 
                 /// Exibe exceção bruta de sistema caso não tenha mensagem personalizada
                 MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void LblArquivotextosom_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (File.Exists(lblArquivotextosom.Text) && lblArquivotextosom.Text != lblArquivotextosomnext.Text)
+                {
+                    lblArquivotextosom.BackColor = Color.LightGreen;
+                }
+                else
+                {
+                    lblArquivotextosom.BackColor = Color.Red;
+                }
+            }
+            catch (Exception ex)
+            {
+                qualquerlixoaqui = ex.Message;
+            }
+        }
+
+        private void TxtUrlsom_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(txtUrlsom.Text) && txtUrlsomnext.Text != txtUrlsom.Text && Uri.IsWellFormedUriString(txtUrlsom.Text, UriKind.Absolute))
+                {
+                    txtUrlsom.BackColor = Color.LightGreen;
+                }
+                else
+                {
+                    txtUrlsom.BackColor = Color.Red;
+                }
+            }
+            catch (Exception ex)
+            {
+                qualquerlixoaqui = ex.Message;
+            }
+        }
+
+        private void LblArquivotextosomnext_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (File.Exists(lblArquivotextosomnext.Text) && lblArquivotextosom.Text != lblArquivotextosomnext.Text)
+                {
+                    lblArquivotextosomnext.BackColor = Color.LightGreen;
+                }
+                else
+                {
+                    lblArquivotextosomnext.BackColor = Color.Red;
+                }
+            }
+            catch (Exception ex)
+            {
+                qualquerlixoaqui = ex.Message;
+            }
+        }
+
+        private void TxtUrlsomnext_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(txtUrlsomnext.Text) && txtUrlsomnext.Text != txtUrlsom.Text && Uri.IsWellFormedUriString(txtUrlsomnext.Text, UriKind.Absolute))
+                {
+                    txtUrlsomnext.BackColor = Color.LightGreen;
+                }
+                else
+                {
+                    txtUrlsomnext.BackColor = Color.Red;
+                }
+            }
+            catch (Exception ex)
+            {
+                qualquerlixoaqui = ex.Message;
+            }
+        }
+
+        private void TxtDominioip_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(txtDominioip.Text))
+                {
+                    txtDominioip.BackColor = Color.LightGreen;
+                }
+                else
+                {
+                    txtDominioip.BackColor = Color.Red;
+                }
+            }
+            catch (Exception ex)
+            {
+                qualquerlixoaqui = ex.Message;
+            }
+        }
+
+        private void TxtPorta_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Regex.IsMatch(txtPorta.Text, @"^[0-9]+$"))
+                {
+                    txtPorta.BackColor = Color.LightGreen;
+                }
+                else
+                {
+                    txtPorta.BackColor = Color.Red;
+                }
+            }
+            catch (Exception ex)
+            {
+                qualquerlixoaqui = ex.Message;
+            }
+        }
+
+        private void TxtTempoexec_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Regex.IsMatch(txtTempoexec.Text, @"^[0-9]+$"))
+                {
+                    txtTempoexec.BackColor = Color.LightGreen;
+                }
+                else
+                {
+                    txtTempoexec.BackColor = Color.Red;
+                }
+            }
+            catch (Exception ex)
+            {
+                qualquerlixoaqui = ex.Message;
+            }
+        }
+
+        private void TxtLoginserver_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(txtLoginserver.Text))
+                {
+                    txtLoginserver.BackColor = Color.LightGreen;
+                }
+                else
+                {
+                    txtLoginserver.BackColor = Color.Red;
+                }
+            }
+            catch (Exception ex)
+            {
+                qualquerlixoaqui = ex.Message;
+            }
+        }
+
+        private void TxtSenhaserver_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(txtSenhaserver.Text))
+                {
+                    txtSenhaserver.BackColor = Color.LightGreen;
+                }
+                else
+                {
+                    txtSenhaserver.BackColor = Color.Red;
+                }
+            }
+            catch (Exception ex)
+            {
+                qualquerlixoaqui = ex.Message;
+            }
+        }
+
+        private void TxtIdoumont_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(txtIdoumont.Text))
+                {
+                    if (rbtShoutcastv2.Checked == true && Regex.IsMatch(txtIdoumont.Text, @"^[0-9]+$"))
+                    {
+                        txtIdoumont.BackColor = Color.LightGreen;
+                    }
+                    else
+                    {
+                        txtIdoumont.BackColor = Color.Red;
+                    }
+                    if (rbtIcecast.Checked == true)
+                    {
+                        txtIdoumont.BackColor = Color.LightGreen;
+                    }
+                }
+                else
+                {
+                    txtIdoumont.BackColor = Color.Red;
+                }
+            }
+            catch (Exception ex)
+            {
+                qualquerlixoaqui = ex.Message;
+            }
+        }
+
+        private void RbtIcecast_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (rbtIcecast.Checked == true && !string.IsNullOrEmpty(txtIdoumont.Text))
+                {
+                    txtIdoumont.BackColor = Color.LightGreen;
+                }
+            }
+            catch (Exception ex)
+            {
+                qualquerlixoaqui = ex.Message;
+            }
+        }
+
+        private void TxtDoproxy_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(txtDoproxy.Text))
+                {
+                    txtDoproxy.BackColor = Color.LightGreen;
+                }
+                else
+                {
+                    if (chkUsoproxy.Checked == true)
+                        txtDoproxy.BackColor = Color.Red;
+                }
+            }
+            catch (Exception ex)
+            {
+                qualquerlixoaqui = ex.Message;
+            }
+        }
+
+        private void TxtPortaproxy_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Regex.IsMatch(txtPortaproxy.Text, @"^[0-9]+$"))
+                {
+                    txtPortaproxy.BackColor = Color.LightGreen;
+                }
+                else
+                {
+                    if (chkUsoproxy.Checked == true)
+                        txtPortaproxy.BackColor = Color.Red;
+                }
+            }
+            catch (Exception ex)
+            {
+                qualquerlixoaqui = ex.Message;
+            }
+        }
+
+        private void TxtLoginproxy_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(txtLoginproxy.Text))
+                {
+                    txtLoginproxy.BackColor = Color.LightGreen;
+                }
+                else
+                {
+                    txtLoginproxy.BackColor = Color.Red;
+                }
+            }
+            catch (Exception ex)
+            {
+                qualquerlixoaqui = ex.Message;
+            }
+        }
+
+        private void TxtSenhaproxy_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(txtSenhaproxy.Text))
+                {
+                    txtSenhaproxy.BackColor = Color.LightGreen;
+                }
+                else
+                {
+                    txtSenhaproxy.BackColor = Color.Red;
+                }
+            }
+            catch (Exception ex)
+            {
+                qualquerlixoaqui = ex.Message;
+            }
+        }
+
+        private void ChkEnviatitulosom_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (chkEnviatitulosom.Checked == true)
+                {
+                    btnLocalizatxtsom.Visible = false;
+                    chkUrlsom.Visible = false;
+                    chkUrlsom.Checked = false;
+                    txtUrlsom.Text = "";
+                    lblArquivotextosom.Text = "";
+                    lblArquivotextosom.BackColor = Color.Empty;
+                }
+                else
+                {
+                    btnLocalizatxtsom.Visible = true;
+                    chkUrlsom.Visible = true;
+                    lblArquivotextosom.BackColor = Color.LightYellow;
+                    txtUrlsom.Text = "";
+                    lblArquivotextosom.Text = "";
+                }
+            }
+            catch (Exception ex)
+            {
+                qualquerlixoaqui = ex.Message;
             }
         }
     }
