@@ -32,9 +32,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UpdateRDS));
             this.lblTextotitulo = new System.Windows.Forms.Label();
             this.lblTextotipo = new System.Windows.Forms.Label();
-            this.rbtShoutcastv1 = new System.Windows.Forms.RadioButton();
-            this.rbtShoutcastv2 = new System.Windows.Forms.RadioButton();
-            this.rbtIcecast = new System.Windows.Forms.RadioButton();
             this.lblTextoselec = new System.Windows.Forms.Label();
             this.chkNaominimsystray = new System.Windows.Forms.CheckBox();
             this.chkNaonotificarsomtray = new System.Windows.Forms.CheckBox();
@@ -100,67 +97,34 @@
             this.btnAbretelainfo = new System.Windows.Forms.Button();
             this.temporizadorgeral = new System.Windows.Forms.Timer(this.components);
             this.lblNomeemissora = new System.Windows.Forms.Label();
+            this.cbCaracteres = new System.Windows.Forms.ComboBox();
+            this.cbTiposervidor = new System.Windows.Forms.ComboBox();
+            this.lblTextocodif = new System.Windows.Forms.Label();
+            this.btnNomeemi = new System.Windows.Forms.Button();
+            this.txtNomeemi = new System.Windows.Forms.TextBox();
+            this.btnNomeemialt = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pbFront)).BeginInit();
             this.SuspendLayout();
             // 
             // lblTextotitulo
             // 
-            this.lblTextotitulo.AutoSize = true;
             this.lblTextotitulo.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTextotitulo.Location = new System.Drawing.Point(330, 20);
+            this.lblTextotitulo.Location = new System.Drawing.Point(288, 20);
             this.lblTextotitulo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTextotitulo.Name = "lblTextotitulo";
-            this.lblTextotitulo.Size = new System.Drawing.Size(303, 25);
+            this.lblTextotitulo.Size = new System.Drawing.Size(375, 25);
             this.lblTextotitulo.TabIndex = 0;
             this.lblTextotitulo.Text = "Título do programa a definir";
             // 
             // lblTextotipo
             // 
             this.lblTextotipo.AutoSize = true;
-            this.lblTextotipo.Location = new System.Drawing.Point(7, 62);
+            this.lblTextotipo.Location = new System.Drawing.Point(7, 63);
             this.lblTextotipo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTextotipo.Name = "lblTextotipo";
             this.lblTextotipo.Size = new System.Drawing.Size(110, 16);
             this.lblTextotipo.TabIndex = 0;
             this.lblTextotipo.Text = "Tipo de servidor:";
-            // 
-            // rbtShoutcastv1
-            // 
-            this.rbtShoutcastv1.AutoSize = true;
-            this.rbtShoutcastv1.Checked = true;
-            this.rbtShoutcastv1.Location = new System.Drawing.Point(125, 60);
-            this.rbtShoutcastv1.Margin = new System.Windows.Forms.Padding(4);
-            this.rbtShoutcastv1.Name = "rbtShoutcastv1";
-            this.rbtShoutcastv1.Size = new System.Drawing.Size(331, 20);
-            this.rbtShoutcastv1.TabIndex = 0;
-            this.rbtShoutcastv1.TabStop = true;
-            this.rbtShoutcastv1.Text = "Shoutcast Server Versão 1.X - Padrão do aplicativo";
-            this.rbtShoutcastv1.UseVisualStyleBackColor = true;
-            this.rbtShoutcastv1.CheckedChanged += new System.EventHandler(this.RbtShoutcastv1_CheckedChanged);
-            // 
-            // rbtShoutcastv2
-            // 
-            this.rbtShoutcastv2.AutoSize = true;
-            this.rbtShoutcastv2.Location = new System.Drawing.Point(460, 60);
-            this.rbtShoutcastv2.Margin = new System.Windows.Forms.Padding(4);
-            this.rbtShoutcastv2.Name = "rbtShoutcastv2";
-            this.rbtShoutcastv2.Size = new System.Drawing.Size(196, 20);
-            this.rbtShoutcastv2.TabIndex = 1;
-            this.rbtShoutcastv2.Text = "Shoutcast Server Versão 2.X";
-            this.rbtShoutcastv2.UseVisualStyleBackColor = true;
-            this.rbtShoutcastv2.CheckedChanged += new System.EventHandler(this.RbtShoutcastv2_CheckedChanged);
-            // 
-            // rbtIcecast
-            // 
-            this.rbtIcecast.AutoSize = true;
-            this.rbtIcecast.Location = new System.Drawing.Point(660, 60);
-            this.rbtIcecast.Margin = new System.Windows.Forms.Padding(4);
-            this.rbtIcecast.Name = "rbtIcecast";
-            this.rbtIcecast.Size = new System.Drawing.Size(180, 20);
-            this.rbtIcecast.TabIndex = 2;
-            this.rbtIcecast.Text = "Icecast Server Versão 2.X";
-            this.rbtIcecast.UseVisualStyleBackColor = true;
-            this.rbtIcecast.CheckedChanged += new System.EventHandler(this.RbtIcecast_CheckedChanged);
             // 
             // lblTextoselec
             // 
@@ -244,7 +208,7 @@
             this.btnSalvadados.Margin = new System.Windows.Forms.Padding(4);
             this.btnSalvadados.Name = "btnSalvadados";
             this.btnSalvadados.Size = new System.Drawing.Size(80, 62);
-            this.btnSalvadados.TabIndex = 18;
+            this.btnSalvadados.TabIndex = 29;
             this.btnSalvadados.UseVisualStyleBackColor = true;
             this.btnSalvadados.Click += new System.EventHandler(this.BtnSalvadados_Click);
             // 
@@ -256,7 +220,7 @@
             this.btnCarregadados.Margin = new System.Windows.Forms.Padding(4);
             this.btnCarregadados.Name = "btnCarregadados";
             this.btnCarregadados.Size = new System.Drawing.Size(80, 62);
-            this.btnCarregadados.TabIndex = 19;
+            this.btnCarregadados.TabIndex = 31;
             this.btnCarregadados.UseVisualStyleBackColor = true;
             this.btnCarregadados.Click += new System.EventHandler(this.BtnCarregadados_Click);
             // 
@@ -287,7 +251,7 @@
             this.btnLocalizatxtsom.Margin = new System.Windows.Forms.Padding(4);
             this.btnLocalizatxtsom.Name = "btnLocalizatxtsom";
             this.btnLocalizatxtsom.Size = new System.Drawing.Size(40, 30);
-            this.btnLocalizatxtsom.TabIndex = 21;
+            this.btnLocalizatxtsom.TabIndex = 17;
             this.btnLocalizatxtsom.UseVisualStyleBackColor = true;
             this.btnLocalizatxtsom.Click += new System.EventHandler(this.BtnLocalizatxtsom_Click);
             // 
@@ -308,7 +272,7 @@
             this.chkUrlsom.Margin = new System.Windows.Forms.Padding(4);
             this.chkUrlsom.Name = "chkUrlsom";
             this.chkUrlsom.Size = new System.Drawing.Size(138, 20);
-            this.chkUrlsom.TabIndex = 22;
+            this.chkUrlsom.TabIndex = 18;
             this.chkUrlsom.Text = "Informar URL Aqui:";
             this.chkUrlsom.UseVisualStyleBackColor = true;
             this.chkUrlsom.CheckedChanged += new System.EventHandler(this.ChkUrlsom_CheckedChanged);
@@ -320,7 +284,7 @@
             this.txtUrlsom.Margin = new System.Windows.Forms.Padding(4);
             this.txtUrlsom.Name = "txtUrlsom";
             this.txtUrlsom.Size = new System.Drawing.Size(550, 22);
-            this.txtUrlsom.TabIndex = 23;
+            this.txtUrlsom.TabIndex = 19;
             this.txtUrlsom.TextChanged += new System.EventHandler(this.TxtUrlsom_TextChanged);
             // 
             // lblTextosomnext
@@ -341,7 +305,7 @@
             this.btnLocalizatxtsomnext.Margin = new System.Windows.Forms.Padding(4);
             this.btnLocalizatxtsomnext.Name = "btnLocalizatxtsomnext";
             this.btnLocalizatxtsomnext.Size = new System.Drawing.Size(40, 30);
-            this.btnLocalizatxtsomnext.TabIndex = 25;
+            this.btnLocalizatxtsomnext.TabIndex = 20;
             this.btnLocalizatxtsomnext.UseVisualStyleBackColor = true;
             this.btnLocalizatxtsomnext.Click += new System.EventHandler(this.BtnLocalizatxtsomnext_Click);
             // 
@@ -363,7 +327,7 @@
             this.chkUrlsomnext.Margin = new System.Windows.Forms.Padding(4);
             this.chkUrlsomnext.Name = "chkUrlsomnext";
             this.chkUrlsomnext.Size = new System.Drawing.Size(138, 20);
-            this.chkUrlsomnext.TabIndex = 26;
+            this.chkUrlsomnext.TabIndex = 21;
             this.chkUrlsomnext.Text = "Informar URL Aqui:";
             this.chkUrlsomnext.UseVisualStyleBackColor = true;
             this.chkUrlsomnext.CheckedChanged += new System.EventHandler(this.ChkUrlsomnext_CheckedChanged);
@@ -375,7 +339,7 @@
             this.txtUrlsomnext.Margin = new System.Windows.Forms.Padding(4);
             this.txtUrlsomnext.Name = "txtUrlsomnext";
             this.txtUrlsomnext.Size = new System.Drawing.Size(550, 22);
-            this.txtUrlsomnext.TabIndex = 27;
+            this.txtUrlsomnext.TabIndex = 22;
             this.txtUrlsomnext.TextChanged += new System.EventHandler(this.TxtUrlsomnext_TextChanged);
             // 
             // chkTransmproxsom
@@ -408,7 +372,7 @@
             this.txtDominioip.Margin = new System.Windows.Forms.Padding(4);
             this.txtDominioip.Name = "txtDominioip";
             this.txtDominioip.Size = new System.Drawing.Size(585, 22);
-            this.txtDominioip.TabIndex = 28;
+            this.txtDominioip.TabIndex = 23;
             this.txtDominioip.TextChanged += new System.EventHandler(this.TxtDominioip_TextChanged);
             // 
             // btnResolvernomeip
@@ -417,7 +381,7 @@
             this.btnResolvernomeip.Margin = new System.Windows.Forms.Padding(4);
             this.btnResolvernomeip.Name = "btnResolvernomeip";
             this.btnResolvernomeip.Size = new System.Drawing.Size(135, 25);
-            this.btnResolvernomeip.TabIndex = 29;
+            this.btnResolvernomeip.TabIndex = 24;
             this.btnResolvernomeip.Text = "Resolver o domínio";
             this.btnResolvernomeip.UseVisualStyleBackColor = true;
             this.btnResolvernomeip.Click += new System.EventHandler(this.BtnResolvernomeip_Click);
@@ -439,7 +403,7 @@
             this.txtPorta.Margin = new System.Windows.Forms.Padding(4);
             this.txtPorta.Name = "txtPorta";
             this.txtPorta.Size = new System.Drawing.Size(132, 22);
-            this.txtPorta.TabIndex = 30;
+            this.txtPorta.TabIndex = 25;
             this.txtPorta.TextChanged += new System.EventHandler(this.TxtPorta_TextChanged);
             // 
             // lblTextoidmon
@@ -459,7 +423,7 @@
             this.txtIdoumont.Margin = new System.Windows.Forms.Padding(4);
             this.txtIdoumont.Name = "txtIdoumont";
             this.txtIdoumont.Size = new System.Drawing.Size(405, 22);
-            this.txtIdoumont.TabIndex = 31;
+            this.txtIdoumont.TabIndex = 26;
             this.txtIdoumont.TextChanged += new System.EventHandler(this.TxtIdoumont_TextChanged);
             // 
             // lblTextologin
@@ -479,7 +443,7 @@
             this.txtLoginserver.Margin = new System.Windows.Forms.Padding(4);
             this.txtLoginserver.Name = "txtLoginserver";
             this.txtLoginserver.Size = new System.Drawing.Size(305, 22);
-            this.txtLoginserver.TabIndex = 32;
+            this.txtLoginserver.TabIndex = 27;
             this.txtLoginserver.TextChanged += new System.EventHandler(this.TxtLoginserver_TextChanged);
             // 
             // lblTextosenha
@@ -500,7 +464,7 @@
             this.txtSenhaserver.Name = "txtSenhaserver";
             this.txtSenhaserver.PasswordChar = '*';
             this.txtSenhaserver.Size = new System.Drawing.Size(420, 22);
-            this.txtSenhaserver.TabIndex = 33;
+            this.txtSenhaserver.TabIndex = 28;
             this.txtSenhaserver.TextChanged += new System.EventHandler(this.TxtSenhaserver_TextChanged);
             // 
             // btnRevisarinfo
@@ -512,7 +476,7 @@
             this.btnRevisarinfo.Margin = new System.Windows.Forms.Padding(4);
             this.btnRevisarinfo.Name = "btnRevisarinfo";
             this.btnRevisarinfo.Size = new System.Drawing.Size(80, 62);
-            this.btnRevisarinfo.TabIndex = 34;
+            this.btnRevisarinfo.TabIndex = 31;
             this.btnRevisarinfo.UseVisualStyleBackColor = true;
             this.btnRevisarinfo.Visible = false;
             this.btnRevisarinfo.Click += new System.EventHandler(this.BtnRevisarinfo_Click);
@@ -525,7 +489,7 @@
             this.btnPararenviords.Margin = new System.Windows.Forms.Padding(4);
             this.btnPararenviords.Name = "btnPararenviords";
             this.btnPararenviords.Size = new System.Drawing.Size(80, 62);
-            this.btnPararenviords.TabIndex = 35;
+            this.btnPararenviords.TabIndex = 32;
             this.btnPararenviords.UseVisualStyleBackColor = true;
             this.btnPararenviords.Visible = false;
             this.btnPararenviords.Click += new System.EventHandler(this.BtnPararenviords_Click);
@@ -538,7 +502,7 @@
             this.btnEnviardadosrds.Margin = new System.Windows.Forms.Padding(4);
             this.btnEnviardadosrds.Name = "btnEnviardadosrds";
             this.btnEnviardadosrds.Size = new System.Drawing.Size(80, 62);
-            this.btnEnviardadosrds.TabIndex = 36;
+            this.btnEnviardadosrds.TabIndex = 32;
             this.btnEnviardadosrds.UseVisualStyleBackColor = true;
             this.btnEnviardadosrds.Visible = false;
             this.btnEnviardadosrds.Click += new System.EventHandler(this.BtnEnviardadosrds_Click);
@@ -551,7 +515,7 @@
             this.btnVerificardadosderds.Margin = new System.Windows.Forms.Padding(4);
             this.btnVerificardadosderds.Name = "btnVerificardadosderds";
             this.btnVerificardadosderds.Size = new System.Drawing.Size(80, 62);
-            this.btnVerificardadosderds.TabIndex = 37;
+            this.btnVerificardadosderds.TabIndex = 32;
             this.btnVerificardadosderds.UseVisualStyleBackColor = true;
             this.btnVerificardadosderds.Click += new System.EventHandler(this.BtnVerificardadosderds_Click);
             // 
@@ -608,10 +572,10 @@
             // pbFront
             // 
             this.pbFront.Image = ((System.Drawing.Image)(resources.GetObject("pbFront.Image")));
-            this.pbFront.Location = new System.Drawing.Point(250, 15);
+            this.pbFront.Location = new System.Drawing.Point(250, 17);
             this.pbFront.Margin = new System.Windows.Forms.Padding(4);
             this.pbFront.Name = "pbFront";
-            this.pbFront.Size = new System.Drawing.Size(75, 31);
+            this.pbFront.Size = new System.Drawing.Size(30, 31);
             this.pbFront.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbFront.TabIndex = 30;
             this.pbFront.TabStop = false;
@@ -734,7 +698,7 @@
             // 
             // btnVerupdate
             // 
-            this.btnVerupdate.Location = new System.Drawing.Point(810, 15);
+            this.btnVerupdate.Location = new System.Drawing.Point(800, 14);
             this.btnVerupdate.Margin = new System.Windows.Forms.Padding(4);
             this.btnVerupdate.Name = "btnVerupdate";
             this.btnVerupdate.Size = new System.Drawing.Size(170, 28);
@@ -761,7 +725,7 @@
             this.btnAbrirappdata.Margin = new System.Windows.Forms.Padding(4);
             this.btnAbrirappdata.Name = "btnAbrirappdata";
             this.btnAbrirappdata.Size = new System.Drawing.Size(80, 62);
-            this.btnAbrirappdata.TabIndex = 42;
+            this.btnAbrirappdata.TabIndex = 33;
             this.btnAbrirappdata.UseVisualStyleBackColor = true;
             this.btnAbrirappdata.Click += new System.EventHandler(this.BtnAbrirappdata_Click);
             // 
@@ -828,7 +792,7 @@
             this.btnAbretelainfo.Margin = new System.Windows.Forms.Padding(4);
             this.btnAbretelainfo.Name = "btnAbretelainfo";
             this.btnAbretelainfo.Size = new System.Drawing.Size(80, 62);
-            this.btnAbretelainfo.TabIndex = 45;
+            this.btnAbretelainfo.TabIndex = 34;
             this.btnAbretelainfo.UseVisualStyleBackColor = true;
             this.btnAbretelainfo.Click += new System.EventHandler(this.BtnAbretelainfo_Click);
             // 
@@ -841,11 +805,87 @@
             this.lblNomeemissora.TabIndex = 0;
             this.lblNomeemissora.Text = "Nome da rádio:";
             // 
+            // cbCaracteres
+            // 
+            this.cbCaracteres.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbCaracteres.FormattingEnabled = true;
+            this.cbCaracteres.Items.AddRange(new object[] {
+            "Sem codificação de arquivo",
+            "Codificação padrão",
+            "Codificação em UTF-8",
+            "Codificação em UTF-7",
+            "Codificação em ASCII"});
+            this.cbCaracteres.Location = new System.Drawing.Point(775, 59);
+            this.cbCaracteres.Name = "cbCaracteres";
+            this.cbCaracteres.Size = new System.Drawing.Size(195, 24);
+            this.cbCaracteres.TabIndex = 2;
+            // 
+            // cbTiposervidor
+            // 
+            this.cbTiposervidor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbTiposervidor.FormattingEnabled = true;
+            this.cbTiposervidor.Items.AddRange(new object[] {
+            "Shoutcast Server Versão 1.X - Versão mais antiga",
+            "Shoutcast Server Versão 2.X - Versão mais recente",
+            "Icecast Server Versão 2.X.X - Qualquer servidor 2.X.X"});
+            this.cbTiposervidor.Location = new System.Drawing.Point(125, 59);
+            this.cbTiposervidor.Name = "cbTiposervidor";
+            this.cbTiposervidor.Size = new System.Drawing.Size(344, 24);
+            this.cbTiposervidor.TabIndex = 1;
+            this.cbTiposervidor.SelectedValueChanged += new System.EventHandler(this.CbTiposervidor_SelectedValueChanged);
+            // 
+            // lblTextocodif
+            // 
+            this.lblTextocodif.AutoSize = true;
+            this.lblTextocodif.Location = new System.Drawing.Point(476, 63);
+            this.lblTextocodif.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblTextocodif.Name = "lblTextocodif";
+            this.lblTextocodif.Size = new System.Drawing.Size(288, 16);
+            this.lblTextocodif.TabIndex = 0;
+            this.lblTextocodif.Text = "Codificação a usar na leitura de arquivo e URL:";
+            // 
+            // btnNomeemi
+            // 
+            this.btnNomeemi.Location = new System.Drawing.Point(13, 30);
+            this.btnNomeemi.Margin = new System.Windows.Forms.Padding(4);
+            this.btnNomeemi.Name = "btnNomeemi";
+            this.btnNomeemi.Size = new System.Drawing.Size(60, 25);
+            this.btnNomeemi.TabIndex = 35;
+            this.btnNomeemi.Text = "Gravar";
+            this.btnNomeemi.UseVisualStyleBackColor = true;
+            this.btnNomeemi.Click += new System.EventHandler(this.BtnNomeemi_Click);
+            // 
+            // txtNomeemi
+            // 
+            this.txtNomeemi.Location = new System.Drawing.Point(114, 7);
+            this.txtNomeemi.MaxLength = 32;
+            this.txtNomeemi.Name = "txtNomeemi";
+            this.txtNomeemi.Size = new System.Drawing.Size(130, 22);
+            this.txtNomeemi.TabIndex = 36;
+            // 
+            // btnNomeemialt
+            // 
+            this.btnNomeemialt.Location = new System.Drawing.Point(13, 30);
+            this.btnNomeemialt.Margin = new System.Windows.Forms.Padding(4);
+            this.btnNomeemialt.Name = "btnNomeemialt";
+            this.btnNomeemialt.Size = new System.Drawing.Size(60, 25);
+            this.btnNomeemialt.TabIndex = 37;
+            this.btnNomeemialt.Text = "Alterar";
+            this.btnNomeemialt.UseVisualStyleBackColor = true;
+            this.btnNomeemialt.Visible = false;
+            this.btnNomeemialt.Click += new System.EventHandler(this.BtnNomeemialt_Click);
+            // 
             // UpdateRDS
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(984, 612);
+            this.Controls.Add(this.btnNomeemialt);
+            this.Controls.Add(this.txtNomeemi);
+            this.Controls.Add(this.btnNomeemi);
+            this.Controls.Add(this.lblTextocodif);
+            this.Controls.Add(this.cbTiposervidor);
+            this.Controls.Add(this.cbCaracteres);
             this.Controls.Add(this.lblNomeemissora);
             this.Controls.Add(this.btnAbretelainfo);
             this.Controls.Add(this.lblTitulobotabform);
@@ -908,9 +948,6 @@
             this.Controls.Add(this.chkNaonotificarsomtray);
             this.Controls.Add(this.chkNaominimsystray);
             this.Controls.Add(this.lblTextoselec);
-            this.Controls.Add(this.rbtIcecast);
-            this.Controls.Add(this.rbtShoutcastv2);
-            this.Controls.Add(this.rbtShoutcastv1);
             this.Controls.Add(this.lblTextotipo);
             this.Controls.Add(this.lblTextotitulo);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -934,9 +971,6 @@
 
         private System.Windows.Forms.Label lblTextotitulo;
         private System.Windows.Forms.Label lblTextotipo;
-        private System.Windows.Forms.RadioButton rbtShoutcastv1;
-        private System.Windows.Forms.RadioButton rbtShoutcastv2;
-        private System.Windows.Forms.RadioButton rbtIcecast;
         private System.Windows.Forms.Label lblTextoselec;
         private System.Windows.Forms.CheckBox chkNaominimsystray;
         private System.Windows.Forms.CheckBox chkNaonotificarsomtray;
@@ -1002,6 +1036,12 @@
         private System.Windows.Forms.Button btnAbretelainfo;
         private System.Windows.Forms.Timer temporizadorgeral;
         private System.Windows.Forms.Label lblNomeemissora;
+        private System.Windows.Forms.ComboBox cbCaracteres;
+        private System.Windows.Forms.ComboBox cbTiposervidor;
+        private System.Windows.Forms.Label lblTextocodif;
+        private System.Windows.Forms.Button btnNomeemi;
+        private System.Windows.Forms.TextBox txtNomeemi;
+        private System.Windows.Forms.Button btnNomeemialt;
     }
 }
 

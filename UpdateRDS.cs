@@ -13,7 +13,7 @@ using System.Windows.Forms;
 using System.Xml;
 using UpdateRDS.Properties;
 
-/// Update RDS By GabardoHost - Versão 0.0.3 Alfa build
+/// Update RDS By GabardoHost - Versão 0.0.4 Alfa build
 /// @file UpdateRDS.cs
 /// <summary>
 /// Este arquivo é o código principal do aplicativo
@@ -22,8 +22,8 @@ using UpdateRDS.Properties;
 /// Mas resolvi criar um para disponibilizar para todos, pois esse programa ou vem associado a um encoder ou não tem para download, então fiz um!
 /// Minha ideia é essa, se uma coisa não existe e você precisa muito, então crie você mesmo! pode ser carro, casa, transmissor de FM, programa de PC, celular etc... CRIE VOCÊ MESMO!!!
 /// @author Vanderson Gabardo <vanderson@vanderson.net.br>
-/// @date 27/07/2019
-/// $Id: UpdateRDS.cs, v0.0.3 2019/07/27 23:30:00 Vanderson Gabardo $
+/// @date 02/08/2019
+/// $Id: UpdateRDS.cs, v0.0.4 2019/08/02 23:30:00 Vanderson Gabardo $
 
 namespace UpdateRDS
 {
@@ -40,7 +40,7 @@ namespace UpdateRDS
         static string weberrogeral;
         static bool eumnext = false;
         static bool versaonova = false;
-        static readonly string versaoappcurrent = "Versao 0.0.3";
+        static readonly string versaoappcurrent = "Versao 0.0.4";
         static string conteudotexto;
         static string conteudotextoantigo;
         static int errocontanext = -1;
@@ -50,7 +50,6 @@ namespace UpdateRDS
         static string errodaweblink = null;
         static readonly string diretoriodoaplicativo = $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Update RDS\";
         static int iconealternar = 0;
-
         public UpdateRDSInfo Updrdsfcar { get; } = new UpdateRDSInfo();
 
         public UpdateRDS()
@@ -104,6 +103,10 @@ namespace UpdateRDS
 
                 /// Carrega interface de informações
                 Updrdsfcar.Show();
+
+                /// Seleciona primeiro item das listas
+                cbCaracteres.SelectedIndex = 1;
+                cbTiposervidor.SelectedIndex = 1;
             }
             catch (Exception ex)
             {
@@ -228,7 +231,7 @@ namespace UpdateRDS
                     /// Verifica se o usuário selecionou a caixa para não ser notificado, se não marcou, Transfere dados para um balão chato haha de texto
                     if (chkNaonotificarsomtray.Checked == false)
                         ntfIcone.ShowBalloonTip(60000, "Update RDS - Erro de conexão", mensagemerro, ToolTipIcon.Warning);
-
+                    #region Alterar para XML em breve
                     /// Gera arquivo texto ou abre um arquivo existente
                     FileStream fs = new FileStream(caminhoarquivolog, FileMode.OpenOrCreate);
 
@@ -242,9 +245,9 @@ namespace UpdateRDS
                     sw.WriteLine("Mensagem completa exibida: " + mensagemerro + ". Por favor, Verifique a conexão com o servidor! ");
                     sw.WriteLine("Mensagem técnica exibida: " + weberrogeral);
                     sw.WriteLine("Código de erro: " + weberrogeralcode);
-                    sw.WriteLine("Shoutcast Server versão 1: " + rbtShoutcastv1.Checked);
-                    sw.WriteLine("Shoutcast Server versão 2: " + rbtShoutcastv2.Checked);
-                    sw.WriteLine("Icecast Server: " + rbtIcecast.Checked);
+                    sw.WriteLine("Nome da emissora: " + txtNomeemi.Text);
+                    sw.WriteLine("Codificação de caracteres usada: " + cbCaracteres.SelectedItem + ". Item selecionado: " + cbCaracteres.SelectedIndex);
+                    sw.WriteLine("Tipo de Servidor: " + cbTiposervidor.SelectedItem + ". Item selecionado: " + cbTiposervidor.SelectedIndex);
                     sw.WriteLine("Não minimizar no system tray: " + chkNaominimsystray.Checked);
                     sw.WriteLine("Não notificar via systray: " + chkNaonotificarsomtray.Checked);
                     sw.WriteLine("Remover a Acentuação das palavras: " + chkAcentospalavras.Checked);
@@ -274,9 +277,7 @@ namespace UpdateRDS
                     /// Limpa a sessão
                     sw.Flush();
                     sw.Close();
-                    sw.Dispose();
-                    fs.Close();
-                    fs.Dispose();
+                    #endregion
                 }
 
                 /// Tratamento de erro de aplicativo
@@ -302,7 +303,7 @@ namespace UpdateRDS
                                 dadosdotxterro = sr.ReadToEnd();
                             }
                         }
-
+                        #region Alterar para XML em breve
                         /// Gera arquivo texto ou abre um arquivo existente
                         FileStream fs = new FileStream(caminhoarquivolog, FileMode.OpenOrCreate);
 
@@ -315,9 +316,9 @@ namespace UpdateRDS
                         sw.WriteLine("Data e hora da execução do erro: " + DateTime.Now);
                         sw.WriteLine("Stack Trace Completo: " + errogeralgravado);
                         sw.WriteLine("Mensagem completa exibida: " + errogeral);
-                        sw.WriteLine("Shoutcast Server versão 1: " + rbtShoutcastv1.Checked);
-                        sw.WriteLine("Shoutcast Server versão 2: " + rbtShoutcastv2.Checked);
-                        sw.WriteLine("Icecast Server: " + rbtIcecast.Checked);
+                        sw.WriteLine("Nome da emissora: " + txtNomeemi.Text);
+                        sw.WriteLine("Codificação de caracteres usada: " + cbCaracteres.SelectedItem + ". Item selecionado: " + cbCaracteres.SelectedIndex);
+                        sw.WriteLine("Tipo de Servidor: " + cbTiposervidor.SelectedItem + ". Item selecionado: " + cbTiposervidor.SelectedIndex);
                         sw.WriteLine("Não minimizar no system tray: " + chkNaominimsystray.Checked);
                         sw.WriteLine("Não notificar via systray: " + chkNaonotificarsomtray.Checked);
                         sw.WriteLine("Remover a Acentuação das palavras: " + chkAcentospalavras.Checked);
@@ -347,9 +348,7 @@ namespace UpdateRDS
                         /// Limpa a sessão
                         sw.Flush();
                         sw.Close();
-                        sw.Dispose();
-                        fs.Close();
-                        fs.Dispose();
+                        #endregion
                     }
                 }
             }
@@ -367,12 +366,12 @@ namespace UpdateRDS
                 Directory.CreateDirectory(diretoriodoaplicativo);
 
             /// Informa versão do aplicativo para o usuário alterando a cor
-            lblVersaoapp.Text = "Versão 0.0.3 Alfa\n(Sem verificar nova versão)";
+            lblVersaoapp.Text = "Versão 0.0.4 Alfa\n(Sem verificar nova versão)";
             lblVersaoapp.ForeColor = Color.Yellow;
 
             /// Declara URL completa de onde vai verificar a atualização do software
-            /// string urlcompletaversao = "http://localhost/versao.txt";
-            string urlcompletaversao = "http://www.vanderson.net.br/updaterds/versao.txt";
+            string urlcompletaversao = "http://localhost/versao.txt";
+            /// string urlcompletaversao = "http://www.vanderson.net.br/updaterds/versao.txt";
 
             /// Declara URL completa de onde baixar o arquivo
             string urlcompletadownload = "http://www.vanderson.net.br/updaterds/UpdateRDSInstaller.exe";
@@ -381,36 +380,31 @@ namespace UpdateRDS
             string versaonovadoapp;
 
             /// Abre sessão de webclient
-            WebClient wcurlcompletaversao = new WebClient();
-
-            /// Define o UserAgent do webclient
-            wcurlcompletaversao.Headers.Add(HttpRequestHeader.UserAgent, useragentdef);
-
-            /// Define o servidor proxy caso tenha
-            if (chkUsoproxy.Checked == true)
+            using (WebClient wcurlcompletaversao = new WebClient())
             {
-                /// Chama a função
-                DadosProxy();
+                /// Define o UserAgent do webclient
+                wcurlcompletaversao.Headers.Add(HttpRequestHeader.UserAgent, useragentdef);
 
-                /// Define o servidor proxy global
-                wcurlcompletaversao.Proxy = servidorproxydoaplicativo;
+                /// Define o servidor proxy caso tenha
+                if (chkUsoproxy.Checked == true)
+                {
+                    /// Chama a função
+                    DadosProxy();
+
+                    /// Define o servidor proxy global
+                    wcurlcompletaversao.Proxy = servidorproxydoaplicativo;
+                }
+
+                /// Pega os dados da URL
+                Stream strurlcompleta = wcurlcompletaversao.OpenRead(urlcompletaversao);
+
+                /// Pega os dados armazenados do que foi capturado na URL
+                using (StreamReader rdrurlcompleta = new StreamReader(strurlcompleta, Encoding.Default))
+                {
+                    /// Transfere os dados capturados da URL, a informação do texto para processamento
+                    versaonovadoapp = rdrurlcompleta.ReadLine();
+                }
             }
-
-            /// Pega os dados da URL
-            Stream strurlcompleta = wcurlcompletaversao.OpenRead(urlcompletaversao);
-
-            /// Pega os dados armazenados do que foi capturado na URL
-            StreamReader rdrurlcompleta = new StreamReader(strurlcompleta, Encoding.Default);
-
-            /// Transfere os dados capturados da URL, a informação do texto para processamento
-            versaonovadoapp = rdrurlcompleta.ReadLine();
-
-            /// Encerra a sessão do Webclient
-            wcurlcompletaversao.Dispose();
-            strurlcompleta.Close();
-            strurlcompleta.Dispose();
-            rdrurlcompleta.Close();
-            rdrurlcompleta.Dispose();
 
             if (versaonovadoapp != versaoappcurrent)
             {
@@ -418,7 +412,7 @@ namespace UpdateRDS
                 versaonova = true;
 
                 /// Altera label de aviso
-                lblVersaoapp.Text = "Versão 0.0.3 Alfa\n(DESATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.0.4 Alfa\n(DESATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Red;
 
                 /// Envia mensagem perguntando se o usuário gostaria de baixar a nova versão do aplicativo, Caso o usuário queira baixar o aplicativo
@@ -427,26 +421,24 @@ namespace UpdateRDS
                     if (!File.Exists($"{diretoriodoaplicativo}UpdateRDSInstaller.exe"))
                     {
                         /// Abre sessão de webclient
-                        WebClient wcurlcompletadownload = new WebClient();
-
-                        /// Define o UserAgent do webclient
-                        wcurlcompletadownload.Headers.Add(HttpRequestHeader.UserAgent, useragentdef);
-
-                        /// Define o servidor proxy caso tenha
-                        if (chkUsoproxy.Checked == true)
+                        using (WebClient wcurlcompletadownload = new WebClient())
                         {
-                            /// Chama a função
-                            DadosProxy();
+                            /// Define o UserAgent do webclient
+                            wcurlcompletadownload.Headers.Add(HttpRequestHeader.UserAgent, useragentdef);
 
-                            /// Define o servidor proxy global
-                            wcurlcompletadownload.Proxy = servidorproxydoaplicativo;
+                            /// Define o servidor proxy caso tenha
+                            if (chkUsoproxy.Checked == true)
+                            {
+                                /// Chama a função
+                                DadosProxy();
+
+                                /// Define o servidor proxy global
+                                wcurlcompletadownload.Proxy = servidorproxydoaplicativo;
+                            }
+
+                            /// Pega os dados da URL
+                            wcurlcompletadownload.DownloadFile(urlcompletadownload, $"{diretoriodoaplicativo}UpdateRDSInstaller.exe");
                         }
-
-                        /// Pega os dados da URL
-                        wcurlcompletadownload.DownloadFile(urlcompletadownload, $"{diretoriodoaplicativo}UpdateRDSInstaller.exe");
-
-                        /// Encerra a sessão do Webclient
-                        wcurlcompletadownload.Dispose();
                     }
 
                     /// Envia mensagem de que o aplicativo está baixado
@@ -474,7 +466,7 @@ namespace UpdateRDS
             }
             else
             {
-                lblVersaoapp.Text = "Versão 0.0.3 Alfa\n(ATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.0.4 Alfa\n(ATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Green;
                 versaonova = false;
             }
@@ -511,14 +503,14 @@ namespace UpdateRDS
             string caminhoarquivonext = $@"{lblArquivotextosomnext.Text}";
 
             /// Verifica se é dados de Icecast, se for, realiza as condições de alteração abaixo para compatibilizar o icecast v2, Caso o usuário não preencha nenhuma informação de ponto de montagem, Então solicita para o usuário preencher
-            if (rbtIcecast.Checked == true & string.IsNullOrEmpty(idoupontomont))
+            if (cbTiposervidor.SelectedIndex == 2 & string.IsNullOrEmpty(idoupontomont))
             {
                 txtIdoumont.BackColor = Color.Red;
                 throw new Exception("Preencha a caixa de texto ID com números para Shoutcast Server ou ponto de montagem para Icecast Server!");
             }
 
             /// Carrega a URL padrão para Shoutcast Server v2 apenas caso marcado pelo usuário, Se as caixas de texto estiverem preenchidas diferente de números ou sem nenhum dado, Então solicita para o usuário preencher
-            if (rbtShoutcastv2.Checked == true & !Regex.IsMatch(idoupontomont, @"^[0-9]+$"))
+            if (cbTiposervidor.SelectedIndex == 1 & !Regex.IsMatch(idoupontomont, @"^[0-9]+$"))
             {
                 txtIdoumont.BackColor = Color.Red;
                 throw new Exception("Preencha a caixa de texto ID ou ponto de montagem apenas com números para Shoutcast V2!");
@@ -543,7 +535,7 @@ namespace UpdateRDS
                 throw new Exception("Preencha a caixa de texto URL com o link VÁLIDO http://link/arquivotexto.txt que leva ao arquivo texto ou a URL do currentsong do servidor shoutcast!");
             }
             /// Caso não seja uma shoutcast v2 entra na condição abaixo
-            if (chkTransmproxsom.Checked == true && rbtShoutcastv2.Checked == true)
+            if (chkTransmproxsom.Checked == true && cbTiposervidor.SelectedIndex == 1)
             {
                 /// Se o usuário marcou para digitar um URL e está nulo ou vazio faz a condição de exceção, Se estiver vazia então apresenta mensagem de erro para o usuário preencher a caixa
                 if (chkUrlsomnext.Checked == true && string.IsNullOrEmpty(txtUrlsomnext.Text))
@@ -616,8 +608,6 @@ namespace UpdateRDS
             /// Caso o arquivo texto seja o mesmo do anterior, Avisa o usuário que o arquivo informado não pode ser o mesmo
             if (chkUrlsom.Checked == false && chkUrlsomnext.Checked == false && caminhoarquivo == caminhoarquivonext)
             {
-                //lblArquivotextosom.BackColor = Color.Red;
-                //lblArquivotextosomnext.BackColor = Color.Red;
                 throw new Exception("O Caminho selecionado para o arquivo de texto com o nome do áudio é o mesmo do arquivo texto de proximo som! Você não pode colocar o mesmo arquivo, precisa ser necessariamente dois arquivos diferentes!");
             }
 
@@ -675,7 +665,7 @@ namespace UpdateRDS
             /// Pega as informações dos textos das caixas de preenchimento e adiciona informações na string
             string arquivotextoantigo = $@"{diretoriodoaplicativo}{identificadorproc}OLD.txt";
             string urlcompleta = txtUrlsom.Text;
-            string dadoscapturadosdaurl;
+            string dadoscapturadosdaurl = null;
 
             /// Caso o arquivo a ser processado é um next song, altera as propriedades dele
             if (eumnext == true)
@@ -715,37 +705,74 @@ namespace UpdateRDS
             }
             try
             {
+                /// Pega os dados da URL
+                Stream strurlcompleta = null;
+                StreamReader rdrurlcompleta = null;
+
                 /// Abre sessão de webclient
-                WebClient wcurlcompleta = new WebClient();
-
-                /// Define o UserAgent do webclient
-                wcurlcompleta.Headers.Add(HttpRequestHeader.UserAgent, useragentdef);
-
-                /// Define o servidor proxy caso tenha
-                if (chkUsoproxy.Checked == true)
+                using (WebClient wcurlcompleta = new WebClient())
                 {
-                    /// Chama a função
-                    DadosProxy();
+                    /// Define o UserAgent do webclient
+                    wcurlcompleta.Headers.Add(HttpRequestHeader.UserAgent, useragentdef);
 
-                    /// Define o servidor proxy global
-                    wcurlcompleta.Proxy = servidorproxydoaplicativo;
+                    /// Define o servidor proxy caso tenha
+                    if (chkUsoproxy.Checked == true)
+                    {
+                        /// Chama a função
+                        DadosProxy();
+
+                        /// Define o servidor proxy global
+                        wcurlcompleta.Proxy = servidorproxydoaplicativo;
+                    }
+                    /// Pega os dados da URL
+                    strurlcompleta = wcurlcompleta.OpenRead(urlcompleta);
                 }
 
-                /// Pega os dados da URL
-                Stream strurlcompleta = wcurlcompleta.OpenRead(urlcompleta);
-
-                /// Pega os dados armazenados do que foi capturado na URL
-                StreamReader rdrurlcompleta = new StreamReader(strurlcompleta);
-
-                /// Transfere os dados capturados da URL, a informação do texto para processamento
-                dadoscapturadosdaurl = rdrurlcompleta.ReadLine();
-
-                /// Encerra a sessão do Webclient
-                wcurlcompleta.Dispose();
-                strurlcompleta.Close();
-                strurlcompleta.Dispose();
-                rdrurlcompleta.Close();
-                rdrurlcompleta.Dispose();
+                if (cbCaracteres.SelectedIndex == 0)
+                {
+                    /// Pega os dados armazenados do que foi capturado na URL
+                    using (rdrurlcompleta = new StreamReader(strurlcompleta))
+                    {
+                        /// Transfere os dados capturados da URL, a informação do texto para processamento
+                        dadoscapturadosdaurl = rdrurlcompleta.ReadLine();
+                    }
+                }
+                if (cbCaracteres.SelectedIndex == 1)
+                {
+                    /// Pega os dados armazenados do que foi capturado na URL
+                    using (rdrurlcompleta = new StreamReader(strurlcompleta, Encoding.Default))
+                    {
+                        /// Transfere os dados capturados da URL, a informação do texto para processamento
+                        dadoscapturadosdaurl = rdrurlcompleta.ReadLine();
+                    }
+                }
+                if (cbCaracteres.SelectedIndex == 2)
+                {
+                    /// Pega os dados armazenados do que foi capturado na URL
+                    using (rdrurlcompleta = new StreamReader(strurlcompleta, Encoding.UTF8))
+                    {
+                        /// Transfere os dados capturados da URL, a informação do texto para processamento
+                        dadoscapturadosdaurl = rdrurlcompleta.ReadLine();
+                    }
+                }
+                if (cbCaracteres.SelectedIndex == 3)
+                {
+                    /// Pega os dados armazenados do que foi capturado na URL
+                    using (rdrurlcompleta = new StreamReader(strurlcompleta, Encoding.UTF7))
+                    {
+                        /// Transfere os dados capturados da URL, a informação do texto para processamento
+                        dadoscapturadosdaurl = rdrurlcompleta.ReadLine();
+                    }
+                }
+                if (cbCaracteres.SelectedIndex == 4)
+                {
+                    /// Pega os dados armazenados do que foi capturado na URL
+                    using (rdrurlcompleta = new StreamReader(strurlcompleta, Encoding.ASCII))
+                    {
+                        /// Transfere os dados capturados da URL, a informação do texto para processamento
+                        dadoscapturadosdaurl = rdrurlcompleta.ReadLine();
+                    }
+                }
 
                 /// Caso tenha erros e é um retorno da conexão então envia uma mensagem de reconexão para o usuário
                 if (erroconta == 0)
@@ -880,20 +907,15 @@ namespace UpdateRDS
                     Directory.CreateDirectory($@"{diretoriodoaplicativo}");
 
                 /// Cria ou abre o arquivo existente para leitura
-                FileStream fs = new FileStream(arquivotextoantigo, FileMode.OpenOrCreate);
-
-                /// Grava ou salva arquivo em UTF 8 com a solicitação
-                StreamWriter sw = new StreamWriter(fs);
-
-                /// Captura texto do arquivo texto e também dos dados adicionais para gravar no arquivo
-                sw.WriteLine(dadoscapturadosdaurl);
-
-                /// Limpa a sessão
-                sw.Flush();
-                sw.Close();
-                sw.Dispose();
-                fs.Close();
-                fs.Dispose();
+                using (FileStream fs = new FileStream(arquivotextoantigo, FileMode.OpenOrCreate))
+                {
+                    /// Grava ou salva arquivo em UTF 8 com a solicitação
+                    using (StreamWriter sw = new StreamWriter(fs))
+                    {
+                        /// Captura texto do arquivo texto e também dos dados adicionais para gravar no arquivo
+                        sw.WriteLine(dadoscapturadosdaurl);
+                    }
+                }
             }
 
             /// Pega o arquivo antigo para ler com o nome do áudio só pra fazer a comparação abaixo
@@ -901,12 +923,6 @@ namespace UpdateRDS
             {
                 /// Carrega arquivo de texto antigo e faz a leitura da primeira linha do arquivo com o nome do áudio
                 conteudotextoantigo = srOld.ReadLine().ToString();
-
-                /// Força o fechamento do arquivo para que não dê erro no delete do arquivo
-                srOld.Close();
-
-                /// Força o despejo da memória do arquivo carregado
-                srOld.Dispose();
             }
 
             /// Verifica se o arquivo anterior é o mesmo do atual, se não for então apaga o arquivo anterior e copia o arquivo novo
@@ -918,20 +934,15 @@ namespace UpdateRDS
                     File.Delete(arquivotextoantigo);
 
                     /// Cria ou abre o arquivo existente para leitura
-                    FileStream fs = new FileStream(arquivotextoantigo, FileMode.OpenOrCreate);
-
-                    /// Grava ou salva arquivo em UTF 8 com a solicitação
-                    StreamWriter sw = new StreamWriter(fs);
-
-                    /// Captura texto do arquivo texto e também dos dados adicionais para gravar no arquivo
-                    sw.WriteLine(dadoscapturadosdaurl);
-
-                    /// Limpa a sessão
-                    sw.Flush();
-                    sw.Close();
-                    sw.Dispose();
-                    fs.Close();
-                    fs.Dispose();
+                    using (FileStream fs = new FileStream(arquivotextoantigo, FileMode.OpenOrCreate))
+                    {
+                        /// Grava ou salva arquivo em UTF 8 com a solicitação
+                        using (StreamWriter sw = new StreamWriter(fs))
+                        {
+                            /// Captura texto do arquivo texto e também dos dados adicionais para gravar no arquivo
+                            sw.WriteLine(dadoscapturadosdaurl);
+                        }
+                    }
                 }
                 catch (IOException errfile)
                 {
@@ -948,20 +959,15 @@ namespace UpdateRDS
                     System.Threading.Thread.Sleep(1500);
 
                     /// Cria ou abre o arquivo existente para leitura
-                    FileStream fs = new FileStream(arquivotextoantigo, FileMode.OpenOrCreate);
-
-                    /// Grava ou salva arquivo em UTF 8 com a solicitação
-                    StreamWriter sw = new StreamWriter(fs);
-
-                    /// Captura texto do arquivo texto e também dos dados adicionais para gravar no arquivo
-                    sw.WriteLine(dadoscapturadosdaurl);
-
-                    /// Limpa a sessão
-                    sw.Flush();
-                    sw.Close();
-                    sw.Dispose();
-                    fs.Close();
-                    fs.Dispose();
+                    using (FileStream fs = new FileStream(arquivotextoantigo, FileMode.OpenOrCreate))
+                    {
+                        /// Grava ou salva arquivo em UTF 8 com a solicitação
+                        using (StreamWriter sw = new StreamWriter(fs))
+                        {
+                            /// Captura texto do arquivo texto e também dos dados adicionais para gravar no arquivo
+                            sw.WriteLine(dadoscapturadosdaurl);
+                        }
+                    }
                 }
             }
         }
@@ -1042,17 +1048,50 @@ namespace UpdateRDS
             {
                 try
                 {
-                    /// Pega o arquivo para ler com o nome do áudio
-                    using (StreamReader sr = new StreamReader(arquivotexto, Encoding.Default))
+                    if (cbCaracteres.SelectedIndex == 0)
                     {
-                        /// Carrega arquivo e faz a leitura da primeira linha do arquivo com o nome do áudio
-                        conteudotexto = sr.ReadLine().ToString();
-
-                        /// Força o fechamento do arquivo para evitar erros
-                        sr.Close();
-
-                        /// Força o despejo da memória do arquivo carregado
-                        sr.Dispose();
+                        /// Pega o arquivo para ler com o nome do áudio
+                        using (StreamReader sr = new StreamReader(arquivotexto))
+                        {
+                            /// Carrega arquivo e faz a leitura da primeira linha do arquivo com o nome do áudio
+                            conteudotexto = sr.ReadLine().ToString();
+                        }
+                    }
+                    if (cbCaracteres.SelectedIndex == 1)
+                    {
+                        /// Pega o arquivo para ler com o nome do áudio
+                        using (StreamReader sr = new StreamReader(arquivotexto, Encoding.Default))
+                        {
+                            /// Carrega arquivo e faz a leitura da primeira linha do arquivo com o nome do áudio
+                            conteudotexto = sr.ReadLine().ToString();
+                        }
+                    }
+                    if (cbCaracteres.SelectedIndex == 2)
+                    {
+                        /// Pega o arquivo para ler com o nome do áudio
+                        using (StreamReader sr = new StreamReader(arquivotexto, Encoding.UTF8))
+                        {
+                            /// Carrega arquivo e faz a leitura da primeira linha do arquivo com o nome do áudio
+                            conteudotexto = sr.ReadLine().ToString();
+                        }
+                    }
+                    if (cbCaracteres.SelectedIndex == 3)
+                    {
+                        /// Pega o arquivo para ler com o nome do áudio
+                        using (StreamReader sr = new StreamReader(arquivotexto, Encoding.UTF7))
+                        {
+                            /// Carrega arquivo e faz a leitura da primeira linha do arquivo com o nome do áudio
+                            conteudotexto = sr.ReadLine().ToString();
+                        }
+                    }
+                    if (cbCaracteres.SelectedIndex == 4)
+                    {
+                        /// Pega o arquivo para ler com o nome do áudio
+                        using (StreamReader sr = new StreamReader(arquivotexto, Encoding.ASCII))
+                        {
+                            /// Carrega arquivo e faz a leitura da primeira linha do arquivo com o nome do áudio
+                            conteudotexto = sr.ReadLine().ToString();
+                        }
                     }
                 }
                 catch (Exception errofile)
@@ -1063,17 +1102,50 @@ namespace UpdateRDS
                     /// Espera um tempo para tentar ler de novo o arquivo
                     System.Threading.Thread.Sleep(1500);
 
-                    /// Pega o arquivo para ler com o nome do áudio
-                    using (StreamReader sr = new StreamReader(arquivotexto, Encoding.Default))
+                    if (cbCaracteres.SelectedIndex == 0)
                     {
-                        /// Carrega arquivo e faz a leitura da primeira linha do arquivo com o nome do áudio
-                        conteudotexto = sr.ReadLine().ToString();
-
-                        /// Força o fechamento do arquivo para evitar erros
-                        sr.Close();
-
-                        /// Força o despejo da memória do arquivo carregado
-                        sr.Dispose();
+                        /// Pega o arquivo para ler com o nome do áudio
+                        using (StreamReader sr = new StreamReader(arquivotexto))
+                        {
+                            /// Carrega arquivo e faz a leitura da primeira linha do arquivo com o nome do áudio
+                            conteudotexto = sr.ReadLine().ToString();
+                        }
+                    }
+                    if (cbCaracteres.SelectedIndex == 1)
+                    {
+                        /// Pega o arquivo para ler com o nome do áudio
+                        using (StreamReader sr = new StreamReader(arquivotexto, Encoding.Default))
+                        {
+                            /// Carrega arquivo e faz a leitura da primeira linha do arquivo com o nome do áudio
+                            conteudotexto = sr.ReadLine().ToString();
+                        }
+                    }
+                    if (cbCaracteres.SelectedIndex == 2)
+                    {
+                        /// Pega o arquivo para ler com o nome do áudio
+                        using (StreamReader sr = new StreamReader(arquivotexto, Encoding.UTF8))
+                        {
+                            /// Carrega arquivo e faz a leitura da primeira linha do arquivo com o nome do áudio
+                            conteudotexto = sr.ReadLine().ToString();
+                        }
+                    }
+                    if (cbCaracteres.SelectedIndex == 3)
+                    {
+                        /// Pega o arquivo para ler com o nome do áudio
+                        using (StreamReader sr = new StreamReader(arquivotexto, Encoding.UTF7))
+                        {
+                            /// Carrega arquivo e faz a leitura da primeira linha do arquivo com o nome do áudio
+                            conteudotexto = sr.ReadLine().ToString();
+                        }
+                    }
+                    if (cbCaracteres.SelectedIndex == 4)
+                    {
+                        /// Pega o arquivo para ler com o nome do áudio
+                        using (StreamReader sr = new StreamReader(arquivotexto, Encoding.ASCII))
+                        {
+                            /// Carrega arquivo e faz a leitura da primeira linha do arquivo com o nome do áudio
+                            conteudotexto = sr.ReadLine().ToString();
+                        }
                     }
                 }
             }
@@ -1108,20 +1180,51 @@ namespace UpdateRDS
             /// Caso o arquivo texto currentsong.txtPID.txt ou similar não exista então ele faz a condição de cópia, Copia o arquivo texto
             if (!File.Exists(arquivotextoantigo))
                 File.Copy(arquivotexto, arquivotextoantigo);
-
-            /// Pega o arquivo antigo para ler com o nome do áudio só pra fazer a comparação abaixo
-            using (StreamReader srOld = new StreamReader(arquivotextoantigo, Encoding.Default))
+            if (cbCaracteres.SelectedIndex == 0)
             {
-                /// Carrega arquivo de texto antigo e faz a leitura da primeira linha do arquivo com o nome do áudio
-                conteudotextoantigo = srOld.ReadLine().ToString();
-
-                /// Força o fechamento do arquivo para que não dê erro no delete do arquivo
-                srOld.Close();
-
-                /// Força o despejo da memória do arquivo carregado
-                srOld.Dispose();
+                /// Pega o arquivo antigo para ler com o nome do áudio só pra fazer a comparação abaixo
+                using (StreamReader srOld = new StreamReader(arquivotextoantigo))
+                {
+                    /// Carrega arquivo de texto antigo e faz a leitura da primeira linha do arquivo com o nome do áudio
+                    conteudotextoantigo = srOld.ReadLine().ToString();
+                }
             }
-
+            if (cbCaracteres.SelectedIndex == 1)
+            {
+                /// Pega o arquivo antigo para ler com o nome do áudio só pra fazer a comparação abaixo
+                using (StreamReader srOld = new StreamReader(arquivotextoantigo, Encoding.Default))
+                {
+                    /// Carrega arquivo de texto antigo e faz a leitura da primeira linha do arquivo com o nome do áudio
+                    conteudotextoantigo = srOld.ReadLine().ToString();
+                }
+            }
+            if (cbCaracteres.SelectedIndex == 2)
+            {
+                /// Pega o arquivo antigo para ler com o nome do áudio só pra fazer a comparação abaixo
+                using (StreamReader srOld = new StreamReader(arquivotextoantigo, Encoding.UTF8))
+                {
+                    /// Carrega arquivo de texto antigo e faz a leitura da primeira linha do arquivo com o nome do áudio
+                    conteudotextoantigo = srOld.ReadLine().ToString();
+                }
+            }
+            if (cbCaracteres.SelectedIndex == 3)
+            {
+                /// Pega o arquivo antigo para ler com o nome do áudio só pra fazer a comparação abaixo
+                using (StreamReader srOld = new StreamReader(arquivotextoantigo, Encoding.UTF7))
+                {
+                    /// Carrega arquivo de texto antigo e faz a leitura da primeira linha do arquivo com o nome do áudio
+                    conteudotextoantigo = srOld.ReadLine().ToString();
+                }
+            }
+            if (cbCaracteres.SelectedIndex == 4)
+            {
+                /// Pega o arquivo antigo para ler com o nome do áudio só pra fazer a comparação abaixo
+                using (StreamReader srOld = new StreamReader(arquivotextoantigo, Encoding.ASCII))
+                {
+                    /// Carrega arquivo de texto antigo e faz a leitura da primeira linha do arquivo com o nome do áudio
+                    conteudotextoantigo = srOld.ReadLine().ToString();
+                }
+            }
             /// Caso o conteúdo do arquivo texto tenha mais de 2000 caracteres
             if (conteudotexto.Length > 2000)
             {
@@ -1155,22 +1258,29 @@ namespace UpdateRDS
                     File.WriteAllText(arquivotextoantigo, string.Empty);
 
                     /// Cria ou abre o arquivo existente para leitura
-                    FileStream fsOld = new FileStream(arquivotextoantigo, FileMode.OpenOrCreate);
-
-                    /// Pega o arquivo antigo para escrever com dados novos
-                    using (StreamWriter swOld = new StreamWriter(fsOld, Encoding.Default))
+                    if (cbCaracteres.SelectedIndex == 0)
                     {
-                        /// Carrega arquivo de texto antigo e sobrescreve todos os dados que tem no arquivo
-                        swOld.WriteLine(conteudotexto);
-
-                        /// Força o fechamento do arquivo
-                        swOld.Flush();
-                        swOld.Close();
-
-                        /// Força o despejo da memória do arquivo carregado
-                        swOld.Dispose();
-                        fsOld.Close();
-                        fsOld.Dispose();
+                        File.WriteAllText(arquivotextoantigo, conteudotexto);
+                    }
+                    if (cbCaracteres.SelectedIndex == 1)
+                    {
+                        /// Pega o arquivo antigo para escrever com dados novos
+                        File.WriteAllText(arquivotextoantigo, conteudotexto, Encoding.Default);
+                    }
+                    if (cbCaracteres.SelectedIndex == 2)
+                    {
+                        /// Pega o arquivo antigo para escrever com dados novos
+                        File.WriteAllText(arquivotextoantigo, conteudotexto, Encoding.UTF8);
+                    }
+                    if (cbCaracteres.SelectedIndex == 3)
+                    {
+                        /// Pega o arquivo antigo para escrever com dados novos
+                        File.WriteAllText(arquivotextoantigo, conteudotexto, Encoding.UTF7);
+                    }
+                    if (cbCaracteres.SelectedIndex == 4)
+                    {
+                        /// Pega o arquivo antigo para escrever com dados novos
+                        File.WriteAllText(arquivotextoantigo, conteudotexto, Encoding.ASCII);
                     }
                 }
                 catch (IOException errfile)
@@ -1181,23 +1291,33 @@ namespace UpdateRDS
                     /// Espera um tempo para processar novamente os arquivos
                     System.Threading.Thread.Sleep(1000);
 
+                    /// Apaga o conteúdo do arquivo texto para escrever em texto limpo abaixo
+                    File.WriteAllText(arquivotextoantigo, string.Empty);
+
                     /// Cria ou abre o arquivo existente para leitura
-                    FileStream fsOld = new FileStream(arquivotextoantigo, FileMode.OpenOrCreate);
-
-                    /// Pega o arquivo antigo para escrever com dados novos
-                    using (StreamWriter swOld = new StreamWriter(fsOld, Encoding.Default))
+                    if (cbCaracteres.SelectedIndex == 0)
                     {
-                        /// Carrega arquivo de texto antigo e sobrescreve todos os dados que tem no arquivo
-                        swOld.WriteLine(conteudotexto);
-
-                        /// Força o fechamento do arquivo
-                        swOld.Flush();
-                        swOld.Close();
-
-                        /// Força o despejo da memória do arquivo carregado
-                        swOld.Dispose();
-                        fsOld.Close();
-                        fsOld.Dispose();
+                        File.WriteAllText(arquivotextoantigo, conteudotexto);
+                    }
+                    if (cbCaracteres.SelectedIndex == 1)
+                    {
+                        /// Pega o arquivo antigo para escrever com dados novos
+                        File.WriteAllText(arquivotextoantigo, conteudotexto, Encoding.Default);
+                    }
+                    if (cbCaracteres.SelectedIndex == 2)
+                    {
+                        /// Pega o arquivo antigo para escrever com dados novos
+                        File.WriteAllText(arquivotextoantigo, conteudotexto, Encoding.UTF8);
+                    }
+                    if (cbCaracteres.SelectedIndex == 3)
+                    {
+                        /// Pega o arquivo antigo para escrever com dados novos
+                        File.WriteAllText(arquivotextoantigo, conteudotexto, Encoding.UTF7);
+                    }
+                    if (cbCaracteres.SelectedIndex == 4)
+                    {
+                        /// Pega o arquivo antigo para escrever com dados novos
+                        File.WriteAllText(arquivotextoantigo, conteudotexto, Encoding.ASCII);
                     }
                 }
             }
@@ -1379,7 +1499,7 @@ namespace UpdateRDS
                 pbFront.Image = Resources.shoutcast1;
 
                 /// Verifica se é dados de Icecast, se for, realiza as condições de alteração abaixo para compatibilizar o icecast v2
-                if (rbtIcecast.Checked == true)
+                if (cbTiposervidor.SelectedIndex == 2)
                 {
                     /// Carrega a URL padrão do Icecast para uso abaixo
                     urlparacarregar = urlicecast + conteudoarquivotexto;
@@ -1391,7 +1511,7 @@ namespace UpdateRDS
                 }
 
                 /// Carrega a URL padrão para Shoutcast Server v2 apenas caso marcado pelo usuário
-                if (rbtShoutcastv2.Checked == true)
+                if (cbTiposervidor.SelectedIndex == 1)
                 {
                     /// Carrega a URL padrão para Shoutcast Server v2, altera o link e faz replace no e comercial para não dar bug na URL de shoutcast
                     urlparacarregar = urlshoutcastv2 + conteudoarquivotexto;
@@ -1431,7 +1551,7 @@ namespace UpdateRDS
                     webreqshouticecast.Proxy = null;
 
                 /// Caso é uma shoutcast v1 faz a condição abaixo
-                if (rbtShoutcastv1.Checked == true)
+                if (cbTiposervidor.SelectedIndex == 0)
                 {
                     try
                     {
@@ -1480,26 +1600,12 @@ namespace UpdateRDS
                     }
                 }
 
-                /// Cria ou abre o arquivo existente para leitura
-                FileStream fs = new FileStream(arquivodelog, FileMode.OpenOrCreate);
-
-                /// Grava ou salva arquivo em UTF 8 com a solicitação
-                StreamWriter sw = new StreamWriter(fs, Encoding.Default);
-
-                /// Captura texto do arquivo texto e também dos dados adicionais para gravar no arquivo, Grava o arquivo com os dados para montagem da CSV
+                /// Caso não tenha dados no arquivo texto então ele cria um dado de cabeçalho para o arquivo
                 if (string.IsNullOrEmpty(dadosarquivotexto))
                     dadosarquivotexto = "Data e Hora:;Nome do som:;Nome do próximo som:";
 
-                /// Grava os dados no arquivo
-                sw.WriteLine(dadosarquivotexto);
-                sw.WriteLine(novosdadosarquivotexto);
-
-                /// Limpa a sessão
-                sw.Flush();
-                sw.Close();
-                sw.Dispose();
-                fs.Close();
-                fs.Dispose();
+                /// Captura texto do arquivo texto e também dos dados adicionais para gravar no arquivo, Grava o arquivo com os dados para montagem da CSV
+                File.WriteAllText(arquivodelog, $"{dadosarquivotexto}\n{novosdadosarquivotexto}", Encoding.Default);
 
                 /// Pega os dados do arquivo
                 FileInfo arquivotextolog = new FileInfo(arquivodelog);
@@ -1667,7 +1773,6 @@ namespace UpdateRDS
                     {
                         File.WriteAllText(diretoriodoaplicativo + "CT.txt", "Update RDS Ativo de forma manual");
                     }
-
                     lblArquivotextosom.Text = diretoriodoaplicativo + "CT.txt";
                 }
 
@@ -1695,9 +1800,9 @@ namespace UpdateRDS
                     lblTextodobotao.Text = "   Enviar RDS:";
 
                     /// Desabilita as caixas e checkbox para que os dados não sejam mais alterados depois do teste da URL, links e textos
-                    rbtShoutcastv1.Enabled = false;
-                    rbtShoutcastv2.Enabled = false;
-                    rbtIcecast.Enabled = false;
+                    /// rbtShoutcastv1.Enabled = false;
+                    cbCaracteres.Enabled = false;
+                    cbTiposervidor.Enabled = false;
                     chkEnviatitulosom.Enabled = false;
                     chkTransmproxsom.Enabled = false;
                     chkUsoproxy.Enabled = false;
@@ -1870,9 +1975,9 @@ namespace UpdateRDS
                     btnRevisarinfo.Visible = false;
 
                     /// Reabilitação dos botões e formulário para edição
-                    rbtShoutcastv1.Enabled = true;
-                    rbtShoutcastv2.Enabled = true;
-                    rbtIcecast.Enabled = true;
+                    /// rbtShoutcastv1.Enabled = true;
+                    cbCaracteres.Enabled = true;
+                    cbTiposervidor.Enabled = true;
                     chkEnviatitulosom.Enabled = true;
                     chkUsoproxy.Enabled = true;
                     txtTempoexec.Enabled = true;
@@ -1906,11 +2011,11 @@ namespace UpdateRDS
                         txtUrlsom.Enabled = true;
 
                     /// Se o shoutcast de versão 1 estiver desabilitado, Então habilita a caixa de edição mountid
-                    if (rbtShoutcastv1.Checked == false)
+                    if (cbTiposervidor.SelectedIndex != 0)
                         txtIdoumont.Enabled = true;
 
                     /// Caso o botão shoutcast v2 esteja marcado
-                    if (rbtShoutcastv2.Checked == true)
+                    if (cbTiposervidor.SelectedIndex == 1)
                     {
                         /// Habilita checkbox para transmitir next song
                         chkTransmproxsom.Enabled = true;
@@ -1992,9 +2097,9 @@ namespace UpdateRDS
                 errocontanext = -1;
 
                 /// Reabilita as caixas e checkbox para que os dados sejam alterados depois do teste da URL, links e textos
-                rbtShoutcastv1.Enabled = true;
-                rbtShoutcastv2.Enabled = true;
-                rbtIcecast.Enabled = true;
+                /// rbtShoutcastv1.Enabled = true;
+                cbCaracteres.Enabled = true;
+                cbTiposervidor.Enabled = true;
                 chkEnviatitulosom.Enabled = true;
                 chkUsoproxy.Enabled = true;
                 txtTempoexec.Enabled = true;
@@ -2021,11 +2126,11 @@ namespace UpdateRDS
                 }
 
                 /// Se o shoutcast de versão 1 estiver desabilitado, Então habilita a caixa de edição mountid
-                if (rbtShoutcastv1.Checked == false)
+                if (cbTiposervidor.SelectedIndex != 0)
                     txtIdoumont.Enabled = true;
 
                 /// Caso o botão shoutcast v2 esteja marcado
-                if (rbtShoutcastv2.Checked == true)
+                if (cbTiposervidor.SelectedIndex == 1)
                 {
                     /// Habilita checkbox para transmitir next song
                     chkTransmproxsom.Enabled = true;
@@ -2121,79 +2226,71 @@ namespace UpdateRDS
                 ValidarInformacoes();
 
                 /// Cria um novo save dialog
-                SaveFileDialog salvardadosdexml = new SaveFileDialog
+                using (SaveFileDialog salvardadosdexml = new SaveFileDialog
                 {
                     Filter = "Arquivos XML (*.XML)|*.XML|Arquivos XML (*.xml)|*.xml",
                     FilterIndex = 2,
                     InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
-                };
-
-                /// Mostra a caixa de diálogo para o usuário e se for OK
-                if (salvardadosdexml.ShowDialog() == DialogResult.OK)
+                })
                 {
-                    /// Salva o arquivo XML
-                    if ((nomedoarquivoxml = salvardadosdexml.OpenFile()) != null)
+                    /// Mostra a caixa de diálogo para o usuário e se for OK
+                    if (salvardadosdexml.ShowDialog() == DialogResult.OK)
                     {
-                        ///  Esta linha indica que o arquivo xml sera salvo
-                        XmlTextWriter xtw = new XmlTextWriter(nomedoarquivoxml, Encoding.Default)
+                        /// Salva o arquivo XML
+                        if ((nomedoarquivoxml = salvardadosdexml.OpenFile()) != null)
                         {
-                            /// A linha abaixo vai identar o código, se não usar isso tudo ficará em uma linha.
-                            Formatting = Formatting.Indented
-                        };
+                            ///  Esta linha indica que o arquivo xml sera salvo
+                            using (XmlTextWriter xtw = new XmlTextWriter(nomedoarquivoxml, Encoding.Default)
+                            {
+                                /// A linha abaixo vai identar o código, se não usar isso tudo ficará em uma linha.
+                                Formatting = Formatting.Indented
+                            })
+                            {
+                                /// Escreve a declaração do documento <?xml version="1.0" encoding="utf-8"?>
+                                xtw.WriteStartDocument();
 
-                        /// Escreve a declaração do documento <?xml version="1.0" encoding="utf-8"?>
-                        xtw.WriteStartDocument();
-
-                        /// Grava os dados das caixas, checkbox e outros dados
-                        xtw.WriteStartElement("Configuracao");
-                        xtw.WriteElementString("SOFTWARE-UPDATE-RDS-XML-VERSION", "Ver-XML-1.0");
-                        xtw.WriteElementString("SHOUTCASTV1", rbtShoutcastv1.Checked.ToString());
-                        xtw.WriteElementString("SHOUTCASTV2", rbtShoutcastv2.Checked.ToString());
-                        xtw.WriteElementString("ICECASTV2", rbtIcecast.Checked.ToString());
-                        xtw.WriteElementString("NAOMINIMIZARSYSTRAY", chkNaominimsystray.Checked.ToString());
-                        xtw.WriteElementString("NAONOTIFICARSYSTRAY", chkNaonotificarsomtray.Checked.ToString());
-                        xtw.WriteElementString("REMOVERACENTOSPALAVRAS", chkAcentospalavras.Checked.ToString());
-                        xtw.WriteElementString("REMOVERCARACTERESESPECIAIS", chkCaracteresespeciais.Checked.ToString());
-                        xtw.WriteElementString("DADOSSENSIVEISEXIBIR", chkDadossensiveis.Checked.ToString());
-                        xtw.WriteElementString("TRANSMITIRDADOSPROXSOM", chkTransmproxsom.Checked.ToString());
-                        xtw.WriteElementString("USOSERVIDORPROXY", chkUsoproxy.Checked.ToString());
-                        xtw.WriteElementString("USOAUTENTICACAOSERVIDORPROXY", chkAutenticaproxy.Checked.ToString());
-                        xtw.WriteElementString("IPDOMINIOPROXYSERVER", txtDoproxy.Text);
-                        xtw.WriteElementString("PORTASERVIDORPROXY", txtPortaproxy.Text);
-                        xtw.WriteElementString("LOGINPROXY", txtLoginproxy.Text);
-                        xtw.WriteElementString("SENHAPROXY", txtSenhaproxy.Text);
-                        xtw.WriteElementString("TEMPOCHECAGEMTEXTOURL", txtTempoexec.Text);
-                        xtw.WriteElementString("TXTARQUIVODETEXTOSOM", lblArquivotextosom.Text);
-                        xtw.WriteElementString("ATUALIZARSOMPORURL", chkUrlsom.Checked.ToString());
-                        xtw.WriteElementString("TXTURLSOM", txtUrlsom.Text);
-                        xtw.WriteElementString("TXTARQUIVOPROXIMOSOM", lblArquivotextosomnext.Text);
-                        xtw.WriteElementString("URLPROXIMOSOM", chkUrlsomnext.Checked.ToString());
-                        xtw.WriteElementString("TXTURLPROXIMOSOM", txtUrlsomnext.Text);
-                        xtw.WriteElementString("IPOUDOMINIO", txtDominioip.Text);
-                        xtw.WriteElementString("PORTA", txtPorta.Text);
-                        xtw.WriteElementString("IDOUPONTODEMONTAGEM", txtIdoumont.Text);
-                        xtw.WriteElementString("LOGINDOSERVER", txtLoginserver.Text);
-                        xtw.WriteElementString("SENHADOSERVER", txtSenhaserver.Text);
-                        xtw.WriteElementString("ENVTITLEMANUAL", chkEnviatitulosom.Checked.ToString());
-                        xtw.WriteEndElement();
-                        xtw.WriteEndDocument();
-
-                        /// Libera o XmlTextWriter
-                        xtw.Flush();
-
-                        /// Fecha o XmlTextWriter
-                        xtw.Close();
-
-                        /// Codigo que escreve o stream está aqui
-                        nomedoarquivoxml.Close();
-
-                        /// Envia mensagem que os dados foram salvos com sucesso
-                        MessageBox.Show("As informações preenchidas aqui foram salvas com sucesso!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                /// Grava os dados das caixas, checkbox e outros dados
+                                xtw.WriteStartElement("Configuracao");
+                                xtw.WriteElementString("SOFTWARE-UPDATE-RDS-XML-VERSION", "Ver-XML-1.0");
+                                xtw.WriteElementString("CARACTERESELECIONADO", cbCaracteres.SelectedIndex.ToString());
+                                xtw.WriteElementString("TIPOSERVERSELECIONADO", cbTiposervidor.SelectedIndex.ToString());
+                                xtw.WriteElementString("ENVTITLEMANUAL", chkEnviatitulosom.Checked.ToString());
+                                xtw.WriteElementString("NAOMINIMIZARSYSTRAY", chkNaominimsystray.Checked.ToString());
+                                xtw.WriteElementString("NAONOTIFICARSYSTRAY", chkNaonotificarsomtray.Checked.ToString());
+                                xtw.WriteElementString("REMOVERACENTOSPALAVRAS", chkAcentospalavras.Checked.ToString());
+                                xtw.WriteElementString("REMOVERCARACTERESESPECIAIS", chkCaracteresespeciais.Checked.ToString());
+                                xtw.WriteElementString("DADOSSENSIVEISEXIBIR", chkDadossensiveis.Checked.ToString());
+                                xtw.WriteElementString("TRANSMITIRDADOSPROXSOM", chkTransmproxsom.Checked.ToString());
+                                xtw.WriteElementString("USOSERVIDORPROXY", chkUsoproxy.Checked.ToString());
+                                xtw.WriteElementString("USOAUTENTICACAOSERVIDORPROXY", chkAutenticaproxy.Checked.ToString());
+                                xtw.WriteElementString("IPDOMINIOPROXYSERVER", txtDoproxy.Text);
+                                xtw.WriteElementString("PORTASERVIDORPROXY", txtPortaproxy.Text);
+                                xtw.WriteElementString("LOGINPROXY", txtLoginproxy.Text);
+                                xtw.WriteElementString("SENHAPROXY", txtSenhaproxy.Text);
+                                xtw.WriteElementString("TEMPOCHECAGEMTEXTOURL", txtTempoexec.Text);
+                                xtw.WriteElementString("TXTARQUIVODETEXTOSOM", lblArquivotextosom.Text);
+                                xtw.WriteElementString("ATUALIZARSOMPORURL", chkUrlsom.Checked.ToString());
+                                xtw.WriteElementString("TXTURLSOM", txtUrlsom.Text);
+                                xtw.WriteElementString("TXTARQUIVOPROXIMOSOM", lblArquivotextosomnext.Text);
+                                xtw.WriteElementString("URLPROXIMOSOM", chkUrlsomnext.Checked.ToString());
+                                xtw.WriteElementString("TXTURLPROXIMOSOM", txtUrlsomnext.Text);
+                                xtw.WriteElementString("IPOUDOMINIO", txtDominioip.Text);
+                                xtw.WriteElementString("PORTA", txtPorta.Text);
+                                xtw.WriteElementString("IDOUPONTODEMONTAGEM", txtIdoumont.Text);
+                                xtw.WriteElementString("LOGINDOSERVER", txtLoginserver.Text);
+                                xtw.WriteElementString("SENHADOSERVER", txtSenhaserver.Text);
+                                xtw.WriteElementString("NOMEDAEMISSORA", txtNomeemi.Text);
+                                xtw.WriteEndElement();
+                                xtw.WriteEndDocument();
+                            }
+                            /// Envia mensagem que os dados foram salvos com sucesso
+                            MessageBox.Show("As informações preenchidas aqui foram salvas com sucesso!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
                     }
+                    else
+                        /// Envia mensagem que os dados não foram salvos
+                        MessageBox.Show("As informações preenchidas aqui não foram salvas!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                else
-                    /// Envia mensagem que os dados não foram salvos
-                    MessageBox.Show("As informações preenchidas aqui não foram salvas!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
@@ -2224,74 +2321,83 @@ namespace UpdateRDS
                 string versaoxmlcarregado;
 
                 /// Cria um novo save dialog
-                OpenFileDialog carregardadosdexml = new OpenFileDialog
+                using (OpenFileDialog carregardadosdexml = new OpenFileDialog
                 {
                     Filter = "Arquivos XML (*.XML)|*.XML|Arquivos XML (*.xml)|*.xml",
                     FilterIndex = 2,
                     InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
-                };
-
-                /// Mostra a caixa de diálogo para o usuário e se for OK
-                if (carregardadosdexml.ShowDialog() == DialogResult.OK)
+                })
                 {
-                    /// Carrega o arquivo XML
-                    if ((nomearquivoxml = carregardadosdexml.OpenFile()) != null)
+                    /// Mostra a caixa de diálogo para o usuário e se for OK
+                    if (carregardadosdexml.ShowDialog() == DialogResult.OK)
                     {
-                        /// Cria uma instância de um documento XML
-                        XmlDocument oXML = new XmlDocument();
-
                         /// Carrega o arquivo XML
-                        oXML.Load(nomearquivoxml);
-
-                        XmlElement root = oXML.DocumentElement;
-                        XmlNodeList lst = root.GetElementsByTagName("SOFTWARE-UPDATE-RDS-XML-VERSION");
-
-                        if (lst.Count == 0)
-                            throw new Exception("Aviso! O arquivo XML carregado é inválido! Preencha novamente os dados da tela e salve um XML novo, ou procure o arquivo XML salvo pelo aplicativo!");
-
-                        /// Lê o filho de um Nó Pai específico e adiciona as informações nas caixas de checagem
-                        versaoxmlcarregado = oXML.SelectSingleNode("Configuracao").ChildNodes[0].InnerText;
-
-                        if (versaoparacomparacao != versaoxmlcarregado)
+                        if ((nomearquivoxml = carregardadosdexml.OpenFile()) != null)
                         {
-                            throw new Exception("Aviso! A versão do XML carregada é incompatível com a versão desse software! Preencha novamente os dados da tela para esta versão e salve um XML novo!");
+                            /// Cria uma instância de um documento XML
+                            XmlDocument oXML = new XmlDocument();
+
+                            /// Carrega o arquivo XML
+                            oXML.Load(nomearquivoxml);
+
+                            XmlElement root = oXML.DocumentElement;
+                            XmlNodeList lst = root.GetElementsByTagName("SOFTWARE-UPDATE-RDS-XML-VERSION");
+
+                            if (lst.Count == 0)
+                                throw new Exception("Aviso! O arquivo XML carregado é inválido! Preencha novamente os dados da tela e salve um XML novo, ou procure o arquivo XML salvo pelo aplicativo!");
+
+                            /// Lê o filho de um Nó Pai específico e adiciona as informações nas caixas de checagem
+                            versaoxmlcarregado = oXML.SelectSingleNode("Configuracao").ChildNodes[0].InnerText;
+
+                            if (versaoparacomparacao != versaoxmlcarregado)
+                            {
+                                throw new Exception("Aviso! A versão do XML carregada é incompatível com a versão desse software! Preencha novamente os dados da tela para esta versão e salve um XML novo!");
+                            }
+
+                            /// rbtShoutcastv1.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[0].InnerText);
+                            cbCaracteres.SelectedIndex = int.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[1].InnerText);
+                            cbTiposervidor.SelectedIndex = int.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[2].InnerText);
+                            chkEnviatitulosom.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[3].InnerText);
+                            chkNaominimsystray.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[4].InnerText);
+                            chkNaonotificarsomtray.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[5].InnerText);
+                            chkAcentospalavras.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[6].InnerText);
+                            chkCaracteresespeciais.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[7].InnerText);
+                            chkDadossensiveis.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[8].InnerText);
+                            chkTransmproxsom.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[9].InnerText);
+                            chkUsoproxy.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[10].InnerText);
+                            chkAutenticaproxy.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[11].InnerText);
+                            txtDoproxy.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[12].InnerText;
+                            txtPortaproxy.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[13].InnerText;
+                            txtLoginproxy.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[14].InnerText;
+                            txtSenhaproxy.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[15].InnerText;
+                            txtTempoexec.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[16].InnerText;
+                            lblArquivotextosom.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[17].InnerText;
+                            chkUrlsom.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[18].InnerText);
+                            txtUrlsom.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[19].InnerText;
+                            lblArquivotextosomnext.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[20].InnerText;
+                            chkUrlsomnext.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[21].InnerText);
+                            txtUrlsomnext.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[22].InnerText;
+                            txtDominioip.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[23].InnerText;
+                            txtPorta.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[24].InnerText;
+                            txtIdoumont.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[25].InnerText;
+                            txtLoginserver.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[26].InnerText;
+                            txtSenhaserver.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[27].InnerText;
+                            txtNomeemi.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[28].InnerText;
+                            if (!string.IsNullOrEmpty(txtNomeemi.Text))
+                            {
+                                lblTextotitulo.Text = txtNomeemi.Text;
+                                Updrdsfcar.InfoEmiNome(txtNomeemi.Text);
+                                btnNomeemi.Visible = false;
+                                btnNomeemialt.Visible = true;
+                                txtNomeemi.Enabled = false;
+                            }
+                            /// Envia mensagem que os dados foram carregados com sucesso
+                            MessageBox.Show("As informações foram carregadas com sucesso!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
-
-                        rbtShoutcastv1.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[1].InnerText);
-                        rbtShoutcastv2.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[2].InnerText);
-                        rbtIcecast.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[3].InnerText);
-                        chkNaominimsystray.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[4].InnerText);
-                        chkNaonotificarsomtray.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[5].InnerText);
-                        chkAcentospalavras.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[6].InnerText);
-                        chkCaracteresespeciais.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[7].InnerText);
-                        chkDadossensiveis.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[8].InnerText);
-                        chkTransmproxsom.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[9].InnerText);
-                        chkUsoproxy.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[10].InnerText);
-                        chkAutenticaproxy.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[11].InnerText);
-                        txtDoproxy.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[12].InnerText;
-                        txtPortaproxy.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[13].InnerText;
-                        txtLoginproxy.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[14].InnerText;
-                        txtSenhaproxy.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[15].InnerText;
-                        txtTempoexec.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[16].InnerText;
-                        lblArquivotextosom.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[17].InnerText;
-                        chkUrlsom.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[18].InnerText);
-                        txtUrlsom.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[19].InnerText;
-                        lblArquivotextosomnext.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[20].InnerText;
-                        chkUrlsomnext.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[21].InnerText);
-                        txtUrlsomnext.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[22].InnerText;
-                        txtDominioip.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[23].InnerText;
-                        txtPorta.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[24].InnerText;
-                        txtIdoumont.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[25].InnerText;
-                        txtLoginserver.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[26].InnerText;
-                        txtSenhaserver.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[27].InnerText;
-                        chkEnviatitulosom.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[28].InnerText);
-
-                        /// Envia mensagem que os dados foram carregados com sucesso
-                        MessageBox.Show("As informações foram carregadas com sucesso!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
+                    else
+                        throw new Exception("Não foi possível carregar a configuração pois houve o cancelamento da abertura do arquivo XML!");
                 }
-                else
-                    throw new Exception("Não foi possível carregar a configuração pois houve o cancelamento da abertura do arquivo XML!");
             }
             catch (Exception ex)
             {
@@ -2502,65 +2608,6 @@ namespace UpdateRDS
 
                 /// Exibe exceção bruta de sistema caso não tenha mensagem personalizada
                 MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
-
-        private void RbtShoutcastv1_CheckedChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                /// Caso o usuário mantenha a versão 1 marcada
-                if (rbtShoutcastv1.Checked == true)
-                {
-                    /// Desabilita a caixa de texto e limpa a caixa de texto
-                    txtIdoumont.Enabled = false;
-                    txtIdoumont.Text = "";
-                    txtIdoumont.BackColor = Color.Empty;
-                }
-
-                /// Caso não tenha mantido marcada a versão 1
-                else
-                {
-                    /// Habilita a caixa de texto para edição
-                    txtIdoumont.Enabled = true;
-
-                    /// Altera cor da caixa de texto
-                    txtIdoumont.BackColor = Color.LightYellow;
-                }
-            }
-            catch (Exception ex)
-            {
-                /// Caso ocorra algum erro de exceção, faz o descarte aqui
-                qualquerlixoaqui = ex.Message;
-            }
-        }
-
-        private void RbtShoutcastv2_CheckedChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                /// Caso o usuário mantenha a versão 2 marcada, Habilita a caixa de texto
-                if (rbtShoutcastv2.Checked == true)
-                {
-                    chkTransmproxsom.Enabled = true;
-                    if (!string.IsNullOrEmpty(txtIdoumont.Text) && !Regex.IsMatch(txtIdoumont.Text, @"^[0-9]+$"))
-                    {
-                        txtIdoumont.BackColor = Color.Red;
-                    }
-                }
-                else
-                {
-                    /// Caso não tenha mantido marcada a versão 2, desabilita a caixa de texto para edição e limpa a caixa de texto
-                    chkTransmproxsom.Checked = false;
-                    chkTransmproxsom.Enabled = false;
-                    btnLocalizatxtsomnext.Enabled = false;
-                    lblArquivotextosomnext.Text = "";
-                }
-            }
-            catch (Exception ex)
-            {
-                /// Caso ocorra algum erro de exceção, faz o descarte aqui
-                qualquerlixoaqui = ex.Message;
             }
         }
 
@@ -2941,6 +2988,38 @@ namespace UpdateRDS
         {
             try
             {
+                /// Caso o usuário tenha marcado para usar um proxy server
+                if (chkUsoproxy.Checked == true)
+                {
+                    /// Valida as caixas de texto
+                    if (string.IsNullOrEmpty(txtDoproxy.Text))
+                    {
+                        txtDoproxy.BackColor = Color.Red;
+                        throw new Exception("O endereço de IP ou domínio do servidor proxy não pode ser em branco, preencha os dados corretamente para continuar!");
+                    }
+                    if (string.IsNullOrEmpty(txtPortaproxy.Text))
+                    {
+                        txtPortaproxy.BackColor = Color.Red;
+                        throw new Exception("A porta do servidor proxy não pode ser em branco, preencha os dados corretamente para continuar!");
+                    }
+                    if (!Regex.IsMatch(txtPortaproxy.Text, @"^[0-9]+$"))
+                        throw new Exception("Preencha a caixa de texto porta do servidor proxy apenas com números!");
+
+                    if (chkAutenticaproxy.Checked == true)
+                    {
+                        if (string.IsNullOrEmpty(txtLoginproxy.Text))
+                        {
+                            txtLoginproxy.BackColor = Color.Red;
+                            throw new Exception("O login do servidor proxy não pode ser em branco, preencha os dados corretamente para continuar!");
+                        }
+                        if (string.IsNullOrEmpty(txtSenhaproxy.Text))
+                        {
+                            txtSenhaproxy.BackColor = Color.Red;
+                            throw new Exception("A senha do servidor proxy não pode ser em branco, preencha os dados corretamente para continuar!");
+                        }
+                    }
+                }
+
                 /// Chama método para baixar a nova versão do aplicativo
                 UpdateAppRDS();
 
@@ -3168,7 +3247,7 @@ namespace UpdateRDS
             {
                 if (!string.IsNullOrEmpty(txtIdoumont.Text))
                 {
-                    if (rbtShoutcastv2.Checked == true && Regex.IsMatch(txtIdoumont.Text, @"^[0-9]+$"))
+                    if (cbTiposervidor.SelectedIndex == 1 && Regex.IsMatch(txtIdoumont.Text, @"^[0-9]+$"))
                     {
                         txtIdoumont.BackColor = Color.LightGreen;
                     }
@@ -3176,7 +3255,7 @@ namespace UpdateRDS
                     {
                         txtIdoumont.BackColor = Color.Red;
                     }
-                    if (rbtIcecast.Checked == true)
+                    if (cbTiposervidor.SelectedIndex == 2)
                     {
                         txtIdoumont.BackColor = Color.LightGreen;
                     }
@@ -3184,21 +3263,6 @@ namespace UpdateRDS
                 else
                 {
                     txtIdoumont.BackColor = Color.Red;
-                }
-            }
-            catch (Exception ex)
-            {
-                qualquerlixoaqui = ex.Message;
-            }
-        }
-
-        private void RbtIcecast_CheckedChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if (rbtIcecast.Checked == true && !string.IsNullOrEmpty(txtIdoumont.Text))
-                {
-                    txtIdoumont.BackColor = Color.LightGreen;
                 }
             }
             catch (Exception ex)
@@ -3310,6 +3374,108 @@ namespace UpdateRDS
             catch (Exception ex)
             {
                 qualquerlixoaqui = ex.Message;
+            }
+        }
+
+        private void CbTiposervidor_SelectedValueChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                /// Caso o usuário mantenha a versão 1 marcada
+                if (cbTiposervidor.SelectedIndex == 0)
+                {
+                    /// Desabilita a caixa de texto e limpa a caixa de texto
+                    txtIdoumont.Enabled = false;
+                    txtIdoumont.Text = "";
+                    txtIdoumont.BackColor = Color.Empty;
+                }
+
+                /// Caso não tenha mantido marcada a versão 1
+                else
+                {
+                    /// Habilita a caixa de texto para edição
+                    txtIdoumont.Enabled = true;
+
+                    /// Altera cor da caixa de texto
+                    txtIdoumont.BackColor = Color.LightYellow;
+                }
+
+                /// Caso o usuário mantenha a versão 2 marcada, Habilita a caixa de texto
+                if (cbTiposervidor.SelectedIndex == 1)
+                {
+                    chkTransmproxsom.Enabled = true;
+                    if (!string.IsNullOrEmpty(txtIdoumont.Text) && !Regex.IsMatch(txtIdoumont.Text, @"^[0-9]+$"))
+                    {
+                        txtIdoumont.BackColor = Color.Red;
+                    }
+                }
+                else
+                {
+                    /// Caso não tenha mantido marcada a versão 2, desabilita a caixa de texto para edição e limpa a caixa de texto
+                    chkTransmproxsom.Checked = false;
+                    chkTransmproxsom.Enabled = false;
+                    btnLocalizatxtsomnext.Enabled = false;
+                    lblArquivotextosomnext.Text = "";
+                }
+
+                if (cbTiposervidor.SelectedIndex == 2 && !string.IsNullOrEmpty(txtIdoumont.Text))
+                {
+                    txtIdoumont.BackColor = Color.LightGreen;
+                }
+            }
+            catch (Exception ex)
+            {
+                qualquerlixoaqui = ex.Message;
+            }
+        }
+
+        private void BtnNomeemi_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(txtNomeemi.Text))
+                {
+                    throw new Exception("O nome da emissora não pode ser em branco!");
+                }
+                lblTextotitulo.Text = txtNomeemi.Text;
+                Updrdsfcar.InfoEmiNome(txtNomeemi.Text);
+                btnNomeemi.Visible = false;
+                btnNomeemialt.Visible = true;
+                txtNomeemi.Enabled = false;
+            }
+            catch (Exception ex)
+            {
+                /// Carrega na string geral os erros
+                errogeral = ex.Message;
+                errogeralgravado = ex.StackTrace;
+
+                /// Chama método para gravação de arquivos texto de erro
+                InfoErroGeral();
+
+                /// Exibe exceção bruta de sistema caso não tenha mensagem personalizada
+                MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void BtnNomeemialt_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                btnNomeemialt.Visible = false;
+                btnNomeemi.Visible = true;
+                txtNomeemi.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                /// Carrega na string geral os erros
+                errogeral = ex.Message;
+                errogeralgravado = ex.StackTrace;
+
+                /// Chama método para gravação de arquivos texto de erro
+                InfoErroGeral();
+
+                /// Exibe exceção bruta de sistema caso não tenha mensagem personalizada
+                MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }

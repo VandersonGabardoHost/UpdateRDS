@@ -35,17 +35,16 @@
             this.btnEnviartitulosom = new System.Windows.Forms.Button();
             this.lblInfoid = new System.Windows.Forms.Label();
             this.lblTituloemissora = new System.Windows.Forms.Label();
-            this.btnPersonalizanomeradio = new System.Windows.Forms.Button();
-            this.txtNomeemissora = new System.Windows.Forms.TextBox();
-            this.lblTextonorad = new System.Windows.Forms.Label();
+            this.txtNsong = new System.Windows.Forms.TextBox();
+            this.lblTextons = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lblInfo
             // 
             this.lblInfo.BackColor = System.Drawing.Color.White;
             this.lblInfo.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblInfo.Location = new System.Drawing.Point(10, 205);
+            this.lblInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblInfo.Location = new System.Drawing.Point(10, 159);
             this.lblInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblInfo.Name = "lblInfo";
             this.lblInfo.Size = new System.Drawing.Size(460, 325);
@@ -55,7 +54,7 @@
             // lblTitulodados
             // 
             this.lblTitulodados.AutoSize = true;
-            this.lblTitulodados.Location = new System.Drawing.Point(10, 175);
+            this.lblTitulodados.Location = new System.Drawing.Point(10, 129);
             this.lblTitulodados.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTitulodados.Name = "lblTitulodados";
             this.lblTitulodados.Size = new System.Drawing.Size(416, 16);
@@ -65,7 +64,7 @@
             // lblTitulocxt
             // 
             this.lblTitulocxt.AutoSize = true;
-            this.lblTitulocxt.Location = new System.Drawing.Point(10, 125);
+            this.lblTitulocxt.Location = new System.Drawing.Point(10, 79);
             this.lblTitulocxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTitulocxt.Name = "lblTitulocxt";
             this.lblTitulocxt.Size = new System.Drawing.Size(227, 16);
@@ -75,16 +74,16 @@
             // txtTitulodesom
             // 
             this.txtTitulodesom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtTitulodesom.Location = new System.Drawing.Point(10, 150);
-            this.txtTitulodesom.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtTitulodesom.Location = new System.Drawing.Point(10, 104);
+            this.txtTitulodesom.Margin = new System.Windows.Forms.Padding(4);
             this.txtTitulodesom.Name = "txtTitulodesom";
             this.txtTitulodesom.Size = new System.Drawing.Size(225, 22);
             this.txtTitulodesom.TabIndex = 2;
             // 
             // btnEnviartitulosom
             // 
-            this.btnEnviartitulosom.Location = new System.Drawing.Point(10, 90);
-            this.btnEnviartitulosom.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnEnviartitulosom.Location = new System.Drawing.Point(276, 488);
+            this.btnEnviartitulosom.Margin = new System.Windows.Forms.Padding(4);
             this.btnEnviartitulosom.Name = "btnEnviartitulosom";
             this.btnEnviartitulosom.Size = new System.Drawing.Size(195, 30);
             this.btnEnviartitulosom.TabIndex = 1;
@@ -113,44 +112,32 @@
             this.lblTituloemissora.TabIndex = 0;
             this.lblTituloemissora.Text = "Nome da rádio:";
             // 
-            // btnPersonalizanomeradio
+            // txtNsong
             // 
-            this.btnPersonalizanomeradio.Location = new System.Drawing.Point(210, 90);
-            this.btnPersonalizanomeradio.Margin = new System.Windows.Forms.Padding(4);
-            this.btnPersonalizanomeradio.Name = "btnPersonalizanomeradio";
-            this.btnPersonalizanomeradio.Size = new System.Drawing.Size(260, 30);
-            this.btnPersonalizanomeradio.TabIndex = 3;
-            this.btnPersonalizanomeradio.Text = "Informar nome da rádio no aplicativo";
-            this.btnPersonalizanomeradio.UseVisualStyleBackColor = true;
-            this.btnPersonalizanomeradio.Click += new System.EventHandler(this.BtnPersonalizanomeradio_Click);
+            this.txtNsong.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNsong.Location = new System.Drawing.Point(245, 104);
+            this.txtNsong.Margin = new System.Windows.Forms.Padding(4);
+            this.txtNsong.Name = "txtNsong";
+            this.txtNsong.Size = new System.Drawing.Size(225, 22);
+            this.txtNsong.TabIndex = 4;
             // 
-            // txtNomeemissora
+            // lblTextons
             // 
-            this.txtNomeemissora.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNomeemissora.Location = new System.Drawing.Point(245, 150);
-            this.txtNomeemissora.Margin = new System.Windows.Forms.Padding(4);
-            this.txtNomeemissora.Name = "txtNomeemissora";
-            this.txtNomeemissora.Size = new System.Drawing.Size(225, 22);
-            this.txtNomeemissora.TabIndex = 4;
-            // 
-            // lblTextonorad
-            // 
-            this.lblTextonorad.AutoSize = true;
-            this.lblTextonorad.Location = new System.Drawing.Point(260, 125);
-            this.lblTextonorad.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblTextonorad.Name = "lblTextonorad";
-            this.lblTextonorad.Size = new System.Drawing.Size(185, 16);
-            this.lblTextonorad.TabIndex = 0;
-            this.lblTextonorad.Text = "Informe o nome da rádio aqui:";
+            this.lblTextons.AutoSize = true;
+            this.lblTextons.Location = new System.Drawing.Point(260, 79);
+            this.lblTextons.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblTextons.Name = "lblTextons";
+            this.lblTextons.Size = new System.Drawing.Size(205, 16);
+            this.lblTextons.TabIndex = 0;
+            this.lblTextons.Text = "Título do próximo som se houver:";
             // 
             // UpdateRDSInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(484, 562);
-            this.Controls.Add(this.lblTextonorad);
-            this.Controls.Add(this.txtNomeemissora);
-            this.Controls.Add(this.btnPersonalizanomeradio);
+            this.Controls.Add(this.lblTextons);
+            this.Controls.Add(this.txtNsong);
             this.Controls.Add(this.lblTituloemissora);
             this.Controls.Add(this.lblInfoid);
             this.Controls.Add(this.btnEnviartitulosom);
@@ -161,7 +148,7 @@
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.HelpButton = true;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "UpdateRDSInfo";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -181,8 +168,7 @@
         private System.Windows.Forms.Button btnEnviartitulosom;
         private System.Windows.Forms.Label lblInfoid;
         private System.Windows.Forms.Label lblTituloemissora;
-        private System.Windows.Forms.Button btnPersonalizanomeradio;
-        private System.Windows.Forms.TextBox txtNomeemissora;
-        private System.Windows.Forms.Label lblTextonorad;
+        private System.Windows.Forms.TextBox txtNsong;
+        private System.Windows.Forms.Label lblTextons;
     }
 }

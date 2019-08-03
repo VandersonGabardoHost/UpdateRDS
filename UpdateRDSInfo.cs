@@ -14,7 +14,7 @@ namespace UpdateRDS
     public partial class UpdateRDSInfo : Form
     {
         string caminhoarquivo;
-        string nomedaemissorards;
+
         /// Verifica o processo do aplicativo
         readonly Process proc = Process.GetCurrentProcess();
         public UpdateRDSInfo()
@@ -35,6 +35,11 @@ namespace UpdateRDS
         public void CarregaInfo(string informacao)
         {
             lblInfo.Text = informacao;
+        }
+
+        public void InfoEmiNome(string nomedaemissora)
+        {
+            lblTituloemissora.Text = $"Nome da rádio: {nomedaemissora}";
         }
 
         private void BtnEnviartitulosom_Click(object sender, EventArgs e)
@@ -62,15 +67,6 @@ namespace UpdateRDS
                     {
                         /// Carrega arquivo de texto antigo e sobrescreve todos os dados que tem no arquivo
                         swManual.WriteLine(txtTitulodesom.Text.Replace("&", "e"));
-
-                        /// Força o fechamento do arquivo
-                        swManual.Flush();
-                        swManual.Close();
-
-                        /// Força o despejo da memória do arquivo carregado
-                        swManual.Dispose();
-                        fsManual.Close();
-                        fsManual.Dispose();
                     }
                 }
                 else
@@ -101,12 +97,7 @@ namespace UpdateRDS
         {
             try
             {
-                if (string.IsNullOrEmpty(txtNomeemissora.Text))
-                {
-                    throw new Exception("A caixa de texto de nome da emissora está vazio, informe um nome válido!");
-                }
-                nomedaemissorards = $"Nome da rádio: {txtNomeemissora.Text}";
-                lblTituloemissora.Text = nomedaemissorards;
+                throw new NotImplementedException();
             }
             catch (Exception ex)
             {
