@@ -35,8 +35,7 @@
             this.btnEnviartitulosom = new System.Windows.Forms.Button();
             this.lblInfoid = new System.Windows.Forms.Label();
             this.lblTituloemissora = new System.Windows.Forms.Label();
-            this.txtNsong = new System.Windows.Forms.TextBox();
-            this.lblTextons = new System.Windows.Forms.Label();
+            this.btnApagarlogerro = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblInfo
@@ -64,7 +63,7 @@
             // lblTitulocxt
             // 
             this.lblTitulocxt.AutoSize = true;
-            this.lblTitulocxt.Location = new System.Drawing.Point(10, 79);
+            this.lblTitulocxt.Location = new System.Drawing.Point(10, 65);
             this.lblTitulocxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTitulocxt.Name = "lblTitulocxt";
             this.lblTitulocxt.Size = new System.Drawing.Size(227, 16);
@@ -74,7 +73,7 @@
             // txtTitulodesom
             // 
             this.txtTitulodesom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtTitulodesom.Location = new System.Drawing.Point(10, 104);
+            this.txtTitulodesom.Location = new System.Drawing.Point(10, 90);
             this.txtTitulodesom.Margin = new System.Windows.Forms.Padding(4);
             this.txtTitulodesom.Name = "txtTitulodesom";
             this.txtTitulodesom.Size = new System.Drawing.Size(225, 22);
@@ -82,10 +81,10 @@
             // 
             // btnEnviartitulosom
             // 
-            this.btnEnviartitulosom.Location = new System.Drawing.Point(276, 488);
+            this.btnEnviartitulosom.Location = new System.Drawing.Point(243, 86);
             this.btnEnviartitulosom.Margin = new System.Windows.Forms.Padding(4);
             this.btnEnviartitulosom.Name = "btnEnviartitulosom";
-            this.btnEnviartitulosom.Size = new System.Drawing.Size(195, 30);
+            this.btnEnviartitulosom.Size = new System.Drawing.Size(228, 30);
             this.btnEnviartitulosom.TabIndex = 1;
             this.btnEnviartitulosom.Text = "Enviar título de som";
             this.btnEnviartitulosom.UseVisualStyleBackColor = true;
@@ -112,32 +111,22 @@
             this.lblTituloemissora.TabIndex = 0;
             this.lblTituloemissora.Text = "Nome da rádio:";
             // 
-            // txtNsong
+            // btnApagarlogerro
             // 
-            this.txtNsong.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNsong.Location = new System.Drawing.Point(245, 104);
-            this.txtNsong.Margin = new System.Windows.Forms.Padding(4);
-            this.txtNsong.Name = "txtNsong";
-            this.txtNsong.Size = new System.Drawing.Size(225, 22);
-            this.txtNsong.TabIndex = 4;
-            // 
-            // lblTextons
-            // 
-            this.lblTextons.AutoSize = true;
-            this.lblTextons.Location = new System.Drawing.Point(260, 79);
-            this.lblTextons.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblTextons.Name = "lblTextons";
-            this.lblTextons.Size = new System.Drawing.Size(205, 16);
-            this.lblTextons.TabIndex = 0;
-            this.lblTextons.Text = "Título do próximo som se houver:";
+            this.btnApagarlogerro.Location = new System.Drawing.Point(261, 497);
+            this.btnApagarlogerro.Name = "btnApagarlogerro";
+            this.btnApagarlogerro.Size = new System.Drawing.Size(210, 30);
+            this.btnApagarlogerro.TabIndex = 3;
+            this.btnApagarlogerro.Text = "Apagar os logs de erro";
+            this.btnApagarlogerro.UseVisualStyleBackColor = true;
+            this.btnApagarlogerro.Click += new System.EventHandler(this.BtnApagarlogerro_Click);
             // 
             // UpdateRDSInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(484, 562);
-            this.Controls.Add(this.lblTextons);
-            this.Controls.Add(this.txtNsong);
+            this.Controls.Add(this.btnApagarlogerro);
             this.Controls.Add(this.lblTituloemissora);
             this.Controls.Add(this.lblInfoid);
             this.Controls.Add(this.btnEnviartitulosom);
@@ -168,7 +157,6 @@
         private System.Windows.Forms.Button btnEnviartitulosom;
         private System.Windows.Forms.Label lblInfoid;
         private System.Windows.Forms.Label lblTituloemissora;
-        private System.Windows.Forms.TextBox txtNsong;
-        private System.Windows.Forms.Label lblTextons;
+        private System.Windows.Forms.Button btnApagarlogerro;
     }
 }

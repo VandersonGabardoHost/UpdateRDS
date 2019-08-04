@@ -26,8 +26,9 @@
     <SupportUrl>http://www.vanderson.net.br</SupportUrl>
     <ProductName>Update RDS</ProductName>
     <PublisherName>Vanderson GabardoHost</PublisherName>
+    <SuiteName>Update RDS</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>0.0.4.0</ApplicationVersion>
+    <ApplicationVersion>0.0.5.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>false</BootstrapperEnabled>
   </PropertyGroup>

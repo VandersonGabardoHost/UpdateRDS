@@ -13,7 +13,7 @@ using System.Windows.Forms;
 using System.Xml;
 using UpdateRDS.Properties;
 
-/// Update RDS By GabardoHost - Versão 0.0.4 Alfa build
+/// Update RDS By GabardoHost - Versão 0.0.5 Alfa build
 /// @file UpdateRDS.cs
 /// <summary>
 /// Este arquivo é o código principal do aplicativo
@@ -22,8 +22,8 @@ using UpdateRDS.Properties;
 /// Mas resolvi criar um para disponibilizar para todos, pois esse programa ou vem associado a um encoder ou não tem para download, então fiz um!
 /// Minha ideia é essa, se uma coisa não existe e você precisa muito, então crie você mesmo! pode ser carro, casa, transmissor de FM, programa de PC, celular etc... CRIE VOCÊ MESMO!!!
 /// @author Vanderson Gabardo <vanderson@vanderson.net.br>
-/// @date 02/08/2019
-/// $Id: UpdateRDS.cs, v0.0.4 2019/08/02 23:30:00 Vanderson Gabardo $
+/// @date 03/08/2019
+/// $Id: UpdateRDS.cs, v0.0.5 2019/08/03 23:30:00 Vanderson Gabardo $
 
 namespace UpdateRDS
 {
@@ -40,7 +40,7 @@ namespace UpdateRDS
         static string weberrogeral;
         static bool eumnext = false;
         static bool versaonova = false;
-        static readonly string versaoappcurrent = "Versao 0.0.4";
+        static readonly string versaoappcurrent = "Versao 0.0.5";
         static string conteudotexto;
         static string conteudotextoantigo;
         static int errocontanext = -1;
@@ -51,7 +51,7 @@ namespace UpdateRDS
         static readonly string diretoriodoaplicativo = $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Update RDS\";
         static int iconealternar = 0;
         public UpdateRDSInfo Updrdsfcar { get; } = new UpdateRDSInfo();
-
+        static string htmltestado;
         public UpdateRDS()
         {
             InitializeComponent();
@@ -121,6 +121,7 @@ namespace UpdateRDS
             {
                 /// String para uso de explicação
                 string weberroexplic = "";
+                string datadeagora = DateTime.Now.ToString().Replace(":", "").Replace("/", "");
 
                 /// Verifica o processo do aplicativo
                 Process proc = Process.GetCurrentProcess();
@@ -133,25 +134,12 @@ namespace UpdateRDS
                     Directory.CreateDirectory($@"{diretoriodoaplicativo}LOGS");
 
                 /// Pega a informação da localização do arquivo de log de erro
-                string caminhoarquivolog = $@"{diretoriodoaplicativo}LOGS\ERRO{identificadorproc}LOG.txt";
+                string caminhoarquivologweb = $@"{diretoriodoaplicativo}LOGS\ERRO {datadeagora} LOGWEB.html";
+                string caminhoarquivologapp = $@"{diretoriodoaplicativo}LOGS\ERRO {datadeagora} LOGAPP.html";
 
                 /// Tratamento de erro da web
                 if (errogeral == null)
                 {
-                    /// String para preenchimento dos dados do arquivo texto de erros
-                    string dadosdotxterro = null;
-
-                    /// Caso o arquivo texto LOGRDSERRO.txt ou similar exista então ele faz a condição abaixo
-                    if (File.Exists(caminhoarquivolog))
-                    {
-                        /// Pega o arquivo texto para ler
-                        using (StreamReader sr = new StreamReader(caminhoarquivolog, Encoding.Default))
-                        {
-                            /// Carrega arquivo e mantém carregado todas as linhas
-                            dadosdotxterro = sr.ReadToEnd();
-                        }
-                    }
-
                     /// Pega os caracteres a verificar
                     string caracteresaanalisar = @"(?i)[^0-9]";
 
@@ -231,61 +219,100 @@ namespace UpdateRDS
                     /// Verifica se o usuário selecionou a caixa para não ser notificado, se não marcou, Transfere dados para um balão chato haha de texto
                     if (chkNaonotificarsomtray.Checked == false)
                         ntfIcone.ShowBalloonTip(60000, "Update RDS - Erro de conexão", mensagemerro, ToolTipIcon.Warning);
-                    #region Alterar para XML em breve
-                    /// Gera arquivo texto ou abre um arquivo existente
-                    FileStream fs = new FileStream(caminhoarquivolog, FileMode.OpenOrCreate);
 
-                    /// Grava arquivo em UTF 8 com a solicitação
-                    StreamWriter sw = new StreamWriter(fs, Encoding.Default);
+                    ///  Esta linha indica que o arquivo xml sera salvo
+                    using (XmlTextWriter xtwerr = new XmlTextWriter(caminhoarquivologweb, Encoding.Default)
+                    {
+                        /// A linha abaixo vai identar o código, se não usar isso tudo ficará em uma linha.
+                        Formatting = Formatting.Indented
+                    })
+                    {
+                        // Escreve o elemento root <html>
+                        xtwerr.WriteStartElement("html");
 
-                    /// Grava o texto com as informações nova do erro mais os erros anteriores
-                    sw.WriteLine(dadosdotxterro);
-                    sw.WriteLine(" -------------- Sessão novo erro CONEXAO --------------------------------- ");
-                    sw.WriteLine("Data e hora da execução do erro: " + DateTime.Now);
-                    sw.WriteLine("Mensagem completa exibida: " + mensagemerro + ". Por favor, Verifique a conexão com o servidor! ");
-                    sw.WriteLine("Mensagem técnica exibida: " + weberrogeral);
-                    sw.WriteLine("Código de erro: " + weberrogeralcode);
-                    sw.WriteLine("Nome da emissora: " + txtNomeemi.Text);
-                    sw.WriteLine("Codificação de caracteres usada: " + cbCaracteres.SelectedItem + ". Item selecionado: " + cbCaracteres.SelectedIndex);
-                    sw.WriteLine("Tipo de Servidor: " + cbTiposervidor.SelectedItem + ". Item selecionado: " + cbTiposervidor.SelectedIndex);
-                    sw.WriteLine("Não minimizar no system tray: " + chkNaominimsystray.Checked);
-                    sw.WriteLine("Não notificar via systray: " + chkNaonotificarsomtray.Checked);
-                    sw.WriteLine("Remover a Acentuação das palavras: " + chkAcentospalavras.Checked);
-                    sw.WriteLine("Remover Caracteres especiais: " + chkCaracteresespeciais.Checked);
-                    sw.WriteLine("Exibir no aplicativo dados sensiveis como senhas: " + chkDadossensiveis.Checked);
-                    sw.WriteLine("Transmitir dados do próximo som: " + chkTransmproxsom.Checked);
-                    sw.WriteLine("Uso de servidor proxy: " + chkUsoproxy.Checked);
-                    sw.WriteLine("Uso de autenticação de servidor proxy: " + chkAutenticaproxy.Checked);
-                    sw.WriteLine("Endereço de IP ou nome de domínio do servidor proxy: " + txtDoproxy.Text);
-                    sw.WriteLine("Porta do servidor proxy: " + txtPortaproxy.Text);
-                    sw.WriteLine("Login do servidor proxy: " + txtLoginproxy.Text);
-                    sw.WriteLine("Senha do servidor proxy: " + txtSenhaproxy.Text);
-                    sw.WriteLine("Tempo de execução: " + txtTempoexec.Text);
-                    sw.WriteLine("Caminho completo do arquivo texto com nome do som: " + lblArquivotextosom.Text);
-                    sw.WriteLine("Caminho completo do arquivo texto com nome do próximo som: " + lblArquivotextosomnext.Text);
-                    sw.WriteLine("Atualizar via URL o título do som: " + chkUrlsom.Checked);
-                    sw.WriteLine("URL para atualização de título: " + txtUrlsom.Text);
-                    sw.WriteLine("Atualizar via URL o título do próximo som: " + chkUrlsomnext.Checked);
-                    sw.WriteLine("URL para atualização de título de próximo som: " + txtUrlsomnext.Text);
-                    sw.WriteLine("IP ou domínio digitado: " + txtDominioip.Text);
-                    sw.WriteLine("Porta: " + txtPorta.Text);
-                    sw.WriteLine("Ponto de montagem ou ID: " + txtIdoumont.Text);
-                    sw.WriteLine("Login: " + txtLoginserver.Text);
-                    sw.WriteLine("Senha: " + txtSenhaserver.Text);
-                    sw.WriteLine(" -------------- Final da sessão novo erro CONEXAO --------------------------------- ");
+                        // Escreve o elemento <head>
+                        xtwerr.WriteStartElement("head");
 
-                    /// Limpa a sessão
-                    sw.Flush();
-                    sw.Close();
-                    #endregion
+                        // Escreve o elemento <title>Titulo da Página</title>
+                        xtwerr.WriteElementString("title", null, "ERRO DE CONEXÃO");
+
+                        // Fecha o elemento </head>
+                        xtwerr.WriteEndElement();
+
+                        // Escreve o elemento <body>
+                        xtwerr.WriteStartElement("body");
+
+                        // Escreve o elemento <h1>ERRO DE CONEXÃO:</h1>
+                        xtwerr.WriteElementString("h1", null, "ERRO DE CONEXÃO:");
+
+                        /// Grava os dados das caixas, checkbox e outros dados
+                        xtwerr.WriteElementString("p", $"Versão do software que está utilizando: {versaoappcurrent}");
+                        xtwerr.WriteElementString("p", $"Data e hora do erro: {DateTime.Now.ToString()}");
+                        xtwerr.WriteElementString("p", $"Mensagem de erro completa exibida: {mensagemerro} Por favor, Verifique a conexão com o servidor!");
+                        xtwerr.WriteElementString("p", $"Mensagem de erro: {weberrogeral}");
+                        xtwerr.WriteElementString("p", $"Mensagem de erro técnico: {errogeralgravado}");
+                        xtwerr.WriteElementString("p", $"Código de erro: {weberrogeralcode}");
+                        xtwerr.WriteElementString("p", $"Nome da emissora: {txtNomeemi.Text}");
+                        xtwerr.WriteElementString("p", $"Codificação de caracteres: {cbCaracteres.SelectedItem}. Item selecionado: {cbCaracteres.SelectedIndex}");
+                        xtwerr.WriteElementString("p", $"Tipo de servidor: {cbTiposervidor.SelectedItem}. Item selecionado: {cbTiposervidor.SelectedIndex}");
+                        VerTrueFalse(chkNaominimsystray.Checked);
+                        xtwerr.WriteElementString("p", "Não minimizar no system tray: ");
+                        xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
+                        VerTrueFalse(chkNaonotificarsomtray.Checked);
+                        xtwerr.WriteElementString("p", "Não notificar no system tray: ");
+                        xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
+                        VerTrueFalse(chkAcentospalavras.Checked);
+                        xtwerr.WriteElementString("p", "Remover acentos das palavras: ");
+                        xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
+                        VerTrueFalse(chkCaracteresespeciais.Checked);
+                        xtwerr.WriteElementString("p", "Remover caracteres especiais: ");
+                        xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
+                        VerTrueFalse(chkDadossensiveis.Checked);
+                        xtwerr.WriteElementString("p", "Exibir dados sensíveis como senhas: ");
+                        xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
+                        VerTrueFalse(chkTransmproxsom.Checked);
+                        xtwerr.WriteElementString("p", "Transmitir próximo som: ");
+                        xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
+                        VerTrueFalse(chkUsoproxy.Checked);
+                        xtwerr.WriteElementString("p", "Uso um servidor proxy para acesso a internet: ");
+                        xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
+                        VerTrueFalse(chkAutenticaproxy.Checked);
+                        xtwerr.WriteElementString("p", "Uso autenticação para o servidor proxy: ");
+                        xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
+                        xtwerr.WriteElementString("p", $"Domínio ou endereço de IP do servidor proxy: {txtDoproxy.Text}");
+                        xtwerr.WriteElementString("p", $"Porta do servidor proxy: {txtPortaproxy.Text}");
+                        xtwerr.WriteElementString("p", $"Login do servidor proxy: {txtLoginproxy.Text}");
+                        xtwerr.WriteElementString("p", $"Senha do servidor proxy: {txtSenhaproxy.Text}");
+                        xtwerr.WriteElementString("p", $"Tempo de execução para verificação de arquivo ou URL: {txtTempoexec.Text}");
+                        xtwerr.WriteElementString("p", $"Caminho do arquivo de texto do som: {lblArquivotextosom.Text}");
+                        xtwerr.WriteElementString("p", $"Caminho do arquivo de texto do próximo som: {lblArquivotextosomnext.Text}");
+                        VerTrueFalse(chkUrlsom.Checked);
+                        xtwerr.WriteElementString("p", "Atualizar título de som através de uma URL: ");
+                        xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
+                        xtwerr.WriteElementString("p", $"URL Informada para captura da informação do nome de som: {txtUrlsom.Text}");
+                        VerTrueFalse(chkUrlsomnext.Checked);
+                        xtwerr.WriteElementString("p", "Atualizar título do próximo som através de uma URL: ");
+                        xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
+                        xtwerr.WriteElementString("p", $"URL Informada para captura da informação do nome do próximo som: {txtUrlsomnext.Text}");
+                        xtwerr.WriteElementString("p", $"Domínio ou endereço de IP informado para o servidor: {txtDominioip.Text}");
+                        xtwerr.WriteElementString("p", $"Porta informada para o servidor: {txtPorta.Text}");
+                        xtwerr.WriteElementString("p", $"Ponto de montagem ou ID informado para o servidor: {txtIdoumont.Text}");
+                        xtwerr.WriteElementString("p", $"Login do servidor: {txtLoginserver.Text}");
+                        xtwerr.WriteElementString("p", $"Senha do servidor: {txtSenhaserver.Text}");
+                        xtwerr.WriteElementString("p", $"ID do processo em execução: {identificadorproc}");
+
+                        // Fecha o elemento </body>
+                        xtwerr.WriteEndElement();
+
+                        // Fecha o elemento root </html>
+                        xtwerr.WriteEndElement();
+                        // xtwerr.WriteEndDocument();
+                    }
                 }
 
                 /// Tratamento de erro de aplicativo
                 if (weberrogeral == null)
                 {
-                    /// String para preenchimento dos dados do arquivo texto de erros
-                    string dadosdotxterro = null;
-
                     /// Caso o botão de verificação de dados esteja visível não carrega o erro na label de informações, Caso aconteça exceções sem tratamento, é carregado direto na label e a exibição na label se dá devido ao fato que não se pode parar a execução desse trecho de código
                     if (btnVerificardadosderds.Visible == false)
                         Updrdsfcar.CarregaInfo(errogeral);
@@ -293,68 +320,117 @@ namespace UpdateRDS
                     /// Caso tenha contagem de erro e ela for menor que um
                     if (erroconta < 1 && errocontanext < 1)
                     {
-                        /// Caso o arquivo LOGERRORDS.txt exista então ele faz a condição abaixo
-                        if (File.Exists(caminhoarquivolog))
+                        ///  Esta linha indica que o arquivo xml sera salvo
+                        using (XmlTextWriter xtwerr = new XmlTextWriter(caminhoarquivologapp, Encoding.Default)
                         {
-                            /// Pega o arquivo texto para ler
-                            using (StreamReader sr = new StreamReader(caminhoarquivolog, Encoding.Default))
-                            {
-                                /// Carrega arquivo e mantém carregado todas as linhas
-                                dadosdotxterro = sr.ReadToEnd();
-                            }
+                            /// A linha abaixo vai identar o código, se não usar isso tudo ficará em uma linha.
+                            Formatting = Formatting.Indented
+                        })
+                        {
+                            /// Escreve o elemento root <html>
+                            xtwerr.WriteStartElement("html");
+
+                            /// Escreve o elemento <head>
+                            xtwerr.WriteStartElement("head");
+
+                            /// Escreve o elemento <title>Titulo da Página</title>
+                            xtwerr.WriteElementString("title", null, "ERRO DO APLICATIVO EM EXECUÇÃO");
+
+                            /// Fecha o elemento </head>
+                            xtwerr.WriteEndElement();
+
+                            /// Escreve o elemento <body>
+                            xtwerr.WriteStartElement("body");
+
+                            /// Escreve o elemento <h1>ERRO DO APLICATIVO EM EXECUÇÃO:</h1>
+                            xtwerr.WriteElementString("h1", null, "ERRO DO APLICATIVO EM EXECUÇÃO:");
+
+                            /// Grava os dados das caixas, checkbox e outros dados
+                            xtwerr.WriteElementString("p", $"Versão do software que está utilizando: {versaoappcurrent}");
+                            xtwerr.WriteElementString("p", $"Data e hora do erro: {DateTime.Now.ToString()}");
+                            xtwerr.WriteElementString("p", $"Mensagem de erro: {errogeral}");
+                            xtwerr.WriteElementString("p", $"Mensagem de erro técnico: {errogeralgravado}");
+                            xtwerr.WriteElementString("p", $"Nome da emissora: {txtNomeemi.Text}");
+                            xtwerr.WriteElementString("p", $"Codificação de caracteres: {cbCaracteres.SelectedItem}. Item selecionado: {cbCaracteres.SelectedIndex}");
+                            xtwerr.WriteElementString("p", $"Tipo de servidor: {cbTiposervidor.SelectedItem}. Item selecionado: {cbTiposervidor.SelectedIndex}");
+                            VerTrueFalse(chkNaominimsystray.Checked);
+                            xtwerr.WriteElementString("p", "Não minimizar no system tray: ");
+                            xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
+                            VerTrueFalse(chkNaonotificarsomtray.Checked);
+                            xtwerr.WriteElementString("p", "Não notificar no system tray: ");
+                            xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
+                            VerTrueFalse(chkAcentospalavras.Checked);
+                            xtwerr.WriteElementString("p", "Remover acentos das palavras: ");
+                            xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
+                            VerTrueFalse(chkCaracteresespeciais.Checked);
+                            xtwerr.WriteElementString("p", "Remover caracteres especiais: ");
+                            xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
+                            VerTrueFalse(chkDadossensiveis.Checked);
+                            xtwerr.WriteElementString("p", "Exibir dados sensíveis como senhas: ");
+                            xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
+                            VerTrueFalse(chkTransmproxsom.Checked);
+                            xtwerr.WriteElementString("p", "Transmitir próximo som: ");
+                            xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
+                            VerTrueFalse(chkUsoproxy.Checked);
+                            xtwerr.WriteElementString("p", "Uso um servidor proxy para acesso a internet: ");
+                            xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
+                            VerTrueFalse(chkAutenticaproxy.Checked);
+                            xtwerr.WriteElementString("p", "Uso autenticação para o servidor proxy: ");
+                            xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
+                            xtwerr.WriteElementString("p", $"Domínio ou endereço de IP do servidor proxy: {txtDoproxy.Text}");
+                            xtwerr.WriteElementString("p", $"Porta do servidor proxy: {txtPortaproxy.Text}");
+                            xtwerr.WriteElementString("p", $"Login do servidor proxy: {txtLoginproxy.Text}");
+                            xtwerr.WriteElementString("p", $"Senha do servidor proxy: {txtSenhaproxy.Text}");
+                            xtwerr.WriteElementString("p", $"Tempo de execução para verificação de arquivo ou URL: {txtTempoexec.Text}");
+                            xtwerr.WriteElementString("p", $"Caminho do arquivo de texto do som: {lblArquivotextosom.Text}");
+                            xtwerr.WriteElementString("p", $"Caminho do arquivo de texto do próximo som: {lblArquivotextosomnext.Text}");
+                            VerTrueFalse(chkUrlsom.Checked);
+                            xtwerr.WriteElementString("p", "Atualizar título de som através de uma URL: ");
+                            xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
+                            xtwerr.WriteElementString("p", $"URL Informada para captura da informação do nome de som: {txtUrlsom.Text}");
+                            VerTrueFalse(chkUrlsomnext.Checked);
+                            xtwerr.WriteElementString("p", "Atualizar título do próximo som através de uma URL: ");
+                            xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
+                            xtwerr.WriteElementString("p", $"URL Informada para captura da informação do nome do próximo som: {txtUrlsomnext.Text}");
+                            xtwerr.WriteElementString("p", $"Domínio ou endereço de IP informado para o servidor: {txtDominioip.Text}");
+                            xtwerr.WriteElementString("p", $"Porta informada para o servidor: {txtPorta.Text}");
+                            xtwerr.WriteElementString("p", $"Ponto de montagem ou ID informado para o servidor: {txtIdoumont.Text}");
+                            xtwerr.WriteElementString("p", $"Login do servidor: {txtLoginserver.Text}");
+                            xtwerr.WriteElementString("p", $"Senha do servidor: {txtSenhaserver.Text}");
+                            xtwerr.WriteElementString("p", $"ID do processo em execução: {identificadorproc}");
+
+                            // Fecha o elemento </body>
+                            xtwerr.WriteEndElement();
+
+                            // Fecha o elemento root </html>
+                            xtwerr.WriteEndElement();
+                            // xtwerr.WriteEndDocument();
                         }
-                        #region Alterar para XML em breve
-                        /// Gera arquivo texto ou abre um arquivo existente
-                        FileStream fs = new FileStream(caminhoarquivolog, FileMode.OpenOrCreate);
-
-                        /// Grava arquivo em UTF 8 com a solicitação
-                        StreamWriter sw = new StreamWriter(fs, Encoding.Default);
-
-                        /// Grava o texto com as informações nova do erro mais os erros anteriores
-                        sw.WriteLine(dadosdotxterro);
-                        sw.WriteLine(" -------------- Sessão novo erro --------------------------------- ");
-                        sw.WriteLine("Data e hora da execução do erro: " + DateTime.Now);
-                        sw.WriteLine("Stack Trace Completo: " + errogeralgravado);
-                        sw.WriteLine("Mensagem completa exibida: " + errogeral);
-                        sw.WriteLine("Nome da emissora: " + txtNomeemi.Text);
-                        sw.WriteLine("Codificação de caracteres usada: " + cbCaracteres.SelectedItem + ". Item selecionado: " + cbCaracteres.SelectedIndex);
-                        sw.WriteLine("Tipo de Servidor: " + cbTiposervidor.SelectedItem + ". Item selecionado: " + cbTiposervidor.SelectedIndex);
-                        sw.WriteLine("Não minimizar no system tray: " + chkNaominimsystray.Checked);
-                        sw.WriteLine("Não notificar via systray: " + chkNaonotificarsomtray.Checked);
-                        sw.WriteLine("Remover a Acentuação das palavras: " + chkAcentospalavras.Checked);
-                        sw.WriteLine("Remover Caracteres especiais: " + chkCaracteresespeciais.Checked);
-                        sw.WriteLine("Exibir no aplicativo dados sensiveis como senhas: " + chkDadossensiveis.Checked);
-                        sw.WriteLine("Transmitir dados do próximo som: " + chkTransmproxsom.Checked);
-                        sw.WriteLine("Uso de servidor proxy: " + chkUsoproxy.Checked);
-                        sw.WriteLine("Uso de autenticação de servidor proxy: " + chkAutenticaproxy.Checked);
-                        sw.WriteLine("Endereço de IP ou nome de domínio do servidor proxy: " + txtDoproxy.Text);
-                        sw.WriteLine("Porta do servidor proxy: " + txtPortaproxy.Text);
-                        sw.WriteLine("Login do servidor proxy: " + txtLoginproxy.Text);
-                        sw.WriteLine("Senha do servidor proxy: " + txtSenhaproxy.Text);
-                        sw.WriteLine("Tempo de execução: " + txtTempoexec.Text);
-                        sw.WriteLine("Caminho completo do arquivo texto com nome do som: " + lblArquivotextosom.Text);
-                        sw.WriteLine("Caminho completo do arquivo texto com nome do próximo som: " + lblArquivotextosomnext.Text);
-                        sw.WriteLine("Atualizar via URL o título do som: " + chkUrlsom.Checked);
-                        sw.WriteLine("URL para atualização de título: " + txtUrlsom.Text);
-                        sw.WriteLine("Atualizar via URL o título do próximo som: " + chkUrlsomnext.Checked);
-                        sw.WriteLine("URL para atualização de título de próximo som: " + txtUrlsomnext.Text);
-                        sw.WriteLine("IP ou domínio digitado: " + txtDominioip.Text);
-                        sw.WriteLine("Porta: " + txtPorta.Text);
-                        sw.WriteLine("Ponto de montagem ou ID: " + txtIdoumont.Text);
-                        sw.WriteLine("Login: " + txtLoginserver.Text);
-                        sw.WriteLine("Senha: " + txtSenhaserver.Text);
-                        sw.WriteLine(" -------------- Final da sessão novo erro --------------------------------- ");
-
-                        /// Limpa a sessão
-                        sw.Flush();
-                        sw.Close();
-                        #endregion
                     }
                 }
             }
             catch (Exception ex)
             {
                 /// Caso gere um erro aqui, o erro acaba aqui
+                qualquerlixoaqui = ex.Message;
+            }
+        }
+
+        public void VerTrueFalse(bool infofalseoutrue)
+        {
+            try
+            {
+                if (infofalseoutrue == true)
+                {
+                    htmltestado = "disabled checked";
+                }
+                else
+                {
+                    htmltestado = "disabled";
+                }
+            }
+            catch (Exception ex)
+            {
                 qualquerlixoaqui = ex.Message;
             }
         }
@@ -366,7 +442,7 @@ namespace UpdateRDS
                 Directory.CreateDirectory(diretoriodoaplicativo);
 
             /// Informa versão do aplicativo para o usuário alterando a cor
-            lblVersaoapp.Text = "Versão 0.0.4 Alfa\n(Sem verificar nova versão)";
+            lblVersaoapp.Text = "Versão 0.0.5 Alfa\n(Sem verificar nova versão)";
             lblVersaoapp.ForeColor = Color.Yellow;
 
             /// Declara URL completa de onde vai verificar a atualização do software
@@ -412,7 +488,7 @@ namespace UpdateRDS
                 versaonova = true;
 
                 /// Altera label de aviso
-                lblVersaoapp.Text = "Versão 0.0.4 Alfa\n(DESATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.0.5 Alfa\n(DESATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Red;
 
                 /// Envia mensagem perguntando se o usuário gostaria de baixar a nova versão do aplicativo, Caso o usuário queira baixar o aplicativo
@@ -466,7 +542,7 @@ namespace UpdateRDS
             }
             else
             {
-                lblVersaoapp.Text = "Versão 0.0.4 Alfa\n(ATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.0.5 Alfa\n(ATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Green;
                 versaonova = false;
             }
@@ -1437,6 +1513,9 @@ namespace UpdateRDS
                     /// Chama método para verificar o arquivo now currentsong ou similar
                     TratamentoTextoNowNext();
                 }
+
+                /// Pega novamente o valor para uso abaixo
+                conteudoarquivotexto = conteudotexto;
             }
 
             /// Verifica se o arquivo anterior é o mesmo do atual, se não for então atualiza o nome do arquivo no servidor
@@ -1614,13 +1693,13 @@ namespace UpdateRDS
                 if (arquivotextolog.Length > 10485760)
                     File.Move(arquivodelog, arquivodelog + DateTime.Now.ToString().Replace(":", "").Replace("/", "") + ".txt");
 
-                /// Caso o valor dos caracteres seja muito grande, tira uma parte para não exibir, Não exibe mais de 100 caracteres
-                if (conteudotexto.Length > 100)
-                    conteudoarquivotexto = conteudoarquivotexto.Substring(0, 100) + "...";
+                ///// Caso o valor dos caracteres seja muito grande, tira uma parte para não exibir, Não exibe mais de 100 caracteres
+                //if (conteudotexto.Length > 100)
+                //    conteudoarquivotexto = conteudoarquivotexto.Substring(0, 100) + "...";
 
-                /// Caso o valor dos caracteres de next song seja muito grande, tira uma parte para não exibir, Não exibe mais de 50 caracteres
-                if (conteudoarquivotextonextsong.Length > 50)
-                    conteudoarquivotextonextsong = conteudoarquivotextonextsong.Substring(0, 50) + "...";
+                ///// Caso o valor dos caracteres de next song seja muito grande, tira uma parte para não exibir, Não exibe mais de 50 caracteres
+                //if (conteudoarquivotextonextsong.Length > 50)
+                //    conteudoarquivotextonextsong = conteudoarquivotextonextsong.Substring(0, 50) + "...";
 
                 /// Se o botão estiver visível mostra a label abaixo com o texto
                 if (btnVerificardadosderds.Visible == true)
@@ -1710,16 +1789,19 @@ namespace UpdateRDS
                 string identificadorproc = proc.Id.ToString();
 
                 DirectoryInfo dir = new DirectoryInfo(diretoriodoaplicativo + @"\LOGS\");
+
+                int indexnum = 0;
+                string indexnome = $"ERRO {DateTime.Now.Date.ToString().Replace("00:00:00", "").Replace("/", "")}";
+                string indexcsv = ".csv";
+
                 if (iconealternar == 0)
                 {
-                    btnAbretelainfo.BackColor = Color.Yellow;
                     iconealternar = 1;
                 }
                 else
                 {
                     if (iconealternar == 1)
                     {
-                        btnAbretelainfo.BackColor = Color.LightGreen;
                         iconealternar = 0;
                     }
                 }
@@ -1728,10 +1810,21 @@ namespace UpdateRDS
 
                 foreach (FileInfo file in arquivostexto)
                 {
-                    if (file.Name == "ERRO" + identificadorproc + "LOG.txt")
+                    if (file.Name.IndexOf(indexcsv) > 0)
                     {
-                        int index = file.Name.IndexOf("LOG.txt");
-                        if (index > 0)
+                        if (iconealternar == 0)
+                        {
+                            btnAbretelainfo.BackColor = Color.Yellow;
+                        }
+                        else
+                        {
+                            btnAbretelainfo.BackColor = Color.LightGreen;
+                        }
+                    }
+                    else
+                    {
+                        indexnum = file.Name.IndexOf(indexnome);
+                        if (indexnum > -1)
                         {
                             if (iconealternar == 0)
                             {
@@ -1742,7 +1835,7 @@ namespace UpdateRDS
                                 btnAbrirappdata.BackColor = Color.Yellow;
                             }
                         }
-                        if (index <= 0)
+                        if (indexnum < 0)
                         {
                             btnAbrirappdata.BackColor = Color.Empty;
                         }
@@ -1830,8 +1923,14 @@ namespace UpdateRDS
                     /// Limpa label de informações de atualização
                     lblInformacaoid.Text = "Dados de RDS enviados com sucesso! Clique no botão Enviar RDS para fazer o envio contínuo dos dados!";
 
-                    /// Envia para outro form os dados do diretório do aplicativo
-                    Updrdsfcar.AarquivoTextoSom(lblArquivotextosom.Text);
+                    if (chkUrlsom.Checked == true)
+                    {
+                        /// Envia para outro form os dados do diretório do aplicativo
+                        Updrdsfcar.ArquivoTextoSom("", true);
+                    }
+                    else
+                        /// Envia para outro form os dados do diretório do aplicativo
+                        Updrdsfcar.ArquivoTextoSom(lblArquivotextosom.Text, false);
                 }
 
                 /// Exceção do web request client
@@ -2043,7 +2142,7 @@ namespace UpdateRDS
                     lblTextodobotao.Text = "Verificar dados:";
 
                     /// Limpa a label de informações e altera informações da label
-                    informacaolabel = "O RDS Não está sendo transmitido para o servidor! Para continuar enviando dados, clique no botão abaixo:";
+                    informacaolabel = "O RDS Não está sendo transmitido para o servidor! Para continuar enviando dados, clique no botão 'verificar dados' da tela anterior!";
                     lblInformacaoid.Text = "Última checagem de modificação do arquivo: " + DateTime.Now.ToString();
 
                     /// Carrega e exibe os dados na label
