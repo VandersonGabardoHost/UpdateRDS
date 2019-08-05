@@ -103,6 +103,7 @@
             this.btnNomeemi = new System.Windows.Forms.Button();
             this.txtNomeemi = new System.Windows.Forms.TextBox();
             this.btnNomeemialt = new System.Windows.Forms.Button();
+            this.temporizadoricone = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pbFront)).BeginInit();
             this.SuspendLayout();
             // 
@@ -1042,6 +1043,7 @@
         private System.Windows.Forms.Button btnNomeemi;
         private System.Windows.Forms.TextBox txtNomeemi;
         private System.Windows.Forms.Button btnNomeemialt;
+        private System.Windows.Forms.Timer temporizadoricone;
     }
 }
 
