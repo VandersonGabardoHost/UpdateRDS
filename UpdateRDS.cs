@@ -13,7 +13,7 @@ using System.Windows.Forms;
 using System.Xml;
 using UpdateRDS.Properties;
 
-/// Update RDS By GabardoHost - Versão 0.0.6 Alfa build
+/// Update RDS By GabardoHost - Versão 0.0.7 Alfa build
 /// @file UpdateRDS.cs
 /// <summary>
 /// Este arquivo é o código principal do aplicativo
@@ -22,8 +22,8 @@ using UpdateRDS.Properties;
 /// Mas resolvi criar um para disponibilizar para todos, pois esse programa ou vem associado a um encoder ou não tem para download, então fiz um!
 /// Minha ideia é essa, se uma coisa não existe e você precisa muito, então crie você mesmo! pode ser carro, casa, transmissor de FM, programa de PC, celular etc... CRIE VOCÊ MESMO!!!
 /// @author Vanderson Gabardo <vanderson@vanderson.net.br>
-/// @date 05/08/2019
-/// $Id: UpdateRDS.cs, v0.0.6 2019/08/05 03:30:00 Vanderson Gabardo $
+/// @date 07/08/2019
+/// $Id: UpdateRDS.cs, v0.0.7 2019/08/07 20:30:00 Vanderson Gabardo $
 
 namespace UpdateRDS
 {
@@ -32,20 +32,14 @@ namespace UpdateRDS
         static readonly WebProxy servidorproxydoaplicativo = new WebProxy();
         static string qualquerlixoaqui;
         static readonly string useragentdef = "Update RDS By GabardoHost - Mozilla/50MIL.0 (Windows NeanderThal) KHTML like Gecko Chrome Opera Safari Netscape Internet Exploit Firefox Godzilla Giroflex Alex Marques Print";
-        static string errogeralgravado;
-        static string errogeral;
-        static string weberrogeralcode;
-        static string weberrogeral;
-        static bool eumnext = false;
         static bool versaonova = false;
-        static readonly string versaoappcurrent = "Versao 0.0.6";
+        static readonly string versaoappcurrent = "Versao 0.0.7";
         static string conteudotexto;
         static string conteudotextoantigo;
         static int errocontanext = -1;
         static int erroconta = -1;
-        static int errfilecnext = -1;
-        static int errfilec = -1;
-        static string errodaweblink = null;
+        static string errfilecnext = null;
+        static string errfilec = null;
         static readonly string diretoriodoaplicativo = $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Update RDS\";
         static int iconealternar = 0;
         public UpdateRDSInfo Updrdsfcar { get; } = new UpdateRDSInfo();
@@ -60,26 +54,18 @@ namespace UpdateRDS
         {
             try
             {
-                try
-                {
-                    errogeralgravado = null;
-                    errogeral = null;
-                    weberrogeralcode = null;
-                    weberrogeral = null;
-                    RecInfoDosDadosCad();
-                }
-                catch (WebException wex)
-                {
-                    weberrogeral = wex.Message;
-                    weberrogeralcode = wex.Status.ToString();
-                    InfoErroGeral();
-                }
+                RecInfoDosDadosCad();
             }
             catch (Exception ex)
             {
-                errogeral = ex.Message;
-                errogeralgravado = ex.StackTrace;
-                InfoErroGeral();
+                if (erroconta == -2 || erroconta == -3)
+                {
+                    InfoErroAplic(ex.Message, ex.StackTrace, true);
+                }
+                else
+                {
+                    InfoErroAplic(ex.Message, ex.StackTrace, false);
+                }
             }
         }
 
@@ -169,10 +155,7 @@ namespace UpdateRDS
             }
             catch (Exception ex)
             {
-                errogeral = ex.Message;
-                errogeralgravado = ex.StackTrace;
-
-                InfoErroGeral();
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
                 MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
@@ -187,10 +170,7 @@ namespace UpdateRDS
             }
             catch (Exception ex)
             {
-                errogeral = ex.Message;
-                errogeralgravado = ex.StackTrace;
-
-                InfoErroGeral();
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
                 MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
@@ -232,7 +212,7 @@ namespace UpdateRDS
                     }
                 }
 
-                UpdateAppRDS();
+                UpdateAppRDS(null);
 
                 if (versaonova == false)
                 {
@@ -243,10 +223,7 @@ namespace UpdateRDS
             {
                 lblInformacaoid.Text = "";
 
-                errogeral = ex.Message;
-                errogeralgravado = ex.StackTrace;
-
-                InfoErroGeral();
+                InfoErroAplic(ex.Message, ex.StackTrace, true);
                 MessageBox.Show($"Infelizmente não foi possível verificar a atualização do aplicativo!\nNão foi possível verificar devido ao seguinte problema:\n{ex.Message}", "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
@@ -261,10 +238,7 @@ namespace UpdateRDS
             {
                 lblInformacaoid.Text = "";
 
-                errogeral = ex.Message;
-                errogeralgravado = ex.StackTrace;
-
-                InfoErroGeral();
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
                 MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
@@ -273,10 +247,6 @@ namespace UpdateRDS
         {
             try
             {
-                errogeralgravado = null;
-                errogeral = null;
-                weberrogeralcode = null;
-                weberrogeral = null;
                 erroconta = -1;
                 errocontanext = -1;
 
@@ -290,64 +260,62 @@ namespace UpdateRDS
 
                 ValidarInformacoes();
 
-                try
+                RecInfoDosDadosCad();
+
+                btnVerificardadosderds.Visible = false;
+                btnRevisarinfo.Enabled = true;
+                btnRevisarinfo.Visible = true;
+                lblTextoinforev.Text = "Revisar informações do cadasto:";
+                btnEnviardadosrds.Visible = true;
+                lblTextodobotao.Text = "   Enviar RDS:";
+                cbCaracteres.Enabled = false;
+                cbTiposervidor.Enabled = false;
+                chkEnviatitulosom.Enabled = false;
+                chkTransmproxsom.Enabled = false;
+                chkUsoproxy.Enabled = false;
+                chkAutenticaproxy.Enabled = false;
+                chkUrlsom.Enabled = false;
+                chkUrlsomnext.Enabled = false;
+                btnCarregadados.Visible = false;
+                btnSalvadados.Enabled = false;
+                btnResolvernomeip.Enabled = false;
+                btnLocalizatxtsomnext.Enabled = false;
+                btnLocalizatxtsom.Enabled = false;
+                txtDoproxy.Enabled = false;
+                txtPortaproxy.Enabled = false;
+                txtLoginproxy.Enabled = false;
+                txtSenhaproxy.Enabled = false;
+                txtUrlsom.Enabled = false;
+                txtUrlsomnext.Enabled = false;
+                txtTempoexec.Enabled = false;
+                txtDominioip.Enabled = false;
+                txtPorta.Enabled = false;
+                txtIdoumont.Enabled = false;
+                txtLoginserver.Enabled = false;
+                txtSenhaserver.Enabled = false;
+
+                lblInformacaoid.Text = "Dados de RDS enviados com sucesso! Clique no botão Enviar RDS para fazer o envio contínuo dos dados!";
+
+                if (chkUrlsom.Checked == true)
                 {
-                    RecInfoDosDadosCad();
-
-                    btnVerificardadosderds.Visible = false;
-                    btnRevisarinfo.Enabled = true;
-                    btnRevisarinfo.Visible = true;
-                    lblTextoinforev.Text = "Revisar informações do cadasto:";
-                    btnEnviardadosrds.Visible = true;
-                    lblTextodobotao.Text = "   Enviar RDS:";
-                    cbCaracteres.Enabled = false;
-                    cbTiposervidor.Enabled = false;
-                    chkEnviatitulosom.Enabled = false;
-                    chkTransmproxsom.Enabled = false;
-                    chkUsoproxy.Enabled = false;
-                    chkAutenticaproxy.Enabled = false;
-                    chkUrlsom.Enabled = false;
-                    chkUrlsomnext.Enabled = false;
-                    btnCarregadados.Visible = false;
-                    btnSalvadados.Enabled = false;
-                    btnResolvernomeip.Enabled = false;
-                    btnLocalizatxtsomnext.Enabled = false;
-                    btnLocalizatxtsom.Enabled = false;
-                    txtDoproxy.Enabled = false;
-                    txtPortaproxy.Enabled = false;
-                    txtLoginproxy.Enabled = false;
-                    txtSenhaproxy.Enabled = false;
-                    txtUrlsom.Enabled = false;
-                    txtUrlsomnext.Enabled = false;
-                    txtTempoexec.Enabled = false;
-                    txtDominioip.Enabled = false;
-                    txtPorta.Enabled = false;
-                    txtIdoumont.Enabled = false;
-                    txtLoginserver.Enabled = false;
-                    txtSenhaserver.Enabled = false;
-
-                    lblInformacaoid.Text = "Dados de RDS enviados com sucesso! Clique no botão Enviar RDS para fazer o envio contínuo dos dados!";
-
-                    if (chkUrlsom.Checked == true)
-                    {
-                        Updrdsfcar.ArquivoTextoSom("", true);
-                    }
-                    else
-                        Updrdsfcar.ArquivoTextoSom(lblArquivotextosom.Text, false);
+                    Updrdsfcar.ArquivoTextoSom("", true);
                 }
-                catch (WebException wex)
-                {
-                    weberrogeral = wex.Message;
-                    weberrogeralcode = wex.Status.ToString();
-                    InfoErroGeral();
-                    lblInformacaoid.Text = "Aplicativo em execução - Registro de erro na data e hora: " + DateTime.Now;
-                }
+                else
+                    Updrdsfcar.ArquivoTextoSom(lblArquivotextosom.Text, false);
             }
             catch (Exception ex)
             {
-                errogeral = ex.Message;
-                errogeralgravado = ex.StackTrace;
-                InfoErroGeral();
+                lblInformacaoid.Text = "Aplicativo em execução - Registro de erro na data e hora: " + DateTime.Now;
+
+                if (erroconta == -2 || erroconta == -3)
+                {
+                    InfoErroAplic(ex.Message, ex.StackTrace, true);
+                }
+                else
+                {
+                    InfoErroAplic(ex.Message, ex.StackTrace, false);
+                }
+
                 MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
@@ -357,10 +325,6 @@ namespace UpdateRDS
             try
             {
                 string informacaolabel;
-                errogeralgravado = null;
-                errogeral = null;
-                weberrogeralcode = null;
-                weberrogeral = null;
                 erroconta = -1;
                 errocontanext = -1;
                 int tempoescolhido = Convert.ToInt32(txtTempoexec.Text + "000");
@@ -386,9 +350,7 @@ namespace UpdateRDS
             }
             catch (Exception ex)
             {
-                errogeral = ex.Message;
-                errogeralgravado = ex.StackTrace;
-                InfoErroGeral();
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
                 MessageBox.Show(ex.Message, "Erro do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -398,11 +360,6 @@ namespace UpdateRDS
             try
             {
                 string informacaolabel;
-                errogeralgravado = null;
-                errogeral = null;
-                weberrogeralcode = null;
-                weberrogeral = null;
-
                 Process proc = Process.GetCurrentProcess();
 
                 string identificadorproc = proc.Id.ToString();
@@ -492,10 +449,8 @@ namespace UpdateRDS
             catch (Exception ex)
             {
                 lblInformacaoid.Text = "";
-                errogeral = ex.Message;
-                errogeralgravado = ex.StackTrace;
 
-                InfoErroGeral();
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
                 MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
@@ -505,12 +460,6 @@ namespace UpdateRDS
             try
             {
                 string labeldeinformacao;
-
-                errogeralgravado = null;
-                errogeral = null;
-                weberrogeralcode = null;
-                weberrogeral = null;
-
                 erroconta = -1;
                 errocontanext = -1;
 
@@ -589,10 +538,7 @@ namespace UpdateRDS
             }
             catch (Exception ex)
             {
-                errogeral = ex.Message;
-                errogeralgravado = ex.StackTrace;
-
-                InfoErroGeral();
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
                 MessageBox.Show(ex.Message, "Erro do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -602,15 +548,26 @@ namespace UpdateRDS
             try
             {
                 Stream nomedoarquivoxml;
-
-                errogeralgravado = null;
-                errogeral = null;
-                weberrogeralcode = null;
-                weberrogeral = null;
                 erroconta = -1;
                 errocontanext = -1;
 
                 ValidarInformacoes();
+
+                if (MessageBox.Show("Você gostaria de criar um atalho na área de trabalho para essa configuração?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    if ("Codigo a implementar" == qualquerlixoaqui)
+                    {
+                        string diretoriododesktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+                        string nomedolink = "Update RDS ";
+                        using (StreamWriter escreveoarquivo = new StreamWriter($"{diretoriododesktop}\\{nomedolink}.lnk"))
+                        {
+                            escreveoarquivo.WriteLine("[InternetShortcut]");
+                            escreveoarquivo.WriteLine("URL=file:///" + Environment.CurrentDirectory);
+                            escreveoarquivo.Flush();
+                        }
+                        MessageBox.Show("O atalho foi criado na área de trabalho conforme solicitado!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
 
                 using (SaveFileDialog salvardadosdexml = new SaveFileDialog
                 {
@@ -673,10 +630,7 @@ namespace UpdateRDS
             {
                 lblInformacaoid.Text = "";
 
-                errogeral = ex.Message;
-                errogeralgravado = ex.StackTrace;
-
-                InfoErroGeral();
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
                 MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
@@ -708,10 +662,7 @@ namespace UpdateRDS
             {
                 lblInformacaoid.Text = "";
 
-                errogeral = ex.Message;
-                errogeralgravado = ex.StackTrace;
-
-                InfoErroGeral();
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
                 MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
@@ -732,10 +683,6 @@ namespace UpdateRDS
         {
             try
             {
-                errogeralgravado = null;
-                errogeral = null;
-                weberrogeralcode = null;
-                weberrogeral = null;
                 erroconta = -1;
                 errocontanext = -1;
 
@@ -754,10 +701,7 @@ namespace UpdateRDS
             }
             catch (Exception ex)
             {
-                errogeral = ex.Message;
-                errogeralgravado = ex.StackTrace;
-
-                InfoErroGeral();
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
                 MessageBox.Show(ex.Message, "Erro do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -766,10 +710,6 @@ namespace UpdateRDS
         {
             try
             {
-                errogeralgravado = null;
-                errogeral = null;
-                weberrogeralcode = null;
-                weberrogeral = null;
                 erroconta = -1;
                 errocontanext = -1;
 
@@ -788,10 +728,7 @@ namespace UpdateRDS
             }
             catch (Exception ex)
             {
-                errogeral = ex.Message;
-                errogeralgravado = ex.StackTrace;
-
-                InfoErroGeral();
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
                 MessageBox.Show(ex.Message, "Erro do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -800,10 +737,6 @@ namespace UpdateRDS
         {
             try
             {
-                errogeralgravado = null;
-                errogeral = null;
-                weberrogeralcode = null;
-                weberrogeral = null;
                 erroconta = -1;
                 errocontanext = -1;
 
@@ -832,10 +765,7 @@ namespace UpdateRDS
             }
             catch (Exception ex)
             {
-                errogeral = ex.Message;
-                errogeralgravado = ex.StackTrace;
-
-                InfoErroGeral();
+                InfoErroAplic(ex.Message, ex.StackTrace, true);
                 MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
@@ -844,10 +774,6 @@ namespace UpdateRDS
         {
             try
             {
-                errogeralgravado = null;
-                errogeral = null;
-                weberrogeralcode = null;
-                weberrogeral = null;
                 erroconta = -1;
                 errocontanext = -1;
 
@@ -872,10 +798,7 @@ namespace UpdateRDS
             {
                 lblInformacaoid.Text = "";
 
-                errogeral = ex.Message;
-                errogeralgravado = ex.StackTrace;
-
-                InfoErroGeral();
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
                 MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
@@ -1023,11 +946,6 @@ namespace UpdateRDS
         {
             try
             {
-                errogeralgravado = null;
-                errogeral = null;
-                weberrogeralcode = null;
-                weberrogeral = null;
-
                 if (chkDadossensiveis.Checked == true)
                 {
                     txtSenhaserver.PasswordChar = Convert.ToChar(0);
@@ -1041,13 +959,7 @@ namespace UpdateRDS
             }
             catch (Exception ex)
             {
-                lblInformacaoid.Text = "";
-
-                errogeral = ex.Message;
-                errogeralgravado = ex.StackTrace;
-
-                InfoErroGeral();
-                MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                qualquerlixoaqui = ex.Message;
             }
         }
 
@@ -1055,11 +967,6 @@ namespace UpdateRDS
         {
             try
             {
-                errogeralgravado = null;
-                errogeral = null;
-                weberrogeralcode = null;
-                weberrogeral = null;
-
                 if (chkUsoproxy.Checked == true)
                 {
                     txtDoproxy.Enabled = true;
@@ -1082,13 +989,7 @@ namespace UpdateRDS
             }
             catch (Exception ex)
             {
-                lblInformacaoid.Text = "";
-
-                errogeral = ex.Message;
-                errogeralgravado = ex.StackTrace;
-
-                InfoErroGeral();
-                MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                qualquerlixoaqui = ex.Message;
             }
         }
 
@@ -1096,11 +997,6 @@ namespace UpdateRDS
         {
             try
             {
-                errogeralgravado = null;
-                errogeral = null;
-                weberrogeralcode = null;
-                weberrogeral = null;
-
                 if (chkAutenticaproxy.Checked == true)
                 {
                     txtLoginproxy.Enabled = true;
@@ -1120,13 +1016,7 @@ namespace UpdateRDS
             }
             catch (Exception ex)
             {
-                lblInformacaoid.Text = "";
-
-                errogeral = ex.Message;
-                errogeralgravado = ex.StackTrace;
-
-                InfoErroGeral();
-                MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                qualquerlixoaqui = ex.Message;
             }
         }
 
@@ -1442,11 +1332,6 @@ namespace UpdateRDS
         {
             try
             {
-                errogeralgravado = null;
-                errogeral = null;
-                weberrogeralcode = null;
-                weberrogeral = null;
-
                 if (WindowState == FormWindowState.Minimized & chkNaominimsystray.Checked == false)
                     Hide();
             }
@@ -1454,10 +1339,7 @@ namespace UpdateRDS
             {
                 lblInformacaoid.Text = "";
 
-                errogeral = ex.Message;
-                errogeralgravado = ex.StackTrace;
-
-                InfoErroGeral();
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
                 MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
@@ -1466,13 +1348,6 @@ namespace UpdateRDS
         {
             try
             {
-                errogeralgravado = null;
-                errogeral = null;
-                weberrogeralcode = null;
-                weberrogeral = null;
-                erroconta = -1;
-                errocontanext = -1;
-
                 bool canceloufechamento = false;
 
                 if (btnVerificardadosderds.Visible == false)
@@ -1516,10 +1391,7 @@ namespace UpdateRDS
             {
                 lblInformacaoid.Text = "";
 
-                errogeral = ex.Message;
-                errogeralgravado = ex.StackTrace;
-
-                InfoErroGeral();
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
                 MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }

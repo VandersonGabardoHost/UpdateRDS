@@ -15,142 +15,68 @@ namespace UpdateRDS
 {
     public partial class UpdateRDS : Form
     {
-        private void CarregarInterfacesPersonalizadas()
+        private void InfoErroAplic(string errogeral, string errogeraltrace, bool weberro)
         {
             try
             {
-                InitializeComponent();
-
                 Process proc = Process.GetCurrentProcess();
-                string identificadorproc = proc.Id.ToString();
-
-                ntfIcone.ShowBalloonTip(60000, "Update RDS - Bem vindo!", "Aqui você pode receber notificações se quiser!", ToolTipIcon.Info);
-
-                cbCaracteres.SelectedIndex = 1;
-                cbTiposervidor.SelectedIndex = 1;
-
-                lblTextotitulo.Text = "Update RDS By GabardoHost";
-                lblInformacaoid.Text = $"Abertura do aplicativo: {DateTime.Now.ToString()} - ID do Processo do aplicativo em execução: {identificadorproc}";
-                chkEnviatitulosom.Text = "Enviar título\nde som\nSOMENTE de\nforma manual";
-
-                qualquerlixoaqui = "Para prosseguir com o envio dos dados, preencha corretamente a tela de cadastro e clique no botão verificar dados da mesma tela";
-
-                Updrdsfcar.CarregaInfo(qualquerlixoaqui);
-                UpdateAppRDS();
-                VerifArqConfig();
-            }
-            catch (Exception ex)
-            {
-                Updrdsfcar.CarregaInfo(ex.Message);
-            }
-        }
-
-        private void InfoErroGeral()
-        {
-            try
-            {
-                string weberroexplic = null;
 
                 string datadeagora = DateTime.Now.ToString().Replace(":", "").Replace("/", "");
-
-                Process proc = Process.GetCurrentProcess();
-
                 string identificadorproc = proc.Id.ToString();
+                string caminhoarquivologapp = $@"{diretoriodoaplicativo}LOGS\ERRO {datadeagora} LOG.html";
 
                 if (!Directory.Exists($@"{diretoriodoaplicativo}LOGS"))
                     Directory.CreateDirectory($@"{diretoriodoaplicativo}LOGS");
 
-                string caminhoarquivologweb = $@"{diretoriodoaplicativo}LOGS\ERRO {datadeagora} LOGWEB.html";
-                string caminhoarquivologapp = $@"{diretoriodoaplicativo}LOGS\ERRO {datadeagora} LOGAPP.html";
+                if (btnVerificardadosderds.Visible == false)
+                    Updrdsfcar.CarregaInfo(errogeral);
 
-                if (errogeral == null)
+                if (erroconta < 1 && errocontanext < 1)
                 {
-                    string caracteresaanalisar = @"(?i)[^0-9]";
-
-                    Regex rgx = new Regex(caracteresaanalisar);
-
-                    string coderro = rgx.Replace(weberrogeral, "");
-
-                    if (coderro == "400")
-                        weberroexplic = "Este erro indica que o encoder que transmite a rádio pode não estar no ar \nOu o ponto de montagem informado não está correto!";
-
-                    if (coderro == "401")
-                        weberroexplic = "Este erro indica que você errou a senha ou o ID \nOu o ponto de montagem do servidor não aceita o login e senha informados!";
-
-                    if (coderro == "403")
+                    if (erroconta == -3)
                     {
-                        weberroexplic = "Este erro indica que o servidor proibiu o acesso aos dados \nOu o ponto de montagem do servidor não aceita o acesso!";
-                        if (chkUsoproxy.Checked == true)
-                        {
-                            weberroexplic = $"Este erro indica que o servidor proxy {txtDoproxy.Text}:{txtPortaproxy.Text} proibiu o acesso! Será necessário solicitar desbloqueio para o endereço http://{txtDominioip.Text}:{txtPorta.Text}/ para que os dados sejam enviados!";
-                        }
+                        erroconta = -1;
                     }
 
-                    if (coderro == "503")
+                    if (erroconta < -1)
                     {
-                        weberroexplic = "Este erro indica que o servidor que você está se conectando está com problemas! \nOu o erro pode ser um retorno de erro do servidor proxy, checar se o servidor proxy está funcionando corretamente!";
+                        erroconta = 250;
+                        errfilec = errogeral;
                     }
 
-                    if (weberrogeralcode == "ConnectFailure")
+                    if (errocontanext < -1)
                     {
-                        if (chkUsoproxy.Checked == true)
-                        {
-                            weberroexplic = $"Este erro indica que o servidor ou o servidor proxy não está no ar. \nVerifique se o servidor http://{txtDominioip.Text}:{txtPorta.Text}/ está funcionando e se o proxy {txtDoproxy.Text}:{txtPortaproxy.Text} está funcionando!";
-                        }
-                        else
-                            weberroexplic = $"Este erro indica que o servidor não está no ar. \nVerifique se o servidor http://{txtDominioip.Text}:{txtPorta.Text}/ está funcionando!";
-                    }
-
-                    if (weberrogeralcode == "NameResolutionFailure")
-                        weberroexplic = $"Verifique se não há erros de digitação do domínio informado!";
-
-                    if (weberrogeralcode == "ProxyNameResolutionFailure")
-                        weberroexplic = $"Verifique se não há erros de digitação na caixa de texto de domínio do servidor proxy informado!";
-
-                    if (coderro == "407")
-                    {
-                        if (chkAutenticaproxy.Checked == true)
-                        {
-                            weberroexplic = $"Verifique se o servidor proxy: {txtDoproxy.Text}:{txtPortaproxy.Text}, o Login: {txtLoginproxy.Text} e a senha: {txtSenhaproxy.Text} do servidor estão corretos e se o servidor está funcionando e se há acesso nesse servidor!";
-                        }
-                        else
-                            weberroexplic = $"Verifique se o servidor proxy: {txtDoproxy.Text}:{txtPortaproxy.Text} não requer autenticação adicional para acessar o servidor, se for o caso marque a opção 'Meu servidor requer autenticação de proxy' acima!";
-                    }
-
-                    string mensagemerro = $"Título não atualizado devido a um erro ao conectar no servidor: \n{weberrogeral} \n{weberroexplic}";
-
-                    if (btnVerificardadosderds.Visible == false)
-                    {
-                        string informacao = $"{mensagemerro} \nData e hora do erro: {DateTime.Now.ToString()} - Por favor, Verifique a conexão com o servidor! ";
-                        Updrdsfcar.CarregaInfo(informacao);
-                    }
-                    else
-                    {
-                        mensagemerro = $"Houve um erro ao conectar no servidor: \n{weberrogeral} \n{weberroexplic}";
-
-                        MessageBox.Show($"{mensagemerro}\nPor favor, corrija a conexão com o servidor e tente novamente!", "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        errocontanext = 250;
+                        errfilecnext = errogeral;
                     }
 
                     if (chkNaonotificarsomtray.Checked == false)
-                        ntfIcone.ShowBalloonTip(60000, "Update RDS - Erro de conexão", mensagemerro, ToolTipIcon.Warning);
+                    {
+                        if (weberro == true)
+                        {
+                            ntfIcone.ShowBalloonTip(60000, "Update RDS - Erro de conexão", errogeral, ToolTipIcon.Warning);
+                        }
+                        else
+                        {
+                            ntfIcone.ShowBalloonTip(60000, "Update RDS - Erro", errogeral, ToolTipIcon.Error);
+                        }
+                    }
 
-                    using (XmlTextWriter xtwerr = new XmlTextWriter(caminhoarquivologweb, Encoding.Default)
+                    using (XmlTextWriter xtwerr = new XmlTextWriter(caminhoarquivologapp, Encoding.Default)
                     {
                         Formatting = Formatting.Indented
                     })
                     {
                         xtwerr.WriteStartElement("html");
                         xtwerr.WriteStartElement("head");
-                        xtwerr.WriteElementString("title", null, "ERRO DE CONEXÃO");
+                        xtwerr.WriteElementString("title", null, "ERRO DO APLICATIVO EM EXECUÇÃO");
                         xtwerr.WriteEndElement();
                         xtwerr.WriteStartElement("body");
-                        xtwerr.WriteElementString("h1", null, "ERRO DE CONEXÃO:");
+                        xtwerr.WriteElementString("h1", null, "ERRO DO APLICATIVO EM EXECUÇÃO:");
                         xtwerr.WriteElementString("p", $"Versão do software que está utilizando: {versaoappcurrent}");
                         xtwerr.WriteElementString("p", $"Data e hora do erro: {DateTime.Now.ToString()}");
-                        xtwerr.WriteElementString("p", $"Mensagem de erro completa exibida: {mensagemerro} Por favor, Verifique a conexão com o servidor!");
-                        xtwerr.WriteElementString("p", $"Mensagem de erro: {weberrogeral}");
-                        xtwerr.WriteElementString("p", $"Mensagem de erro técnico: {errogeralgravado}");
-                        xtwerr.WriteElementString("p", $"Código de erro: {weberrogeralcode}");
+                        xtwerr.WriteElementString("p", $"Mensagem de erro: {errogeral}");
+                        xtwerr.WriteElementString("p", $"Mensagem de erro técnico: {errogeraltrace}");
                         xtwerr.WriteElementString("p", $"Nome da emissora: {txtNomeemi.Text}");
                         xtwerr.WriteElementString("p", $"Codificação de caracteres: {cbCaracteres.SelectedItem}. Item selecionado: {cbCaracteres.SelectedIndex}");
                         xtwerr.WriteElementString("p", $"Tipo de servidor: {cbTiposervidor.SelectedItem}. Item selecionado: {cbTiposervidor.SelectedIndex}");
@@ -203,82 +129,6 @@ namespace UpdateRDS
                         xtwerr.WriteEndElement();
                     }
                 }
-
-                if (weberrogeral == null)
-                {
-                    if (btnVerificardadosderds.Visible == false)
-                        Updrdsfcar.CarregaInfo(errogeral);
-
-                    if (erroconta < 1 && errocontanext < 1)
-                    {
-                        using (XmlTextWriter xtwerr = new XmlTextWriter(caminhoarquivologapp, Encoding.Default)
-                        {
-                            Formatting = Formatting.Indented
-                        })
-                        {
-                            xtwerr.WriteStartElement("html");
-                            xtwerr.WriteStartElement("head");
-                            xtwerr.WriteElementString("title", null, "ERRO DO APLICATIVO EM EXECUÇÃO");
-                            xtwerr.WriteEndElement();
-                            xtwerr.WriteStartElement("body");
-                            xtwerr.WriteElementString("h1", null, "ERRO DO APLICATIVO EM EXECUÇÃO:");
-                            xtwerr.WriteElementString("p", $"Versão do software que está utilizando: {versaoappcurrent}");
-                            xtwerr.WriteElementString("p", $"Data e hora do erro: {DateTime.Now.ToString()}");
-                            xtwerr.WriteElementString("p", $"Mensagem de erro: {errogeral}");
-                            xtwerr.WriteElementString("p", $"Mensagem de erro técnico: {errogeralgravado}");
-                            xtwerr.WriteElementString("p", $"Nome da emissora: {txtNomeemi.Text}");
-                            xtwerr.WriteElementString("p", $"Codificação de caracteres: {cbCaracteres.SelectedItem}. Item selecionado: {cbCaracteres.SelectedIndex}");
-                            xtwerr.WriteElementString("p", $"Tipo de servidor: {cbTiposervidor.SelectedItem}. Item selecionado: {cbTiposervidor.SelectedIndex}");
-                            VerTrueFalse(chkNaominimsystray.Checked);
-                            xtwerr.WriteElementString("p", "Não minimizar no system tray: ");
-                            xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
-                            VerTrueFalse(chkNaonotificarsomtray.Checked);
-                            xtwerr.WriteElementString("p", "Não notificar no system tray: ");
-                            xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
-                            VerTrueFalse(chkAcentospalavras.Checked);
-                            xtwerr.WriteElementString("p", "Remover acentos das palavras: ");
-                            xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
-                            VerTrueFalse(chkCaracteresespeciais.Checked);
-                            xtwerr.WriteElementString("p", "Remover caracteres especiais: ");
-                            xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
-                            VerTrueFalse(chkDadossensiveis.Checked);
-                            xtwerr.WriteElementString("p", "Exibir dados sensíveis como senhas: ");
-                            xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
-                            VerTrueFalse(chkTransmproxsom.Checked);
-                            xtwerr.WriteElementString("p", "Transmitir próximo som: ");
-                            xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
-                            VerTrueFalse(chkUsoproxy.Checked);
-                            xtwerr.WriteElementString("p", "Uso um servidor proxy para acesso a internet: ");
-                            xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
-                            VerTrueFalse(chkAutenticaproxy.Checked);
-                            xtwerr.WriteElementString("p", "Uso autenticação para o servidor proxy: ");
-                            xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
-                            xtwerr.WriteElementString("p", $"Domínio ou endereço de IP do servidor proxy: {txtDoproxy.Text}");
-                            xtwerr.WriteElementString("p", $"Porta do servidor proxy: {txtPortaproxy.Text}");
-                            xtwerr.WriteElementString("p", $"Login do servidor proxy: {txtLoginproxy.Text}");
-                            xtwerr.WriteElementString("p", $"Senha do servidor proxy: {txtSenhaproxy.Text}");
-                            xtwerr.WriteElementString("p", $"Tempo de execução para verificação de arquivo ou URL: {txtTempoexec.Text}");
-                            xtwerr.WriteElementString("p", $"Caminho do arquivo de texto do som: {lblArquivotextosom.Text}");
-                            xtwerr.WriteElementString("p", $"Caminho do arquivo de texto do próximo som: {lblArquivotextosomnext.Text}");
-                            VerTrueFalse(chkUrlsom.Checked);
-                            xtwerr.WriteElementString("p", "Atualizar título de som através de uma URL: ");
-                            xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
-                            xtwerr.WriteElementString("p", $"URL Informada para captura da informação do nome de som: {txtUrlsom.Text}");
-                            VerTrueFalse(chkUrlsomnext.Checked);
-                            xtwerr.WriteElementString("p", "Atualizar título do próximo som através de uma URL: ");
-                            xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
-                            xtwerr.WriteElementString("p", $"URL Informada para captura da informação do nome do próximo som: {txtUrlsomnext.Text}");
-                            xtwerr.WriteElementString("p", $"Domínio ou endereço de IP informado para o servidor: {txtDominioip.Text}");
-                            xtwerr.WriteElementString("p", $"Porta informada para o servidor: {txtPorta.Text}");
-                            xtwerr.WriteElementString("p", $"Ponto de montagem ou ID informado para o servidor: {txtIdoumont.Text}");
-                            xtwerr.WriteElementString("p", $"Login do servidor: {txtLoginserver.Text}");
-                            xtwerr.WriteElementString("p", $"Senha do servidor: {txtSenhaserver.Text}");
-                            xtwerr.WriteElementString("p", $"ID do processo em execução: {identificadorproc}");
-                            xtwerr.WriteEndElement();
-                            xtwerr.WriteEndElement();
-                        }
-                    }
-                }
             }
             catch (Exception ex)
             {
@@ -286,10 +136,134 @@ namespace UpdateRDS
             }
         }
 
-        private void VerifArqConfig()
+        private void ErroWebConServ(string weberrogeral, string weberrogeralcode)
+        {
+            string weberroexplic = null;
+
+            string caracteresaanalisar = @"(?i)[^0-9]";
+
+            Regex rgx = new Regex(caracteresaanalisar);
+
+            string coderro = rgx.Replace(weberrogeral, "");
+
+            if (cbTiposervidor.SelectedIndex == 0 && weberrogeral == "Impossível conectar-se ao servidor remoto")
+            {
+                weberroexplic = $"Este erro indica que o servidor não está no ar. \nVerifique se o servidor http://{txtDominioip.Text}:{txtPorta.Text}/ está funcionando!";
+            }
+
+            if (coderro == "400")
+                weberroexplic = "Este erro indica que o encoder que transmite a rádio pode não estar no ar \nOu o ponto de montagem informado não está correto!";
+
+            if (coderro == "401")
+                weberroexplic = "Este erro indica que você errou a senha ou o ID \nOu o ponto de montagem do servidor não aceita o login e senha informados!";
+
+            if (coderro == "403")
+            {
+                weberroexplic = "Este erro indica que o servidor proibiu o acesso aos dados \nOu o ponto de montagem do servidor não aceita o acesso!";
+                if (chkUsoproxy.Checked == true)
+                {
+                    weberroexplic = $"Este erro indica que o servidor proxy {txtDoproxy.Text}:{txtPortaproxy.Text} proibiu o acesso! Será necessário solicitar desbloqueio para o endereço http://{txtDominioip.Text}:{txtPorta.Text}/ para que os dados sejam enviados!";
+                }
+            }
+
+            if (coderro == "503")
+            {
+                weberroexplic = "Este erro indica que o servidor que você está se conectando está com problemas! \nOu o erro pode ser um retorno de erro do servidor proxy, checar se o servidor proxy está funcionando corretamente!";
+            }
+
+            if (weberrogeralcode == "ConnectFailure")
+            {
+                if (chkUsoproxy.Checked == true)
+                {
+                    weberroexplic = $"Este erro indica que o servidor ou o servidor proxy não está no ar. \nVerifique se o servidor http://{txtDominioip.Text}:{txtPorta.Text}/ está funcionando e se o proxy {txtDoproxy.Text}:{txtPortaproxy.Text} está funcionando!";
+                }
+                else
+                    weberroexplic = $"Este erro indica que o servidor não está no ar. \nVerifique se o servidor http://{txtDominioip.Text}:{txtPorta.Text}/ está funcionando!";
+            }
+
+            if (weberrogeralcode == "NameResolutionFailure")
+                weberroexplic = $"Verifique se não há erros de digitação do domínio informado!";
+
+
+            if (weberrogeralcode == "ProxyNameResolutionFailure")
+                weberroexplic = $"Verifique se não há erros de digitação na caixa de texto de domínio do servidor proxy informado!";
+
+            if (coderro == "407")
+            {
+                if (chkAutenticaproxy.Checked == true)
+                {
+                    weberroexplic = $"Verifique se o servidor proxy: {txtDoproxy.Text}:{txtPortaproxy.Text}, o Login: {txtLoginproxy.Text} e a senha: {txtSenhaproxy.Text} do servidor estão corretos e se o servidor está funcionando e se há acesso nesse servidor!";
+                }
+                else
+                    weberroexplic = $"Verifique se o servidor proxy: {txtDoproxy.Text}:{txtPortaproxy.Text} não requer autenticação adicional para acessar o servidor, se for o caso marque a opção 'Meu servidor requer autenticação de proxy' acima!";
+            }
+
+            string mensagemerro = $"Título não atualizado devido a um erro ao conectar no servidor: \n{weberrogeral} \n{weberroexplic}";
+
+            if (string.IsNullOrEmpty(weberroexplic))
+            {
+                mensagemerro = $"Título não atualizado devido a um erro ao conectar no servidor: \n{weberrogeral}";
+            }
+
+            if (btnVerificardadosderds.Visible == false)
+            {
+                mensagemerro = $"{mensagemerro} \nData e hora do erro: {DateTime.Now.ToString()} - Por favor, Verifique a conexão com o servidor! ";
+            }
+            else
+            {
+                mensagemerro = $"Houve um erro ao conectar no servidor: \n{weberrogeral} \n{weberroexplic}";
+            }
+            erroconta = -3;
+            throw new Exception(mensagemerro);
+        }
+
+        private void CarregarInterfacesPersonalizadas()
+        {
+            try
+            {
+                InitializeComponent();
+
+                Process proc = Process.GetCurrentProcess();
+                string identificadorproc = proc.Id.ToString();
+
+                ntfIcone.ShowBalloonTip(60000, "Update RDS - Bem vindo!", "Aqui você pode receber notificações se quiser!", ToolTipIcon.Info);
+
+                cbCaracteres.SelectedIndex = 1;
+                cbTiposervidor.SelectedIndex = 1;
+
+                lblTextotitulo.Text = "Update RDS By GabardoHost";
+                lblInformacaoid.Text = $"Abertura do aplicativo: {DateTime.Now.ToString()} - ID do Processo do aplicativo em execução: {identificadorproc}";
+                chkEnviatitulosom.Text = "Enviar título\nde som\nSOMENTE de\nforma manual";
+
+                qualquerlixoaqui = "Para prosseguir com o envio dos dados, preencha corretamente a tela de cadastro e clique no botão verificar dados da mesma tela";
+
+                Updrdsfcar.CarregaInfo(qualquerlixoaqui);
+
+                try
+                {
+                    UpdateAppRDS(null);
+                }
+                catch (Exception exup)
+                {
+                    InfoErroAplic(exup.Message, exup.StackTrace, true);
+
+                    MessageBox.Show($"Infelizmente não foi possível verificar se o aplicativo precisa de atualização!\nNão foi possível verificar devido ao seguinte problema:\n{exup.Message}", "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
+                VerifArqConfig(null);
+            }
+            catch (Exception ex)
+            {
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
+
+                MessageBox.Show($"Infelizmente não foi possível carregar corretamente o aplicativo!\nNão foi possível carregar devido ao seguinte problema:\n{ex.Message}", "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void VerifArqConfig(string diretoriodoxml)
         {
             string[] comandosdados = Environment.GetCommandLineArgs();
-            string diretoriodoxml = null;
+
             foreach (string comando in comandosdados)
             {
                 if (!comando.Contains("Update RDS.exe"))
@@ -301,6 +275,10 @@ namespace UpdateRDS
                 if (File.Exists(diretoriodoxml))
                 {
                     CarregaXml(diretoriodoxml);
+                }
+                else
+                {
+                    throw new Exception("Aviso! O arquivo XML configurado na inicialização desse aplicativo não foi encontrado! Verifique se o arquivo existe no diretório configurado!");
                 }
             }
         }
@@ -383,12 +361,12 @@ namespace UpdateRDS
             }
         }
 
-        private void UpdateAppRDS()
+        private void UpdateAppRDS(string versaonovadoapp)
         {
             if (!Directory.Exists(diretoriodoaplicativo))
                 Directory.CreateDirectory(diretoriodoaplicativo);
 
-            lblVersaoapp.Text = "Versão 0.0.6 Alfa\n(Sem verificar nova versão)";
+            lblVersaoapp.Text = "Versão 0.0.7 Alfa\n(Sem verificar nova versão)";
             lblVersaoapp.ForeColor = Color.Yellow;
 
             // string urlcompletaversao = "http://localhost/versao.txt";
@@ -396,31 +374,36 @@ namespace UpdateRDS
 
             string urlcompletadownload = "http://www.vanderson.net.br/updaterds/UpdateRDSInstaller.exe";
 
-            string versaonovadoapp;
-
-            using (WebClient wcurlcompletaversao = new WebClient())
+            try
             {
-                wcurlcompletaversao.Headers.Add(HttpRequestHeader.UserAgent, useragentdef);
-
-                if (chkUsoproxy.Checked == true)
+                using (WebClient wcurlcompletaversao = new WebClient())
                 {
-                    DadosProxy();
-                    wcurlcompletaversao.Proxy = servidorproxydoaplicativo;
-                }
+                    wcurlcompletaversao.Headers.Add(HttpRequestHeader.UserAgent, useragentdef);
 
-                Stream strurlcompleta = wcurlcompletaversao.OpenRead(urlcompletaversao);
+                    if (chkUsoproxy.Checked == true)
+                    {
+                        DadosProxy();
+                        wcurlcompletaversao.Proxy = servidorproxydoaplicativo;
+                    }
 
-                using (StreamReader rdrurlcompleta = new StreamReader(strurlcompleta, Encoding.Default))
-                {
-                    versaonovadoapp = rdrurlcompleta.ReadLine();
+                    Stream strurlcompleta = wcurlcompletaversao.OpenRead(urlcompletaversao);
+
+                    using (StreamReader rdrurlcompleta = new StreamReader(strurlcompleta, Encoding.Default))
+                    {
+                        versaonovadoapp = rdrurlcompleta.ReadLine();
+                    }
                 }
+            }
+            catch (WebException excwebupdate)
+            {
+                throw new Exception($"A conexão retornou um erro: {excwebupdate.Message}");
             }
 
             if (versaonovadoapp != versaoappcurrent)
             {
                 versaonova = true;
 
-                lblVersaoapp.Text = "Versão 0.0.6 Alfa\n(DESATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.0.7 Alfa\n(DESATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Red;
 
                 if (MessageBox.Show($"Há uma nova versão do aplicativo disponível para download, gostaria de baixar a nova versão do aplicativo? a sua versão de aplicativo instalada atualmente é {versaoappcurrent} e a nova versão do aplicativo para baixar é {versaonovadoapp} sendo a nova versão com correções de problemas e outras correções de interface.", "Pergunta", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -462,7 +445,7 @@ namespace UpdateRDS
             }
             else
             {
-                lblVersaoapp.Text = "Versão 0.0.6 Alfa\n(ATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.0.7 Alfa\n(ATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Green;
                 versaonova = false;
             }
@@ -624,11 +607,9 @@ namespace UpdateRDS
             }
         }
 
-        private void TratamentoURLNowNext()
+        private void TratamentoURLNowNext(bool eumurlnext)
         {
             string infolabel;
-            int numconta = erroconta;
-            int numcontanext = errocontanext;
 
             Process proc = Process.GetCurrentProcess();
 
@@ -638,7 +619,7 @@ namespace UpdateRDS
             string urlcompleta = txtUrlsom.Text;
             string dadoscapturadosdaurl = null;
 
-            if (eumnext == true)
+            if (eumurlnext == true)
             {
                 urlcompleta = txtUrlsomnext.Text;
                 arquivotextoantigo = $@"{diretoriodoaplicativo}{identificadorproc}NEXTOLD.txt";
@@ -646,33 +627,21 @@ namespace UpdateRDS
 
             if (errocontanext > 0)
             {
-                errocontanext = numcontanext - 1;
-
-                if (chkUsoproxy.Checked == true)
-                {
-                    throw new Exception($"O servidor proxy ou a URL do próximo som informada anteriormente está com problemas! \n{errodaweblink}\nSerá feita uma nova tentativa de conexão. \nNovas tentativas de conexão a tentar novamente: {errocontanext}");
-                }
-                else
-                    throw new Exception($"A URL do próximo som informada anteriormente está com problemas! \n{errodaweblink}\nSerá feita uma nova tentativa de conexão. \nNovas tentativas de conexão a tentar novamente: {errocontanext}");
+                errocontanext = errocontanext - 1;
+                throw new Exception(errfilecnext + " Nova tentativa de verificar a URL: " + errocontanext);
             }
 
             if (erroconta > 0)
             {
-                erroconta = numconta - 1;
-
-                if (chkUsoproxy.Checked == true)
-                {
-                    throw new Exception($"O servidor proxy ou a URL informada anteriormente está com problemas! \n{errodaweblink}\nSerá feita uma nova tentativa de conexão. \nNovas tentativas de conexão a tentar novamente: {erroconta}");
-                }
-                else
-                    throw new Exception($"A URL informada anteriormente está com problemas! \n{errodaweblink}\nSerá feita uma nova tentativa de conexão. \nNovas tentativas de conexão a tentar novamente: {erroconta}");
+                erroconta = erroconta - 1;
+                throw new Exception(errfilec + " Nova tentativa de verificar a URL: " + erroconta);
             }
+
+            Stream strurlcompleta = null;
+            StreamReader rdrurlcompleta;
 
             try
             {
-                Stream strurlcompleta = null;
-                StreamReader rdrurlcompleta = null;
-
                 using (WebClient wcurlcompleta = new WebClient())
                 {
                     wcurlcompleta.Headers.Add(HttpRequestHeader.UserAgent, useragentdef);
@@ -685,141 +654,103 @@ namespace UpdateRDS
 
                     strurlcompleta = wcurlcompleta.OpenRead(urlcompleta);
                 }
-
-                if (cbCaracteres.SelectedIndex == 0)
-                {
-                    using (rdrurlcompleta = new StreamReader(strurlcompleta))
-                    {
-                        dadoscapturadosdaurl = rdrurlcompleta.ReadLine();
-                    }
-                }
-
-                if (cbCaracteres.SelectedIndex == 1)
-                {
-                    using (rdrurlcompleta = new StreamReader(strurlcompleta, Encoding.Default))
-                    {
-                        dadoscapturadosdaurl = rdrurlcompleta.ReadLine();
-                    }
-                }
-
-                if (cbCaracteres.SelectedIndex == 2)
-                {
-                    using (rdrurlcompleta = new StreamReader(strurlcompleta, Encoding.UTF8))
-                    {
-                        dadoscapturadosdaurl = rdrurlcompleta.ReadLine();
-                    }
-                }
-
-                if (cbCaracteres.SelectedIndex == 3)
-                {
-                    using (rdrurlcompleta = new StreamReader(strurlcompleta, Encoding.UTF7))
-                    {
-                        dadoscapturadosdaurl = rdrurlcompleta.ReadLine();
-                    }
-                }
-
-                if (cbCaracteres.SelectedIndex == 4)
-                {
-                    using (rdrurlcompleta = new StreamReader(strurlcompleta, Encoding.ASCII))
-                    {
-                        dadoscapturadosdaurl = rdrurlcompleta.ReadLine();
-                    }
-                }
-
-                if (erroconta == 0)
-                {
-                    infolabel = "Nome do som conectado no servidor! Aguarde atualização de título...";
-
-                    Updrdsfcar.CarregaInfo(infolabel);
-
-                    erroconta = -1;
-                }
-
-                if (errocontanext == 0)
-                {
-                    infolabel = "Nome do próximo som conectado no servidor! Aguarde atualização de título...";
-
-                    Updrdsfcar.CarregaInfo(infolabel);
-
-                    errocontanext = -1;
-                }
             }
-            catch (WebException webexc)
+            catch (WebException excecaointerna)
             {
-                errodaweblink = webexc.Message;
-
-                if (btnVerificardadosderds.Visible == true)
+                if (eumurlnext == true)
                 {
-                    if (eumnext == true)
-                    {
-                        string erroconexaowebexc1 = $"A URL do próximo som informada anteriormente está com problemas! \n{errodaweblink}\nPor favor, verifique se a URL está correta e se o servidor está funcionando!";
-
-                        if (chkUsoproxy.Checked == true)
-                        {
-                            erroconexaowebexc1 = $"A URL do próximo som informada anteriormente está com problemas! \n{errodaweblink}\nPor favor, verifique se a URL está correta, se o servidor proxy está funcionando e se o servidor está funcionando!";
-                        }
-
-                        if (chkNaonotificarsomtray.Checked == false)
-                            ntfIcone.ShowBalloonTip(60000, "Update RDS - Erro de conexão", erroconexaowebexc1, ToolTipIcon.Warning);
-
-                        throw new Exception(erroconexaowebexc1);
-                    }
-                    else
-                    {
-                        string erroconexaowebexc2 = $"A URL informada anteriormente está com problemas! \n{errodaweblink}\nPor favor, verifique se a URL está correta e se o servidor está funcionando!";
-
-                        if (chkUsoproxy.Checked == true)
-                        {
-                            erroconexaowebexc2 = $"A URL informada anteriormente está com problemas! \n{errodaweblink}\nPor favor, verifique se a URL está correta, se o servidor proxy está funcionando e se o servidor está funcionando!";
-                        }
-
-                        if (chkNaonotificarsomtray.Checked == false)
-                            ntfIcone.ShowBalloonTip(60000, "Update RDS - Erro de conexão", erroconexaowebexc2, ToolTipIcon.Warning);
-
-                        throw new Exception(erroconexaowebexc2);
-                    }
-                }
-
-                if (eumnext == true)
-                {
-                    errocontanext = numcontanext + 250;
-
-                    string erroconexaowebexc3 = $"A URL do próximo som informada anteriormente está com problemas! \n{errodaweblink}\nSerá feita uma nova tentativa de conexão. \nNovas tentativas de conexão a tentar novamente: {errocontanext}";
+                    string erroconexaowebexc1 = $"A URL do próximo som informada anteriormente está com problemas! \n{excecaointerna.Message}\nPor favor, verifique se a URL está correta e se o servidor está funcionando!";
 
                     if (chkUsoproxy.Checked == true)
                     {
-                        erroconexaowebexc3 = $"O servidor proxy ou a URL do próximo som informada anteriormente está com problemas! \n{errodaweblink}\nSerá feita uma nova tentativa de conexão. \nNovas tentativas de conexão a tentar novamente: {errocontanext}";
+                        erroconexaowebexc1 = $"A URL do próximo som informada anteriormente está com problemas! \n{excecaointerna.Message}\nPor favor, verifique se a URL está correta, se o servidor proxy está funcionando e se o servidor está funcionando!";
                     }
-
-                    if (chkNaonotificarsomtray.Checked == false)
-                        ntfIcone.ShowBalloonTip(60000, "Update RDS - Erro de conexão", erroconexaowebexc3, ToolTipIcon.Warning);
-
-                    throw new Exception(erroconexaowebexc3);
+                    errocontanext = -2;
+                    throw new Exception(erroconexaowebexc1);
                 }
                 else
                 {
-                    erroconta = numconta + 250;
-
-                    string erroconexaowebexc4 = $"A URL informada anteriormente está com problemas! \n{errodaweblink}\nSerá feita uma nova tentativa de conexão. \nNovas tentativas de conexão a tentar novamente: {erroconta}";
+                    string erroconexaowebexc2 = $"A URL informada anteriormente está com problemas! \n{excecaointerna.Message}\nPor favor, verifique se a URL está correta e se o servidor está funcionando!";
 
                     if (chkUsoproxy.Checked == true)
                     {
-                        erroconexaowebexc4 = $"O servidor proxy ou a URL informada anteriormente está com problemas! \n{errodaweblink}\nSerá feita uma nova tentativa de conexão. \nNovas tentativas de conexão a tentar novamente: {erroconta}";
+                        erroconexaowebexc2 = $"A URL informada anteriormente está com problemas! \n{excecaointerna.Message}\nPor favor, verifique se a URL está correta, se o servidor proxy está funcionando e se o servidor está funcionando!";
                     }
-
-                    if (chkNaonotificarsomtray.Checked == false)
-                        ntfIcone.ShowBalloonTip(60000, "Update RDS - Erro de conexão", erroconexaowebexc4, ToolTipIcon.Warning);
-
-                    throw new Exception(erroconexaowebexc4);
+                    erroconta = -2;
+                    throw new Exception(erroconexaowebexc2);
                 }
+            }
+
+            if (cbCaracteres.SelectedIndex == 0)
+            {
+                using (rdrurlcompleta = new StreamReader(strurlcompleta))
+                {
+                    dadoscapturadosdaurl = rdrurlcompleta.ReadLine();
+                }
+            }
+
+            if (cbCaracteres.SelectedIndex == 1)
+            {
+                using (rdrurlcompleta = new StreamReader(strurlcompleta, Encoding.Default))
+                {
+                    dadoscapturadosdaurl = rdrurlcompleta.ReadLine();
+                }
+            }
+
+            if (cbCaracteres.SelectedIndex == 2)
+            {
+                using (rdrurlcompleta = new StreamReader(strurlcompleta, Encoding.UTF8))
+                {
+                    dadoscapturadosdaurl = rdrurlcompleta.ReadLine();
+                }
+            }
+
+            if (cbCaracteres.SelectedIndex == 3)
+            {
+                using (rdrurlcompleta = new StreamReader(strurlcompleta, Encoding.UTF7))
+                {
+                    dadoscapturadosdaurl = rdrurlcompleta.ReadLine();
+                }
+            }
+
+            if (cbCaracteres.SelectedIndex == 4)
+            {
+                using (rdrurlcompleta = new StreamReader(strurlcompleta, Encoding.ASCII))
+                {
+                    dadoscapturadosdaurl = rdrurlcompleta.ReadLine();
+                }
+            }
+
+            if (erroconta == 0)
+            {
+                infolabel = "Nome do som conectado no servidor! Aguarde atualização de título...";
+
+                Updrdsfcar.CarregaInfo(infolabel);
+
+                erroconta = -1;
+            }
+
+            if (errocontanext == 0)
+            {
+                infolabel = "Nome do próximo som conectado no servidor! Aguarde atualização de título...";
+
+                Updrdsfcar.CarregaInfo(infolabel);
+
+                errocontanext = -1;
             }
 
             if (string.IsNullOrEmpty(dadoscapturadosdaurl))
             {
-                if (eumnext == true)
+                if (eumurlnext == true)
+                {
+                    errocontanext = -2;
                     throw new Exception("A URL do próximo som informada anteriormente está com problemas! verificar se o texto da URL do próximo som não está vazio!");
-
-                throw new Exception("A URL informada anteriormente está com problemas! verificar se o texto da URL não está vazio!");
+                }
+                else
+                {
+                    erroconta = -2;
+                    throw new Exception("A URL informada anteriormente está com problemas! verificar se o texto da URL não está vazio!");
+                }
             }
 
             conteudotexto = dadoscapturadosdaurl;
@@ -878,7 +809,7 @@ namespace UpdateRDS
             }
         }
 
-        private void TratamentoTextoNowNext()
+        private void TratamentoTextoNowNext(bool eumarquivonext)
         {
             string informacoes;
 
@@ -889,49 +820,61 @@ namespace UpdateRDS
             string arquivotexto = $@"{lblArquivotextosom.Text}";
             string arquivotextoantigo = $@"{lblArquivotextosom.Text}{identificadorproc}.txt";
 
-            if (eumnext == true)
+            if (eumarquivonext == true)
             {
                 arquivotexto = $@"{lblArquivotextosomnext.Text}";
                 arquivotextoantigo = $@"{lblArquivotextosomnext.Text}{identificadorproc}.txt";
             }
 
-            if (File.Exists(arquivotexto))
+            if (errocontanext > 0)
             {
-                if (eumnext == true && errfilecnext == 1)
-                    errfilecnext = 0;
-
-                if (eumnext == false && errfilec == 1)
-                    errfilec = 0;
+                errocontanext = errocontanext - 1;
+                throw new Exception(errfilecnext + " Nova tentativa de verificar o arquivo: " + errocontanext);
             }
 
-            if (errfilec == 0)
+            if (erroconta > 0)
+            {
+                erroconta = erroconta - 1;
+                throw new Exception(errfilec + " Nova tentativa de verificar o arquivo: " + erroconta);
+            }
+
+            //if (File.Exists(arquivotexto))
+            //{
+            //    if (eumnext == true && errocontanext == 1)
+            //        errocontanext = 0;
+
+            //    if (eumnext == false && erroconta == 1)
+            //        erroconta = 0;
+            //}
+
+            if (erroconta == 0)
             {
                 informacoes = "Arquivo de nome do som corrigido com sucesso! Aguarde atualização de título...";
 
                 Updrdsfcar.CarregaInfo(informacoes);
 
-                errfilec = -1;
+                erroconta = -1;
             }
 
-            if (errfilecnext == 0)
+            if (errocontanext == 0)
             {
                 informacoes = "Arquivo de nome do próximo som corrigido com sucesso! Aguarde atualização de título...";
 
                 Updrdsfcar.CarregaInfo(informacoes);
 
-                errfilecnext = -1;
+                errocontanext = -1;
             }
 
             if (!File.Exists(arquivotexto))
             {
-                if (eumnext == true)
+                if (eumarquivonext == true)
                 {
-                    errfilecnext = 1;
+                    errocontanext = -2;
 
                     throw new Exception("O Caminho informado anteriormente para o arquivo de texto de próximo som está com problemas! \nVerificar se o arquivo ainda existe!");
                 }
 
-                errfilec = 1;
+                erroconta = -2;
 
                 throw new Exception("O Caminho informado anteriormente para o arquivo de texto está com problemas! \nVerificar se o arquivo ainda existe!");
             }
@@ -1031,20 +974,36 @@ namespace UpdateRDS
             {
                 if (errofilegeral.Source == "mscorlib")
                 {
-                    if (eumnext == true)
-                        throw new Exception("O arquivo texto de próximo som informado anteriormente está com problemas! \nVerificar se o arquivo texto não está em uso por outro aplicativo ou processo do sistema!");
+                    if (eumarquivonext == true)
+                    {
+                        errocontanext = -2;
 
-                    throw new Exception("O arquivo texto informado anteriormente está com problemas! \nVerificar se o arquivo texto não está em uso por outro aplicativo ou processo do sistema!");
+                        throw new Exception("O arquivo texto de próximo som informado anteriormente está com problemas! \nVerificar se o arquivo texto não está em uso por outro aplicativo ou processo do sistema!");
+                    }
+                    else
+                    {
+                        erroconta = -2;
+
+                        throw new Exception("O arquivo texto informado anteriormente está com problemas! \nVerificar se o arquivo texto não está em uso por outro aplicativo ou processo do sistema!");
+                    }
                 }
 
                 FileInfo arquivotextomusica = new FileInfo(arquivotexto);
 
                 if (arquivotextomusica.Length == 0)
                 {
-                    if (eumnext == true)
-                        throw new Exception("O arquivo texto de próximo som informado anteriormente está com problemas! \nVerificar se o arquivo texto não está vazio!");
+                    if (eumarquivonext == true)
+                    {
+                        errocontanext = -2;
 
-                    throw new Exception("O arquivo texto informado anteriormente está com problemas! \nVerificar se o arquivo texto não está vazio!");
+                        throw new Exception("O arquivo texto de próximo som informado anteriormente está com problemas! \nVerificar se o arquivo texto não está vazio!");
+                    }
+                    else
+                    {
+                        erroconta = -2;
+
+                        throw new Exception("O arquivo texto informado anteriormente está com problemas! \nVerificar se o arquivo texto não está vazio!");
+                    }
                 }
             }
 
@@ -1093,18 +1052,34 @@ namespace UpdateRDS
 
             if (conteudotexto.Length > 2000)
             {
-                if (eumnext == true)
+                if (eumarquivonext == true)
+                {
+                    errocontanext = -2;
+
                     throw new Exception("O arquivo texto de próximo som contém mais de 2000 caracteres \nO servidor não é capaz de receber essa quantidade de caracteres! \nTente apagar algumas palavras do arquivo!");
+                }
                 else
+                {
+                    erroconta = -2;
+
                     throw new Exception("O arquivo texto de som contém mais de 2000 caracteres \nO servidor não é capaz de receber essa quantidade de caracteres! \nTente apagar algumas palavras do arquivo!");
+                }
             }
 
             if (conteudotexto.Length < 1)
             {
-                if (eumnext == true)
+                if (eumarquivonext == true)
+                {
+                    errocontanext = -2;
+
                     throw new Exception("O arquivo texto de próximo som informado anteriormente está com problemas! \nVerificar se o arquivo texto não está vazio ou falta a primeira linha!");
+                }
                 else
+                {
+                    erroconta = -2;
+
                     throw new Exception("O arquivo texto informado anteriormente está com problemas! \nVerificar se o arquivo texto não está vazio ou falta a primeira linha!");
+                }
             }
 
             if (conteudotexto != conteudotextoantigo || btnVerificardadosderds.Visible == true)
@@ -1176,8 +1151,6 @@ namespace UpdateRDS
 
         private void RecInfoDosDadosCad()
         {
-            eumnext = false;
-
             Process proc = Process.GetCurrentProcess();
 
             string identificadorproc = proc.Id.ToString();
@@ -1199,26 +1172,22 @@ namespace UpdateRDS
 
             if (chkTransmproxsom.Checked == true)
             {
-                eumnext = true;
-
                 if (chkUrlsomnext.Checked == true)
-                    TratamentoURLNowNext();
+                    TratamentoURLNowNext(true);
 
                 else
-                    TratamentoTextoNowNext();
+                    TratamentoTextoNowNext(true);
 
                 conteudoarquivotextonextsong = conteudotexto;
             }
 
             if (chkUrlsom.Checked == true)
             {
-                eumnext = false;
-                TratamentoURLNowNext();
+                TratamentoURLNowNext(false);
             }
             else
             {
-                eumnext = false;
-                TratamentoTextoNowNext();
+                TratamentoTextoNowNext(false);
             }
 
             string conteudoarquivotexto = conteudotexto;
@@ -1230,26 +1199,22 @@ namespace UpdateRDS
 
                 if (chkTransmproxsom.Checked == true)
                 {
-                    eumnext = true;
-
                     if (chkUrlsomnext.Checked == true)
-                        TratamentoURLNowNext();
+                        TratamentoURLNowNext(true);
 
                     else
-                        TratamentoTextoNowNext();
+                        TratamentoTextoNowNext(true);
 
                     conteudoarquivotextonextsong = conteudotexto;
                 }
 
                 if (chkUrlsom.Checked == true)
                 {
-                    eumnext = false;
-                    TratamentoURLNowNext();
+                    TratamentoURLNowNext(false);
                 }
                 else
                 {
-                    eumnext = false;
-                    TratamentoTextoNowNext();
+                    TratamentoTextoNowNext(false);
                 }
 
                 conteudoarquivotexto = conteudotexto;
@@ -1312,48 +1277,54 @@ namespace UpdateRDS
                     if (chkTransmproxsom.Checked == true)
                         urlparacarregar = urlshoutcastv2 + conteudoarquivotexto + "&next=" + conteudoarquivotextonextsong;
                 }
-
-                HttpWebRequest webreqshouticecast = (HttpWebRequest)WebRequest.Create(urlparacarregar);
-                webreqshouticecast.UserAgent = useragentdef;
-                senhaserver = Convert.ToBase64String(Encoding.Default.GetBytes(senhaserver));
-                webreqshouticecast.Headers.Add("Authorization", "Basic " + senhaserver);
-                webreqshouticecast.Credentials = new NetworkCredential("username", "password");
-                webreqshouticecast.Method = WebRequestMethods.Http.Get;
-                webreqshouticecast.AllowAutoRedirect = true;
-
-                if (chkUsoproxy.Checked == true)
+                try
                 {
-                    DadosProxy();
-                    webreqshouticecast.Proxy = servidorproxydoaplicativo;
-                }
-                else
-                    webreqshouticecast.Proxy = null;
+                    HttpWebRequest webreqshouticecast = (HttpWebRequest)WebRequest.Create(urlparacarregar);
+                    webreqshouticecast.UserAgent = useragentdef;
+                    senhaserver = Convert.ToBase64String(Encoding.Default.GetBytes(senhaserver));
+                    webreqshouticecast.Headers.Add("Authorization", "Basic " + senhaserver);
+                    webreqshouticecast.Credentials = new NetworkCredential("username", "password");
+                    webreqshouticecast.Method = WebRequestMethods.Http.Get;
+                    webreqshouticecast.AllowAutoRedirect = true;
 
-                if (cbTiposervidor.SelectedIndex == 0)
-                {
-                    try
+                    if (chkUsoproxy.Checked == true)
+                    {
+                        DadosProxy();
+                        webreqshouticecast.Proxy = servidorproxydoaplicativo;
+                    }
+                    else
+                        webreqshouticecast.Proxy = null;
+
+                    if (cbTiposervidor.SelectedIndex == 0)
+                    {
+                        try
+                        {
+                            HttpWebResponse webrespshouticecast = (HttpWebResponse)webreqshouticecast.GetResponse();
+                            webrespshouticecast.Close();
+                        }
+                        catch (WebException erroverificar)
+                        {
+                            if (chkUsoproxy.Checked == true)
+                            {
+                                if (erroverificar.Message != "O servidor remoto retornou um erro: (502) Gateway Incorreto.")
+                                    throw new WebException(erroverificar.Message);
+                            }
+                            else
+                            {
+                                if (erroverificar.Message != "A conexão subjacente estava fechada: A conexão foi fechada de modo inesperado.")
+                                    throw new WebException(erroverificar.Message);
+                            }
+                        }
+                    }
+                    else
                     {
                         HttpWebResponse webrespshouticecast = (HttpWebResponse)webreqshouticecast.GetResponse();
                         webrespshouticecast.Close();
                     }
-                    catch (WebException erroverificar)
-                    {
-                        if (chkUsoproxy.Checked == true)
-                        {
-                            if (erroverificar.Message != "O servidor remoto retornou um erro: (502) Gateway Incorreto.")
-                                throw new WebException(erroverificar.Message);
-                        }
-                        else
-                        {
-                            if (erroverificar.Message != "A conexão subjacente estava fechada: A conexão foi fechada de modo inesperado.")
-                                throw new WebException(erroverificar.Message);
-                        }
-                    }
                 }
-                else
+                catch (WebException excecaodoservidor)
                 {
-                    HttpWebResponse webrespshouticecast = (HttpWebResponse)webreqshouticecast.GetResponse();
-                    webrespshouticecast.Close();
+                    ErroWebConServ(excecaodoservidor.Message, excecaodoservidor.Status.ToString());
                 }
 
                 string novosdadosarquivotexto = $"{DateTime.Now.ToString()};{conteudoarquivotexto}";
@@ -1369,7 +1340,7 @@ namespace UpdateRDS
                     using (StreamReader sr = new StreamReader(arquivodelog, Encoding.Default))
                     {
                         dadosarquivotexto = sr.ReadToEnd();
-                        dadosarquivotexto = dadosarquivotexto.Substring(0, dadosarquivotexto.Length - 2);
+                        // dadosarquivotexto = dadosarquivotexto.Substring(0, dadosarquivotexto.Length - 2);
                     }
                 }
 
