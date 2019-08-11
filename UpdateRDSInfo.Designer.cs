@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UpdateRDSInfo));
             this.lblInfo = new System.Windows.Forms.Label();
             this.lblTitulodados = new System.Windows.Forms.Label();
             this.lblTitulocxt = new System.Windows.Forms.Label();
@@ -135,8 +136,7 @@
             this.Controls.Add(this.lblTitulodados);
             this.Controls.Add(this.lblInfo);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.HelpButton = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "UpdateRDSInfo";

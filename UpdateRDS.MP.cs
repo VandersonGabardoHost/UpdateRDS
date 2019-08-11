@@ -19,10 +19,8 @@ namespace UpdateRDS
         {
             try
             {
-                Process proc = Process.GetCurrentProcess();
-
                 string datadeagora = DateTime.Now.ToString().Replace(":", "").Replace("/", "");
-                string identificadorproc = proc.Id.ToString();
+                string identificadorproc = processodoaplicativo.Id.ToString();
                 string caminhoarquivologapp = $@"{diretoriodoaplicativo}LOGS\ERRO {datadeagora} LOG.html";
 
                 if (!Directory.Exists($@"{diretoriodoaplicativo}LOGS"))
@@ -223,8 +221,7 @@ namespace UpdateRDS
             {
                 InitializeComponent();
 
-                Process proc = Process.GetCurrentProcess();
-                string identificadorproc = proc.Id.ToString();
+                string identificadorproc = processodoaplicativo.Id.ToString();
 
                 ntfIcone.ShowBalloonTip(60000, "Update RDS - Bem vindo!", "Aqui você pode receber notificações se quiser!", ToolTipIcon.Info);
 
@@ -366,7 +363,7 @@ namespace UpdateRDS
             if (!Directory.Exists(diretoriodoaplicativo))
                 Directory.CreateDirectory(diretoriodoaplicativo);
 
-            lblVersaoapp.Text = "Versão 0.0.7 Alfa\n(Sem verificar nova versão)";
+            lblVersaoapp.Text = "Versão 0.0.8 Alfa\n(Sem verificar nova versão)";
             lblVersaoapp.ForeColor = Color.Yellow;
 
             // string urlcompletaversao = "http://localhost/versao.txt";
@@ -403,7 +400,7 @@ namespace UpdateRDS
             {
                 versaonova = true;
 
-                lblVersaoapp.Text = "Versão 0.0.7 Alfa\n(DESATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.0.8 Alfa\n(DESATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Red;
 
                 if (MessageBox.Show($"Há uma nova versão do aplicativo disponível para download, gostaria de baixar a nova versão do aplicativo? a sua versão de aplicativo instalada atualmente é {versaoappcurrent} e a nova versão do aplicativo para baixar é {versaonovadoapp} sendo a nova versão com correções de problemas e outras correções de interface.", "Pergunta", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -445,7 +442,7 @@ namespace UpdateRDS
             }
             else
             {
-                lblVersaoapp.Text = "Versão 0.0.7 Alfa\n(ATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.0.8 Alfa\n(ATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Green;
                 versaonova = false;
             }
@@ -610,14 +607,12 @@ namespace UpdateRDS
         private void TratamentoURLNowNext(bool eumurlnext)
         {
             string infolabel;
-
-            Process proc = Process.GetCurrentProcess();
-
-            string identificadorproc = proc.Id.ToString();
-
+            string identificadorproc = processodoaplicativo.Id.ToString();
             string arquivotextoantigo = $@"{diretoriodoaplicativo}{identificadorproc}OLD.txt";
             string urlcompleta = txtUrlsom.Text;
             string dadoscapturadosdaurl = null;
+            int contanext = errocontanext;
+            int conta = erroconta;
 
             if (eumurlnext == true)
             {
@@ -627,13 +622,13 @@ namespace UpdateRDS
 
             if (errocontanext > 0)
             {
-                errocontanext = errocontanext - 1;
+                errocontanext = contanext - 1;
                 throw new Exception(errfilecnext + " Nova tentativa de verificar a URL: " + errocontanext);
             }
 
             if (erroconta > 0)
             {
-                erroconta = erroconta - 1;
+                erroconta = conta - 1;
                 throw new Exception(errfilec + " Nova tentativa de verificar a URL: " + erroconta);
             }
 
@@ -724,7 +719,8 @@ namespace UpdateRDS
             if (erroconta == 0)
             {
                 infolabel = "Nome do som conectado no servidor! Aguarde atualização de título...";
-
+                if (chkNaonotificarsomtray.Checked == false)
+                    ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", infolabel, ToolTipIcon.Info);
                 Updrdsfcar.CarregaInfo(infolabel);
 
                 erroconta = -1;
@@ -733,7 +729,8 @@ namespace UpdateRDS
             if (errocontanext == 0)
             {
                 infolabel = "Nome do próximo som conectado no servidor! Aguarde atualização de título...";
-
+                if (chkNaonotificarsomtray.Checked == false)
+                    ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", infolabel, ToolTipIcon.Info);
                 Updrdsfcar.CarregaInfo(infolabel);
 
                 errocontanext = -1;
@@ -812,13 +809,11 @@ namespace UpdateRDS
         private void TratamentoTextoNowNext(bool eumarquivonext)
         {
             string informacoes;
-
-            Process proc = Process.GetCurrentProcess();
-
-            string identificadorproc = proc.Id.ToString();
-
+            string identificadorproc = processodoaplicativo.Id.ToString();
             string arquivotexto = $@"{lblArquivotextosom.Text}";
             string arquivotextoantigo = $@"{lblArquivotextosom.Text}{identificadorproc}.txt";
+            int conta = erroconta;
+            int contanext = errocontanext;
 
             if (eumarquivonext == true)
             {
@@ -828,29 +823,21 @@ namespace UpdateRDS
 
             if (errocontanext > 0)
             {
-                errocontanext = errocontanext - 1;
+                errocontanext = contanext - 1;
                 throw new Exception(errfilecnext + " Nova tentativa de verificar o arquivo: " + errocontanext);
             }
 
             if (erroconta > 0)
             {
-                erroconta = erroconta - 1;
+                erroconta = conta - 1;
                 throw new Exception(errfilec + " Nova tentativa de verificar o arquivo: " + erroconta);
             }
-
-            //if (File.Exists(arquivotexto))
-            //{
-            //    if (eumnext == true && errocontanext == 1)
-            //        errocontanext = 0;
-
-            //    if (eumnext == false && erroconta == 1)
-            //        erroconta = 0;
-            //}
 
             if (erroconta == 0)
             {
                 informacoes = "Arquivo de nome do som corrigido com sucesso! Aguarde atualização de título...";
-
+                if (chkNaonotificarsomtray.Checked == false)
+                    ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", informacoes, ToolTipIcon.Info);
                 Updrdsfcar.CarregaInfo(informacoes);
 
                 erroconta = -1;
@@ -859,7 +846,8 @@ namespace UpdateRDS
             if (errocontanext == 0)
             {
                 informacoes = "Arquivo de nome do próximo som corrigido com sucesso! Aguarde atualização de título...";
-
+                if (chkNaonotificarsomtray.Checked == false)
+                    ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", informacoes, ToolTipIcon.Info);
                 Updrdsfcar.CarregaInfo(informacoes);
 
                 errocontanext = -1;
@@ -869,12 +857,12 @@ namespace UpdateRDS
             {
                 if (eumarquivonext == true)
                 {
-                    errocontanext = -2;
+                    errocontanext = -4;
 
                     throw new Exception("O Caminho informado anteriormente para o arquivo de texto de próximo som está com problemas! \nVerificar se o arquivo ainda existe!");
                 }
 
-                erroconta = -2;
+                erroconta = -4;
 
                 throw new Exception("O Caminho informado anteriormente para o arquivo de texto está com problemas! \nVerificar se o arquivo ainda existe!");
             }
@@ -976,13 +964,13 @@ namespace UpdateRDS
                 {
                     if (eumarquivonext == true)
                     {
-                        errocontanext = -2;
+                        errocontanext = -4;
 
                         throw new Exception("O arquivo texto de próximo som informado anteriormente está com problemas! \nVerificar se o arquivo texto não está em uso por outro aplicativo ou processo do sistema!");
                     }
                     else
                     {
-                        erroconta = -2;
+                        erroconta = -4;
 
                         throw new Exception("O arquivo texto informado anteriormente está com problemas! \nVerificar se o arquivo texto não está em uso por outro aplicativo ou processo do sistema!");
                     }
@@ -994,13 +982,13 @@ namespace UpdateRDS
                 {
                     if (eumarquivonext == true)
                     {
-                        errocontanext = -2;
+                        errocontanext = -4;
 
                         throw new Exception("O arquivo texto de próximo som informado anteriormente está com problemas! \nVerificar se o arquivo texto não está vazio!");
                     }
                     else
                     {
-                        erroconta = -2;
+                        erroconta = -4;
 
                         throw new Exception("O arquivo texto informado anteriormente está com problemas! \nVerificar se o arquivo texto não está vazio!");
                     }
@@ -1054,13 +1042,13 @@ namespace UpdateRDS
             {
                 if (eumarquivonext == true)
                 {
-                    errocontanext = -2;
+                    errocontanext = -4;
 
                     throw new Exception("O arquivo texto de próximo som contém mais de 2000 caracteres \nO servidor não é capaz de receber essa quantidade de caracteres! \nTente apagar algumas palavras do arquivo!");
                 }
                 else
                 {
-                    erroconta = -2;
+                    erroconta = -4;
 
                     throw new Exception("O arquivo texto de som contém mais de 2000 caracteres \nO servidor não é capaz de receber essa quantidade de caracteres! \nTente apagar algumas palavras do arquivo!");
                 }
@@ -1070,13 +1058,13 @@ namespace UpdateRDS
             {
                 if (eumarquivonext == true)
                 {
-                    errocontanext = -2;
+                    errocontanext = -4;
 
                     throw new Exception("O arquivo texto de próximo som informado anteriormente está com problemas! \nVerificar se o arquivo texto não está vazio ou falta a primeira linha!");
                 }
                 else
                 {
-                    erroconta = -2;
+                    erroconta = -4;
 
                     throw new Exception("O arquivo texto informado anteriormente está com problemas! \nVerificar se o arquivo texto não está vazio ou falta a primeira linha!");
                 }
@@ -1151,9 +1139,7 @@ namespace UpdateRDS
 
         private void RecInfoDosDadosCad()
         {
-            Process proc = Process.GetCurrentProcess();
-
-            string identificadorproc = proc.Id.ToString();
+            string identificadorproc = processodoaplicativo.Id.ToString();
             string labeldeinformacao;
             string urlparacarregar;
             string dadosadicionais;

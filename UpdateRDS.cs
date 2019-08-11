@@ -11,9 +11,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
-using UpdateRDS.Properties;
 
-/// Update RDS By GabardoHost - Versão 0.0.7 Alfa build
+/// Update RDS By GabardoHost - Versão 0.0.8 Alfa build
 /// @file UpdateRDS.cs
 /// <summary>
 /// Este arquivo é o código principal do aplicativo
@@ -22,8 +21,8 @@ using UpdateRDS.Properties;
 /// Mas resolvi criar um para disponibilizar para todos, pois esse programa ou vem associado a um encoder ou não tem para download, então fiz um!
 /// Minha ideia é essa, se uma coisa não existe e você precisa muito, então crie você mesmo! pode ser carro, casa, transmissor de FM, programa de PC, celular etc... CRIE VOCÊ MESMO!!!
 /// @author Vanderson Gabardo <vanderson@vanderson.net.br>
-/// @date 07/08/2019
-/// $Id: UpdateRDS.cs, v0.0.7 2019/08/07 20:30:00 Vanderson Gabardo $
+/// @date 10/08/2019
+/// $Id: UpdateRDS.cs, v0.0.8 2019/08/10 21:30:00 Vanderson Gabardo $
 
 namespace UpdateRDS
 {
@@ -33,7 +32,7 @@ namespace UpdateRDS
         static string qualquerlixoaqui;
         static readonly string useragentdef = "Update RDS By GabardoHost - Mozilla/50MIL.0 (Windows NeanderThal) KHTML like Gecko Chrome Opera Safari Netscape Internet Exploit Firefox Godzilla Giroflex Alex Marques Print";
         static bool versaonova = false;
-        static readonly string versaoappcurrent = "Versao 0.0.7";
+        static readonly string versaoappcurrent = "Versao 0.0.8";
         static string conteudotexto;
         static string conteudotextoantigo;
         static int errocontanext = -1;
@@ -41,9 +40,9 @@ namespace UpdateRDS
         static string errfilecnext = null;
         static string errfilec = null;
         static readonly string diretoriodoaplicativo = $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Update RDS\";
-        static int iconealternar = 0;
         public UpdateRDSInfo Updrdsfcar { get; } = new UpdateRDSInfo();
         static string htmltestado;
+        static readonly Process processodoaplicativo = Process.GetCurrentProcess();
 
         public UpdateRDS()
         {
@@ -66,74 +65,6 @@ namespace UpdateRDS
                 {
                     InfoErroAplic(ex.Message, ex.StackTrace, false);
                 }
-            }
-        }
-
-        private void TemporizacaoIcone_Tick(object Sender, EventArgs e)
-        {
-            try
-            {
-                Process proc = Process.GetCurrentProcess();
-
-                string identificadorproc = proc.Id.ToString();
-
-                DirectoryInfo dir = new DirectoryInfo(diretoriodoaplicativo + @"\LOGS\");
-
-                int indexnum = 0;
-                string indexnome = $"ERRO {DateTime.Now.Date.ToString().Replace("00:00:00", "").Replace("/", "")}";
-                string indexcsv = ".csv";
-
-                if (iconealternar == 0)
-                {
-                    iconealternar = 1;
-                }
-                else
-                {
-                    if (iconealternar == 1)
-                    {
-                        iconealternar = 0;
-                    }
-                }
-
-                FileInfo[] arquivostexto = dir.GetFiles();
-
-                foreach (FileInfo file in arquivostexto)
-                {
-                    if (file.Name.IndexOf(indexcsv) > 0)
-                    {
-                        if (iconealternar == 0)
-                        {
-                            btnAbretelainfo.BackColor = Color.Yellow;
-                        }
-                        else
-                        {
-                            btnAbretelainfo.BackColor = Color.LightGreen;
-                        }
-                    }
-                    else
-                    {
-                        indexnum = file.Name.IndexOf(indexnome);
-                        if (indexnum > -1)
-                        {
-                            if (iconealternar == 0)
-                            {
-                                btnAbrirappdata.BackColor = Color.Red;
-                            }
-                            else
-                            {
-                                btnAbrirappdata.BackColor = Color.Yellow;
-                            }
-                        }
-                        if (indexnum < 0)
-                        {
-                            btnAbrirappdata.BackColor = Color.Empty;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                qualquerlixoaqui = ex.Message;
             }
         }
 
@@ -338,15 +269,9 @@ namespace UpdateRDS
                 btnPararenviords.Visible = true;
                 lblTextodobotao.Text = "  Parar o envio:";
 
-                temporizadorgeral.Enabled = true;
                 temporizadorgeral.Interval = tempoescolhido;
                 temporizadorgeral.Tick += new EventHandler(Temporizacao_Tick);
                 temporizadorgeral.Start();
-
-                temporizadoricone.Enabled = true;
-                temporizadoricone.Interval = 1000;
-                temporizadoricone.Tick += new EventHandler(TemporizacaoIcone_Tick);
-                temporizadoricone.Start();
             }
             catch (Exception ex)
             {
@@ -360,9 +285,7 @@ namespace UpdateRDS
             try
             {
                 string informacaolabel;
-                Process proc = Process.GetCurrentProcess();
-
-                string identificadorproc = proc.Id.ToString();
+                string identificadorproc = processodoaplicativo.Id.ToString();
                 string caminhoarquivoantigo = $@"{lblArquivotextosom.Text}{identificadorproc}.txt";
                 string caminhoarquivoantigonext = $@"{lblArquivotextosomnext.Text}{identificadorproc}.txt";
 
@@ -371,7 +294,6 @@ namespace UpdateRDS
                     MessageBox.Show("Os dados de RDS pararam de ser enviados para o servidor", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     temporizadorgeral.Stop();
-                    temporizadoricone.Stop();
 
                     btnPararenviords.Visible = false;
                     btnRevisarinfo.Visible = false;
@@ -525,9 +447,7 @@ namespace UpdateRDS
 
                 Updrdsfcar.CarregaInfo(labeldeinformacao);
 
-                Process proc = Process.GetCurrentProcess();
-
-                string identificadorproc = proc.Id.ToString();
+                string identificadorproc = processodoaplicativo.Id.ToString();
                 string caminhoarquivoantigo = $@"{lblArquivotextosom.Text}{identificadorproc}.txt";
                 string caminhoarquivoantigonext = $@"{lblArquivotextosomnext.Text}{identificadorproc}.txt";
 
@@ -552,22 +472,6 @@ namespace UpdateRDS
                 errocontanext = -1;
 
                 ValidarInformacoes();
-
-                if (MessageBox.Show("Você gostaria de criar um atalho na área de trabalho para essa configuração?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                {
-                    if ("Codigo a implementar" == qualquerlixoaqui)
-                    {
-                        string diretoriododesktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-                        string nomedolink = "Update RDS ";
-                        using (StreamWriter escreveoarquivo = new StreamWriter($"{diretoriododesktop}\\{nomedolink}.lnk"))
-                        {
-                            escreveoarquivo.WriteLine("[InternetShortcut]");
-                            escreveoarquivo.WriteLine("URL=file:///" + Environment.CurrentDirectory);
-                            escreveoarquivo.Flush();
-                        }
-                        MessageBox.Show("O atalho foi criado na área de trabalho conforme solicitado!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
 
                 using (SaveFileDialog salvardadosdexml = new SaveFileDialog
                 {
@@ -620,6 +524,22 @@ namespace UpdateRDS
                                 xtw.WriteEndDocument();
                             }
                             MessageBox.Show("As informações preenchidas aqui foram salvas com sucesso!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            if (MessageBox.Show("Você gostaria de criar um atalho na área de trabalho para essa configuração?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                            {
+                                string nomedoarquivo = Path.GetFileName(salvardadosdexml.FileName.Replace(".xml", ""));
+                                IWshRuntimeLibrary.WshShell wsh = new IWshRuntimeLibrary.WshShell();
+                                IWshRuntimeLibrary.IWshShortcut shortcut = wsh.CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\Update RDS " + nomedoarquivo + ".lnk") as IWshRuntimeLibrary.IWshShortcut;
+                                shortcut.Arguments = $"\"{salvardadosdexml.FileName}\"";
+                                shortcut.TargetPath = AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\Update RDS.exe";
+                                shortcut.Description = "Update RDS - Configurações Personalizadas";
+                                shortcut.WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory.ToString();
+                                shortcut.Save();
+
+                                MessageBox.Show("O atalho foi criado na área de trabalho conforme solicitado!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
+                            else
+                                MessageBox.Show("O atalho não foi criado, se preferir, pode criar um atalho manualmente com as configurações", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                     else
@@ -1368,9 +1288,7 @@ namespace UpdateRDS
                     }
                 }
 
-                Process proc = Process.GetCurrentProcess();
-
-                string identificadorproc = proc.Id.ToString();
+                string identificadorproc = processodoaplicativo.Id.ToString();
                 string caminhoarquivoantigo = $@"{lblArquivotextosom.Text}{identificadorproc}.txt";
 
                 if (File.Exists(caminhoarquivoantigo) && canceloufechamento == false)
