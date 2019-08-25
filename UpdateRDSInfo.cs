@@ -88,7 +88,7 @@ namespace UpdateRDS
                     File.WriteAllText(caminhoarquivo, txtTitulodesom.Text.Replace("&", "e"));
                 }
                 else
-                    throw new Exception("Ainda não é possível enviar título de som manualmente!\nExperimente iniciar a transmissão de dados de RDS primeiro!");
+                    throw new Exception("Ainda não é possível enviar título de som manualmente!\nExperimente iniciar a transmissão de dados de RDS primeiro! ou verifique se o arquivo texto existe!");
             }
             catch (Exception ex)
             {

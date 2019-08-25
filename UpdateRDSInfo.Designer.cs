@@ -139,6 +139,8 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(500, 600);
+            this.MinimumSize = new System.Drawing.Size(500, 600);
             this.Name = "UpdateRDSInfo";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Update RDS Informações";

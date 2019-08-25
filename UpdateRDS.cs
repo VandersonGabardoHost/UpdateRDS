@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 
-/// Update RDS By GabardoHost - Versão 0.0.8 Alfa build
+/// Update RDS By GabardoHost - Versão 0.0.9 Pré Beta build
 /// @file UpdateRDS.cs
 /// <summary>
 /// Este arquivo é o código principal do aplicativo
@@ -22,7 +22,7 @@ using System.Xml;
 /// Minha ideia é essa, se uma coisa não existe e você precisa muito, então crie você mesmo! pode ser carro, casa, transmissor de FM, programa de PC, celular etc... CRIE VOCÊ MESMO!!!
 /// @author Vanderson Gabardo <vanderson@vanderson.net.br>
 /// @date 10/08/2019
-/// $Id: UpdateRDS.cs, v0.0.8 2019/08/10 21:30:00 Vanderson Gabardo $
+/// $Id: UpdateRDS.cs, v0.0.9 2019/08/10 22:30:00 Vanderson Gabardo $
 
 namespace UpdateRDS
 {
@@ -32,9 +32,11 @@ namespace UpdateRDS
         static string qualquerlixoaqui;
         static readonly string useragentdef = "Update RDS By GabardoHost - Mozilla/50MIL.0 (Windows NeanderThal) KHTML like Gecko Chrome Opera Safari Netscape Internet Exploit Firefox Godzilla Giroflex Alex Marques Print";
         static bool versaonova = false;
-        static readonly string versaoappcurrent = "Versao 0.0.8";
+        static readonly string versaoappcurrent = "Versao 0.0.9";
         static string conteudotexto;
         static string conteudotextoantigo;
+        static int arquivoerrocontanext = -1;
+        static int arquivoerroconta = -1;
         static int errocontanext = -1;
         static int erroconta = -1;
         static string errfilecnext = null;
@@ -57,7 +59,7 @@ namespace UpdateRDS
             }
             catch (Exception ex)
             {
-                if (erroconta == -2 || erroconta == -3)
+                if (erroconta == -3 || errocontanext == -2 || erroconta == -2)
                 {
                     InfoErroAplic(ex.Message, ex.StackTrace, true);
                 }
@@ -79,7 +81,7 @@ namespace UpdateRDS
 
                 lblTextotitulo.Text = txtNomeemi.Text;
                 Updrdsfcar.InfoEmiNome(txtNomeemi.Text);
-
+                ntfIcone.Text = $"Update RDS - Nome da rádio: {txtNomeemi.Text}";
                 btnNomeemi.Visible = false;
                 btnNomeemialt.Visible = true;
                 txtNomeemi.Enabled = false;
@@ -98,6 +100,7 @@ namespace UpdateRDS
                 btnNomeemialt.Visible = false;
                 btnNomeemi.Visible = true;
                 txtNomeemi.Enabled = true;
+                ntfIcone.Text = "Update RDS By GabardoHost";
             }
             catch (Exception ex)
             {
@@ -238,7 +241,7 @@ namespace UpdateRDS
             {
                 lblInformacaoid.Text = "Aplicativo em execução - Registro de erro na data e hora: " + DateTime.Now;
 
-                if (erroconta == -2 || erroconta == -3)
+                if (erroconta == -3 || errocontanext == -2 || erroconta == -2)
                 {
                     InfoErroAplic(ex.Message, ex.StackTrace, true);
                 }
