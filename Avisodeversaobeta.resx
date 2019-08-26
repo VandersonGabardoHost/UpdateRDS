@@ -117,6 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="lblAviso.Text" xml:space="preserve">
+    <value>Aviso de Versão Beta!
+
+Este aplicativo ainda está na versão beta e por esse motivo pode apresentar inconsistências e outros problemas na execução deste!
+
+Caso ocorra problemas, reportar imediatamente para o desenvolvimento os problemas que venham a acontecer com esse aplicativo
+
+O aplicativo cumpre todas as funcionalidades com excelência técnica e precisão, mas como está na versão beta, pode ocorrer problemas principalmente com a interface gráfica dele.
+
+Erros podem ser reportados para vanderson@vanderson.net.br
+
+Bom uso!</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

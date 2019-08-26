@@ -28,7 +28,7 @@
     <PublisherName>Vanderson GabardoHost</PublisherName>
     <SuiteName>Update RDS</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>0.0.9.0</ApplicationVersion>
+    <ApplicationVersion>0.1.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>false</BootstrapperEnabled>
   </PropertyGroup>
@@ -67,6 +67,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Avisodeversaobeta.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Avisodeversaobeta.Designer.cs">
+      <DependentUpon>Avisodeversaobeta.cs</DependentUpon>
+    </Compile>
     <Compile Include="UpdateRDS.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -78,12 +84,9 @@
     <Compile Include="UpdateRDS.MP.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UpdateRDSInfo.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UpdateRDSInfo.Designer.cs">
-      <DependentUpon>UpdateRDSInfo.cs</DependentUpon>
-    </Compile>
+    <EmbeddedResource Include="Avisodeversaobeta.resx">
+      <DependentUpon>Avisodeversaobeta.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -96,9 +99,6 @@
     </Compile>
     <EmbeddedResource Include="UpdateRDS.resx">
       <DependentUpon>UpdateRDS.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UpdateRDSInfo.resx">
-      <DependentUpon>UpdateRDSInfo.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">

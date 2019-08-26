@@ -26,9 +26,9 @@ namespace UpdateRDS
                 if (!Directory.Exists($@"{diretoriodoaplicativo}LOGS"))
                     Directory.CreateDirectory($@"{diretoriodoaplicativo}LOGS");
 
-                if (btnVerificardadosderds.Visible == false)
+                if (btnEnviardadosrds.Visible == false)
                 {
-                    Updrdsfcar.CarregaInfo(errogeral);
+                    lblInfo.Text = errogeral;
                 }
                 else
                 {
@@ -151,7 +151,7 @@ namespace UpdateRDS
             }
             catch (Exception ex)
             {
-                qualquerlixoaqui = ex.Message;
+                manutencaodoaplicativo.ErroGenerico(ex.Message, ex.StackTrace, ex.Source);
             }
         }
 
@@ -224,7 +224,7 @@ namespace UpdateRDS
                 mensagemerro = $"Título não atualizado devido a um erro ao conectar no servidor: \n{weberrogeral}";
             }
 
-            if (btnVerificardadosderds.Visible == false)
+            if (btnEnviardadosrds.Visible == false)
             {
                 mensagemerro = $"{mensagemerro} \nData e hora do erro: {DateTime.Now.ToString()} - Por favor, Verifique a conexão com o servidor! ";
             }
@@ -250,12 +250,8 @@ namespace UpdateRDS
                 cbTiposervidor.SelectedIndex = 1;
 
                 lblTextotitulo.Text = "Update RDS By GabardoHost";
-                lblInformacaoid.Text = $"Abertura do aplicativo: {DateTime.Now.ToString()} - ID do Processo do aplicativo em execução: {identificadorproc}";
+                lblInformacaoid.Text = "Para prosseguir com o envio dos dados, preencha corretamente a tela de cadastro e clique em enviar RDS!";
                 chkEnviatitulosom.Text = "Enviar título\nde som\nSOMENTE de\nforma manual";
-
-                qualquerlixoaqui = "Para prosseguir com o envio dos dados, preencha corretamente a tela de cadastro e clique no botão verificar dados da mesma tela";
-
-                Updrdsfcar.CarregaInfo(qualquerlixoaqui);
 
                 try
                 {
@@ -285,7 +281,12 @@ namespace UpdateRDS
             foreach (string comando in comandosdados)
             {
                 if (!comando.Contains("Update RDS.exe"))
-                    diretoriodoxml = comando.ToString();
+                {
+                    if (!comando.Contains("-O"))
+                    {
+                        diretoriodoxml = comando.ToString();
+                    }
+                }
             }
 
             if (!string.IsNullOrEmpty(diretoriodoxml))
@@ -353,7 +354,6 @@ namespace UpdateRDS
             if (!string.IsNullOrEmpty(txtNomeemi.Text))
             {
                 lblTextotitulo.Text = txtNomeemi.Text;
-                Updrdsfcar.InfoEmiNome(txtNomeemi.Text);
                 btnNomeemi.Visible = false;
                 btnNomeemialt.Visible = true;
                 txtNomeemi.Enabled = false;
@@ -376,7 +376,7 @@ namespace UpdateRDS
             }
             catch (Exception ex)
             {
-                qualquerlixoaqui = ex.Message;
+                manutencaodoaplicativo.ErroGenerico(ex.Message, ex.StackTrace, ex.Source);
             }
         }
 
@@ -385,7 +385,7 @@ namespace UpdateRDS
             if (!Directory.Exists(diretoriodoaplicativo))
                 Directory.CreateDirectory(diretoriodoaplicativo);
 
-            lblVersaoapp.Text = "Versão 0.0.9 Pré Beta\n(Sem verificar nova versão)";
+            lblVersaoapp.Text = "Versão 0.1 Beta\n(Sem verificar nova versão)";
             lblVersaoapp.ForeColor = Color.Yellow;
 
             // string urlcompletaversao = "http://localhost/updaterds/versao.txt";
@@ -422,7 +422,7 @@ namespace UpdateRDS
             {
                 versaonova = true;
 
-                lblVersaoapp.Text = "Versão 0.0.9 Pré Beta\n(DESATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.1 Beta\n(DESATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Red;
 
                 if (MessageBox.Show($"Há uma nova versão do aplicativo disponível para download, gostaria de baixar a nova versão do aplicativo? a sua versão de aplicativo instalada atualmente é {versaoappcurrent} e a nova versão do aplicativo para baixar é {versaonovadoapp} sendo a nova versão com correções de problemas e outras correções de interface.", "Pergunta", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -464,7 +464,7 @@ namespace UpdateRDS
             }
             else
             {
-                lblVersaoapp.Text = "Versão 0.0.9 Pré Beta\n(ATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.1 Beta\n(ATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Green;
                 versaonova = false;
             }
@@ -494,6 +494,45 @@ namespace UpdateRDS
             string caminhoarquivo = $@"{lblArquivotextosom.Text}";
             string caminhoarquivonext = $@"{lblArquivotextosomnext.Text}";
 
+            if (string.IsNullOrEmpty(caminhoarquivo) && chkUrlsom.Checked == false)
+            {
+                lblArquivotextosom.BackColor = Color.Red;
+                throw new Exception("Selecione o arquivo no Caminho do arquivo texto gerado pelo automatizador com o nome do áudio!");
+            }
+
+            if (txtTempoexec.Text == "0" || !Regex.IsMatch(txtTempoexec.Text, @"^[0-9]+$"))
+            {
+                txtTempoexec.BackColor = Color.Red;
+                throw new Exception("Preencha a caixa de tempo de verificação de arquivo APENAS COM NÚMEROS para verificar uma atualização de arquivo! NÃO PODE SER VAZIO OU ZERO!");
+            }
+
+            if (string.IsNullOrEmpty(ipserver))
+            {
+                txtDominioip.BackColor = Color.Red;
+                throw new Exception("Preencha a caixa de texto endereço de IP ou nome de domínio!");
+            }
+
+            if (string.IsNullOrEmpty(portaserver))
+            {
+                txtPorta.BackColor = Color.Red;
+                throw new Exception("Preencha a caixa de texto porta!");
+            }
+
+            if (!Regex.IsMatch(portaserver, @"^[0-9]+$"))
+                throw new Exception("Preencha a caixa de texto porta apenas com números!");
+
+            if (string.IsNullOrEmpty(txtLoginserver.Text))
+            {
+                txtLoginserver.BackColor = Color.Red;
+                throw new Exception("Preencha a caixa de texto login!");
+            }
+
+            if (string.IsNullOrEmpty(txtSenhaserver.Text))
+            {
+                txtSenhaserver.BackColor = Color.Red;
+                throw new Exception("Preencha a caixa de texto senha!");
+            }
+
             if (cbTiposervidor.SelectedIndex == 2 & string.IsNullOrEmpty(idoupontomont))
             {
                 txtIdoumont.BackColor = Color.Red;
@@ -504,12 +543,6 @@ namespace UpdateRDS
             {
                 txtIdoumont.BackColor = Color.Red;
                 throw new Exception("Preencha a caixa de texto ID ou ponto de montagem apenas com números para Shoutcast V2!");
-            }
-
-            if (string.IsNullOrEmpty(caminhoarquivo) && chkUrlsom.Checked == false)
-            {
-                lblArquivotextosom.BackColor = Color.Red;
-                throw new Exception("Selecione o arquivo no Caminho do arquivo texto gerado pelo automatizador com o nome do áudio!");
             }
 
             if (chkUrlsom.Checked == true && string.IsNullOrEmpty(txtUrlsom.Text))
@@ -546,39 +579,6 @@ namespace UpdateRDS
 
                 if (!File.Exists(caminhoarquivonext) && chkUrlsomnext.Checked == false)
                     throw new Exception("O Caminho selecionado para o arquivo de texto com o nome do próximo áudio está incorreto! verifique se o arquivo realmente existe!");
-            }
-
-            if (txtTempoexec.Text == "0" || !Regex.IsMatch(txtTempoexec.Text, @"^[0-9]+$"))
-            {
-                txtTempoexec.BackColor = Color.Red;
-                throw new Exception("Preencha a caixa de tempo de verificação de arquivo APENAS COM NÚMEROS para verificar uma atualização de arquivo! NÃO PODE SER VAZIO OU ZERO!");
-            }
-
-            if (string.IsNullOrEmpty(ipserver))
-            {
-                txtDominioip.BackColor = Color.Red;
-                throw new Exception("Preencha a caixa de texto endereço de IP ou nome de domínio!");
-            }
-
-            if (string.IsNullOrEmpty(portaserver))
-            {
-                txtPorta.BackColor = Color.Red;
-                throw new Exception("Preencha a caixa de texto porta!");
-            }
-
-            if (!Regex.IsMatch(portaserver, @"^[0-9]+$"))
-                throw new Exception("Preencha a caixa de texto porta apenas com números!");
-
-            if (string.IsNullOrEmpty(txtLoginserver.Text))
-            {
-                txtLoginserver.BackColor = Color.Red;
-                throw new Exception("Preencha a caixa de texto login!");
-            }
-
-            if (string.IsNullOrEmpty(txtSenhaserver.Text))
-            {
-                txtSenhaserver.BackColor = Color.Red;
-                throw new Exception("Preencha a caixa de texto senha!");
             }
 
             if (!File.Exists(caminhoarquivo) && chkUrlsom.Checked == false)
@@ -628,7 +628,6 @@ namespace UpdateRDS
 
         private void TratamentoURLNowNext(bool eumurlnext)
         {
-            string infolabel;
             string identificadorproc = processodoaplicativo.Id.ToString();
             string arquivotextoantigo = $@"{diretoriodoaplicativo}{identificadorproc}OLD.txt";
             string urlcompleta = txtUrlsom.Text;
@@ -740,20 +739,18 @@ namespace UpdateRDS
 
             if (erroconta == 0)
             {
-                infolabel = "Nome do som conectado no servidor! Aguarde atualização de título...";
+                lblInfo.Text = "Nome do som conectado no servidor! Aguarde atualização de título...";
                 if (chkNaonotificarsomtray.Checked == false)
-                    ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", infolabel, ToolTipIcon.Info);
-                Updrdsfcar.CarregaInfo(infolabel);
+                    ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", lblInfo.Text, ToolTipIcon.Info);
 
                 erroconta = -1;
             }
 
             if (errocontanext == 0)
             {
-                infolabel = "Nome do próximo som conectado no servidor! Aguarde atualização de título...";
+                lblInfo.Text = "Nome do próximo som conectado no servidor! Aguarde atualização de título...";
                 if (chkNaonotificarsomtray.Checked == false)
-                    ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", infolabel, ToolTipIcon.Info);
-                Updrdsfcar.CarregaInfo(infolabel);
+                    ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", lblInfo.Text, ToolTipIcon.Info);
 
                 errocontanext = -1;
             }
@@ -793,7 +790,7 @@ namespace UpdateRDS
                 conteudotextoantigo = srOld.ReadLine().ToString();
             }
 
-            if (conteudotexto != conteudotextoantigo || btnVerificardadosderds.Visible == true)
+            if (conteudotexto != conteudotextoantigo || btnEnviardadosrds.Visible == true)
             {
                 try
                 {
@@ -809,7 +806,7 @@ namespace UpdateRDS
                 }
                 catch (IOException errfile)
                 {
-                    qualquerlixoaqui = errfile.Message;
+                    manutencaodoaplicativo.ErroGenerico(errfile.Message, errfile.StackTrace, errfile.Source);
 
                     System.Threading.Thread.Sleep(1500);
 
@@ -830,7 +827,6 @@ namespace UpdateRDS
 
         private void TratamentoTextoNowNext(bool eumarquivonext)
         {
-            string informacoes;
             string identificadorproc = processodoaplicativo.Id.ToString();
             string arquivotexto = $@"{lblArquivotextosom.Text}";
             string arquivotextoantigo = $@"{lblArquivotextosom.Text}{identificadorproc}.txt";
@@ -857,20 +853,18 @@ namespace UpdateRDS
 
             if (arquivoerroconta == 0)
             {
-                informacoes = "Arquivo de nome do som corrigido com sucesso! Aguarde atualização de título...";
+                lblInfo.Text = "Arquivo de nome do som corrigido com sucesso! Aguarde atualização de título...";
                 if (chkNaonotificarsomtray.Checked == false)
-                    ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", informacoes, ToolTipIcon.Info);
-                Updrdsfcar.CarregaInfo(informacoes);
+                    ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", lblInfo.Text, ToolTipIcon.Info);
 
                 arquivoerroconta = -1;
             }
 
             if (arquivoerrocontanext == 0)
             {
-                informacoes = "Arquivo de nome do próximo som corrigido com sucesso! Aguarde atualização de título...";
+                lblInfo.Text = "Arquivo de nome do próximo som corrigido com sucesso! Aguarde atualização de título...";
                 if (chkNaonotificarsomtray.Checked == false)
-                    ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", informacoes, ToolTipIcon.Info);
-                Updrdsfcar.CarregaInfo(informacoes);
+                    ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", lblInfo.Text, ToolTipIcon.Info);
 
                 arquivoerrocontanext = -1;
             }
@@ -935,7 +929,7 @@ namespace UpdateRDS
                 }
                 catch (Exception errofile)
                 {
-                    qualquerlixoaqui = errofile.Message;
+                    manutencaodoaplicativo.ErroGenerico(errofile.Message, errofile.StackTrace, errofile.Source);
 
                     System.Threading.Thread.Sleep(1500);
 
@@ -1092,7 +1086,7 @@ namespace UpdateRDS
                 }
             }
 
-            if (conteudotexto != conteudotextoantigo || btnVerificardadosderds.Visible == true)
+            if (conteudotexto != conteudotextoantigo || btnEnviardadosrds.Visible == true)
             {
                 try
                 {
@@ -1125,7 +1119,7 @@ namespace UpdateRDS
                 }
                 catch (IOException errfile)
                 {
-                    qualquerlixoaqui = errfile.Message;
+                    manutencaodoaplicativo.ErroGenerico(errfile.Message, errfile.StackTrace, errfile.Source);
 
                     System.Threading.Thread.Sleep(1000);
 
@@ -1162,7 +1156,6 @@ namespace UpdateRDS
         private void RecInfoDosDadosCad()
         {
             string identificadorproc = processodoaplicativo.Id.ToString();
-            string labeldeinformacao;
             string urlparacarregar;
             string dadosadicionais;
             string conteudoarquivotextonextsong = "Update RDS By GabardoHost - Vanderson Gabardo";
@@ -1228,7 +1221,7 @@ namespace UpdateRDS
                 conteudoarquivotexto = conteudotexto;
             }
 
-            if (conteudoarquivotexto != conteudoarquivotextoantigo || btnVerificardadosderds.Visible == true)
+            if (conteudoarquivotexto != conteudoarquivotextoantigo || btnEnviardadosrds.Visible == true)
             {
                 conteudoarquivotexto = conteudoarquivotexto.Replace("&", "e").Replace("_", " ");
                 conteudoarquivotextonextsong = conteudoarquivotextonextsong.Replace("&", "e").Replace("_", " ");
@@ -1348,7 +1341,6 @@ namespace UpdateRDS
                     using (StreamReader sr = new StreamReader(arquivodelog, Encoding.Default))
                     {
                         dadosarquivotexto = sr.ReadToEnd();
-                        // dadosarquivotexto = dadosarquivotexto.Substring(0, dadosarquivotexto.Length - 2);
                     }
                 }
 
@@ -1362,24 +1354,10 @@ namespace UpdateRDS
                 if (arquivotextolog.Length > 10485760)
                     File.Move(arquivodelog, $"{arquivodelog}{DateTime.Now.ToString().Replace(":", "").Replace("/", "")}.csv");
 
-                if (btnVerificardadosderds.Visible == true)
-                {
-                    labeldeinformacao = $"O RDS Transmitiu agora o seguinte nome para o servidor: \n{conteudoarquivotexto} \nNa data e hora: {DateTime.Now.ToString()} \nSe estiver tudo certo com o cadastro, clique no botão abaixo para começar a transmitir os dados:";
+                lblInfo.Text = $"O RDS Está transmitindo agora o seguinte nome para o servidor: \n{conteudoarquivotexto} \nNa data e hora: {DateTime.Now.ToString()}";
 
-                    if (chkTransmproxsom.Checked == true)
-                        labeldeinformacao = $"O RDS Transmitiu agora o seguinte nome para o servidor: \n{conteudoarquivotexto} \nA Informação de próximo som é: {conteudoarquivotextonextsong} \nNa data e hora: {DateTime.Now.ToString()} \nSe estiver tudo certo com o cadastro, clique no botão abaixo para começar a transmitir os dados:";
-
-                    lblInformacaoid.Text = "";
-                }
-                else
-                {
-                    labeldeinformacao = $"O RDS Está transmitindo agora o seguinte nome para o servidor: \n{conteudoarquivotexto} \nNa data e hora: {DateTime.Now.ToString()}";
-
-                    if (chkTransmproxsom.Checked == true)
-                        labeldeinformacao = $"O RDS Está transmitindo agora o seguinte nome para o servidor: \n{conteudoarquivotexto} \nPróximo som: {conteudoarquivotextonextsong} \nNa data e hora: {DateTime.Now.ToString()}";
-                }
-
-                Updrdsfcar.CarregaInfo(labeldeinformacao);
+                if (chkTransmproxsom.Checked == true)
+                    lblInfo.Text = $"O RDS Está transmitindo agora o seguinte nome para o servidor: \n{conteudoarquivotexto} \nPróximo som: {conteudoarquivotextonextsong} \nNa data e hora: {DateTime.Now.ToString()}";
 
                 dadosadicionais = $"No ar o som: {conteudoarquivotexto} \nNa data e hora: {DateTime.Now.ToString()}";
 
