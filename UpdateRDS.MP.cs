@@ -282,7 +282,7 @@ namespace UpdateRDS
             {
                 if (!comando.Contains("Update RDS.exe"))
                 {
-                    if (!comando.Contains("-O"))
+                    if (!comando.Contains("-O") && !comando.Contains("-o"))
                     {
                         diretoriodoxml = comando.ToString();
                     }
@@ -306,58 +306,81 @@ namespace UpdateRDS
         {
             string versaoparacomparacao = "Ver-XML-1.0";
             string versaoxmlcarregado;
+            bool arquivoconfigatalho = false;
 
-            XmlDocument oXML = new XmlDocument();
-            oXML.Load(diretoriodoarquivoxml);
-            XmlElement root = oXML.DocumentElement;
-            XmlNodeList lst = root.GetElementsByTagName("SOFTWARE-UPDATE-RDS-XML-VERSION");
+            string[] comandosdados = Environment.GetCommandLineArgs();
 
-            if (lst.Count == 0)
-                throw new Exception("Aviso! O arquivo XML carregado é inválido! Preencha novamente os dados da tela e salve um XML novo, ou procure o arquivo XML salvo pelo aplicativo!");
-
-            versaoxmlcarregado = oXML.SelectSingleNode("Configuracao").ChildNodes[0].InnerText;
-
-            if (versaoparacomparacao != versaoxmlcarregado)
+            foreach (string comando in comandosdados)
             {
-                throw new Exception("Aviso! A versão do XML carregada é incompatível com a versão desse software! Preencha novamente os dados da tela para esta versão e salve um XML novo!");
+                if (comando.Contains("-O"))
+                {
+                    arquivoconfigatalho = true;
+                }
+                if (comando.Contains("-o"))
+                {
+                    arquivoconfigatalho = true;
+                }
             }
 
-            cbCaracteres.SelectedIndex = int.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[1].InnerText);
-            cbTiposervidor.SelectedIndex = int.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[2].InnerText);
-            chkEnviatitulosom.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[3].InnerText);
-            chkNaominimsystray.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[4].InnerText);
-            chkNaonotificarsomtray.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[5].InnerText);
-            chkAcentospalavras.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[6].InnerText);
-            chkCaracteresespeciais.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[7].InnerText);
-            chkDadossensiveis.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[8].InnerText);
-            chkTransmproxsom.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[9].InnerText);
-            chkUsoproxy.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[10].InnerText);
-            chkAutenticaproxy.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[11].InnerText);
-            txtDoproxy.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[12].InnerText;
-            txtPortaproxy.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[13].InnerText;
-            txtLoginproxy.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[14].InnerText;
-            txtSenhaproxy.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[15].InnerText;
-            txtTempoexec.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[16].InnerText;
-            lblArquivotextosom.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[17].InnerText;
-            chkUrlsom.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[18].InnerText);
-            txtUrlsom.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[19].InnerText;
-            lblArquivotextosomnext.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[20].InnerText;
-            chkUrlsomnext.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[21].InnerText);
-            txtUrlsomnext.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[22].InnerText;
-            txtDominioip.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[23].InnerText;
-            txtPorta.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[24].InnerText;
-            txtIdoumont.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[25].InnerText;
-            txtLoginserver.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[26].InnerText;
-            txtSenhaserver.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[27].InnerText;
-            txtNomeemi.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[28].InnerText;
-
-            if (!string.IsNullOrEmpty(txtNomeemi.Text))
+            using (FileStream arquivoxmlpracarregar = new FileStream(diretoriodoarquivoxml, FileMode.Open))
             {
-                lblTextotitulo.Text = txtNomeemi.Text;
-                btnNomeemi.Visible = false;
-                btnNomeemialt.Visible = true;
-                txtNomeemi.Enabled = false;
-                ntfIcone.Text = $"Update RDS - Nome da rádio: {txtNomeemi.Text}";
+                XmlDocument oXML = new XmlDocument();
+                oXML.Load(arquivoxmlpracarregar);
+                XmlElement root = oXML.DocumentElement;
+                XmlNodeList lst = root.GetElementsByTagName("SOFTWARE-UPDATE-RDS-XML-VERSION");
+
+                if (lst.Count == 0)
+                    throw new Exception("Aviso! O arquivo XML carregado é inválido! Preencha novamente os dados da tela e salve um XML novo, ou procure o arquivo XML salvo pelo aplicativo!");
+
+                versaoxmlcarregado = oXML.SelectSingleNode("Configuracao").ChildNodes[0].InnerText;
+
+                if (versaoparacomparacao != versaoxmlcarregado)
+                {
+                    throw new Exception("Aviso! A versão do XML carregada é incompatível com a versão desse software! Preencha novamente os dados da tela para esta versão e salve um XML novo!");
+                }
+
+                cbCaracteres.SelectedIndex = int.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[1].InnerText);
+                cbTiposervidor.SelectedIndex = int.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[2].InnerText);
+                chkEnviatitulosom.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[3].InnerText);
+                if (arquivoconfigatalho == true)
+                {
+                    chkNaominimsystray.Checked = false;
+                }
+                else
+                    chkNaominimsystray.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[4].InnerText);
+                chkNaonotificarsomtray.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[5].InnerText);
+                chkAcentospalavras.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[6].InnerText);
+                chkCaracteresespeciais.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[7].InnerText);
+                chkDadossensiveis.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[8].InnerText);
+                chkTransmproxsom.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[9].InnerText);
+                chkUsoproxy.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[10].InnerText);
+                chkAutenticaproxy.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[11].InnerText);
+                txtDoproxy.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[12].InnerText;
+                txtPortaproxy.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[13].InnerText;
+                txtLoginproxy.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[14].InnerText;
+                txtSenhaproxy.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[15].InnerText;
+                txtTempoexec.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[16].InnerText;
+                lblArquivotextosom.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[17].InnerText;
+                chkUrlsom.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[18].InnerText);
+                txtUrlsom.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[19].InnerText;
+                lblArquivotextosomnext.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[20].InnerText;
+                chkUrlsomnext.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[21].InnerText);
+                txtUrlsomnext.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[22].InnerText;
+                txtDominioip.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[23].InnerText;
+                txtPorta.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[24].InnerText;
+                txtIdoumont.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[25].InnerText;
+                txtLoginserver.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[26].InnerText;
+                txtSenhaserver.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[27].InnerText;
+                txtNomeemi.Text = oXML.SelectSingleNode("Configuracao").ChildNodes[28].InnerText;
+
+                if (!string.IsNullOrEmpty(txtNomeemi.Text))
+                {
+                    lblTextotitulo.Text = txtNomeemi.Text;
+                    btnNomeemi.Visible = false;
+                    btnNomeemialt.Visible = true;
+                    txtNomeemi.Enabled = false;
+                    ntfIcone.Text = $"Update RDS - Nome da rádio: {txtNomeemi.Text}";
+                }
             }
         }
 
@@ -385,7 +408,7 @@ namespace UpdateRDS
             if (!Directory.Exists(diretoriodoaplicativo))
                 Directory.CreateDirectory(diretoriodoaplicativo);
 
-            lblVersaoapp.Text = "Versão 0.1 Beta\n(Sem verificar nova versão)";
+            lblVersaoapp.Text = "Versão 0.2 Beta\n(Sem verificar nova versão)";
             lblVersaoapp.ForeColor = Color.Yellow;
 
             // string urlcompletaversao = "http://localhost/updaterds/versao.txt";
@@ -422,7 +445,7 @@ namespace UpdateRDS
             {
                 versaonova = true;
 
-                lblVersaoapp.Text = "Versão 0.1 Beta\n(DESATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.2 Beta\n(DESATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Red;
 
                 if (MessageBox.Show($"Há uma nova versão do aplicativo disponível para download, gostaria de baixar a nova versão do aplicativo? a sua versão de aplicativo instalada atualmente é {versaoappcurrent} e a nova versão do aplicativo para baixar é {versaonovadoapp} sendo a nova versão com correções de problemas e outras correções de interface.", "Pergunta", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -464,7 +487,7 @@ namespace UpdateRDS
             }
             else
             {
-                lblVersaoapp.Text = "Versão 0.1 Beta\n(ATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.2 Beta\n(ATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Green;
                 versaonova = false;
             }

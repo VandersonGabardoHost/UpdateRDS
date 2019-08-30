@@ -34,6 +34,8 @@ namespace UpdateRDS
         {
             try
             {
+                Process processodoaplicativo = Process.GetCurrentProcess();
+
                 string origemdoerrodeaplicativo = "Update RDS By GabardoHost";
 
                 if (!EventLog.SourceExists(origemdoerrodeaplicativo))
@@ -41,9 +43,11 @@ namespace UpdateRDS
                     EventLog.CreateEventSource(origemdoerrodeaplicativo, "Application");
                 }
 
-                EventLog log = new EventLog();
-                log.Source = origemdoerrodeaplicativo;
-                log.WriteEntry($"Ocorreu um erro interno do aplicativo {origemdoerrodeaplicativo} com a seguinte mensagem de erro: {mensagemdeerro}\nStackTrace de erro completo: {stacktracecompleto}\nOrigem do erro no aplicativo: {origemdoerro}\nEsse erro é interno do aplicativo, não causando problemas na execução do aplicativo, caso o problema venha a comprometer a execução do aplicativo, entrar em contato com o desenvolvimento deste.", EventLogEntryType.Error, 1);
+                using (EventLog log = new EventLog())
+                {
+                    log.Source = origemdoerrodeaplicativo;
+                    log.WriteEntry($"Ocorreu um erro interno do aplicativo {origemdoerrodeaplicativo} com a seguinte mensagem de erro: {mensagemdeerro}\nStackTrace de erro completo: {stacktracecompleto}\nOrigem do erro no aplicativo: {origemdoerro}\nID do processo em execução: {processodoaplicativo}\nEsse erro é interno do aplicativo, não causando problemas na execução do aplicativo, caso o problema venha a comprometer a execução do aplicativo, entrar em contato com o desenvolvimento deste.", EventLogEntryType.Error, 1);
+                }
             }
             catch (Exception ex)
             {

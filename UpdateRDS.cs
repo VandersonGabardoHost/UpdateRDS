@@ -18,9 +18,9 @@ namespace UpdateRDS
     {
         static readonly WebProxy servidorproxydoaplicativo = new WebProxy();
         static bool errodoaplicativo = false;
-        static readonly string useragentdef = "Update RDS By GabardoHost - Mozilla/50MIL.0 (Windows NeanderThal) KHTML like Gecko Chrome Opera Safari Netscape Internet Exploit Firefox Godzilla Giroflex Alex Marques Print";
+        static readonly string useragentdef = "Update RDS By GabardoHost v0.2 Beta - Mozilla/50MIL.0 (Windows NeanderThal) KHTML like Gecko Chrome Opera Safari Netscape Internet Exploit Firefox Godzilla Giroflex Alex Marques Print";
         static bool versaonova = false;
-        static readonly string versaoappcurrent = "Versao 0.1";
+        static readonly string versaoappcurrent = "Versao 0.2";
         static string conteudotexto;
         static string conteudotextoantigo;
         static int arquivoerrocontanext = -1;
@@ -37,6 +37,7 @@ namespace UpdateRDS
         public UpdateRDS()
         {
             CarregarInterfacesPersonalizadas();
+            ttInfo.SetToolTip(pbFront, "Ícone do servidor definido no momento, nenhum servidor definido é o ícone da antena parabólica");
         }
 
         private void Temporizacao_Tick(object Sender, EventArgs e)
@@ -250,7 +251,8 @@ namespace UpdateRDS
                 ValidarInformacoes();
 
                 RecInfoDosDadosCad();
-
+                tsmiParar.Enabled = true;
+                tsmiIniciar.Enabled = false;
                 btnEnviardadosrds.Visible = false;
                 cbCaracteres.Enabled = false;
                 cbTiposervidor.Enabled = false;
@@ -327,7 +329,8 @@ namespace UpdateRDS
                     MessageBox.Show("Os dados de RDS pararam de ser enviados para o servidor", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     temporizadorgeral.Stop();
-
+                    tsmiParar.Enabled = false;
+                    tsmiIniciar.Enabled = true;
                     lblInfo.Visible = false;
                     btnPararenviords.Visible = false;
                     cbCaracteres.Enabled = true;
@@ -467,6 +470,9 @@ namespace UpdateRDS
                                 xtw.WriteElementString("LOGINDOSERVER", txtLoginserver.Text);
                                 xtw.WriteElementString("SENHADOSERVER", txtSenhaserver.Text);
                                 xtw.WriteElementString("NOMEDAEMISSORA", txtNomeemi.Text);
+                                xtw.WriteElementString("APLICATIVOGERADORPID", $"PID do Aplicativo gerador do arquivo: {processodoaplicativo.Id.ToString()}");
+                                xtw.WriteElementString("DATAEHORA", DateTime.Now.ToString());
+                                xtw.WriteElementString("CAMINHOCOMPLETODOARQUIVOGERADO", salvardadosdexml.FileName);
                                 xtw.WriteEndElement();
                                 xtw.WriteEndDocument();
                             }
@@ -506,24 +512,22 @@ namespace UpdateRDS
         {
             try
             {
-                using (OpenFileDialog carregardadosdexml = new OpenFileDialog
+                ofdCca.Multiselect = false;
+                ofdCca.Title = "Selecionar arquivo XML";
+                ofdCca.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                ofdCca.Filter = "Arquivos de configuração XML (*.XML;*.xml)|*.XML;*.xml";
+                ofdCca.CheckFileExists = true;
+                ofdCca.FileName = "";
+
+                DialogResult dr = ofdCca.ShowDialog();
+
+                if (dr == DialogResult.OK)
                 {
-                    Filter = "Arquivos XML (*.XML)|*.XML|Arquivos XML (*.xml)|*.xml",
-                    FilterIndex = 2,
-                    InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
-                })
-                {
-                    if (carregardadosdexml.ShowDialog() == DialogResult.OK)
-                    {
-                        if (carregardadosdexml.OpenFile() != null)
-                        {
-                            CarregaXml(carregardadosdexml.FileName);
-                            MessageBox.Show("As informações foram carregadas com sucesso!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                    }
-                    else
-                        throw new Exception("Não foi possível carregar a configuração pois houve o cancelamento da abertura do arquivo XML!");
+                    CarregaXml(ofdCca.FileName);
+                    MessageBox.Show("As informações foram carregadas com sucesso!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
+                else
+                    MessageBox.Show("Não foi possível carregar a configuração pois houve o cancelamento da abertura do arquivo XML!");
             }
             catch (Exception ex)
             {
@@ -592,7 +596,6 @@ namespace UpdateRDS
                 ofdCca.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 ofdCca.Filter = "Arquivos de texto (*.TXT;*.txt)|*.TXT;*.txt";
                 ofdCca.CheckFileExists = true;
-                ofdCca.CheckFileExists = true;
                 ofdCca.FileName = "";
 
                 DialogResult dr = ofdCca.ShowDialog();
@@ -618,7 +621,6 @@ namespace UpdateRDS
                 ofdCca.Title = "Selecionar arquivo";
                 ofdCca.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 ofdCca.Filter = "Arquivos de texto (*.TXT;*.txt)|*.TXT;*.txt";
-                ofdCca.CheckFileExists = true;
                 ofdCca.CheckFileExists = true;
                 ofdCca.FileName = "";
 
@@ -961,6 +963,25 @@ namespace UpdateRDS
             }
         }
 
+        private void ChkNaominimsystray_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (chkNaominimsystray.Checked == true)
+                {
+                    tsmiOcultar.Enabled = false;
+                }
+                else
+                {
+                    tsmiOcultar.Enabled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                manutencaodoaplicativo.ErroGenerico(ex.Message, ex.StackTrace, ex.Source);
+            }
+        }
+
         private void TxtUrlsom_TextChanged(object sender, EventArgs e)
         {
             try
@@ -1258,6 +1279,16 @@ namespace UpdateRDS
                             {
                                 Hide();
                                 ShowInTaskbar = false;
+                                TsmiOcultar_Click(null, null);
+                            }
+                        }
+                        if (comando.Contains("-o"))
+                        {
+                            if (errodoaplicativo != true)
+                            {
+                                Hide();
+                                ShowInTaskbar = false;
+                                TsmiOcultar_Click(null, null);
                             }
                         }
                     }
@@ -1277,7 +1308,16 @@ namespace UpdateRDS
             try
             {
                 if (WindowState == FormWindowState.Minimized & chkNaominimsystray.Checked == false)
+                {
                     Hide();
+                    tsmiExibir.Enabled = true;
+                    tsmiOcultar.Enabled = false;
+                }
+                if (WindowState == FormWindowState.Normal & chkNaominimsystray.Checked == false)
+                {
+                    tsmiExibir.Enabled = false;
+                    tsmiOcultar.Enabled = true;
+                }
             }
             catch (Exception ex)
             {
@@ -1328,6 +1368,121 @@ namespace UpdateRDS
 
                 if (File.Exists($@"{diretoriodoaplicativo}{identificadorproc}NEXTOLD.txt") && canceloufechamento == false)
                     File.Delete($@"{diretoriodoaplicativo}{identificadorproc}NEXTOLD.txt");
+            }
+            catch (Exception ex)
+            {
+                lblInformacaoid.Text = "Aplicativo em execução - Registro de erro na data e hora: " + DateTime.Now;
+
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
+                MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void TsmiExibir_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Show();
+                WindowState = FormWindowState.Normal;
+                tsmiExibir.Enabled = false;
+                tsmiOcultar.Enabled = true;
+                if (ShowInTaskbar != true)
+                {
+                    ShowInTaskbar = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                lblInformacaoid.Text = "Aplicativo em execução - Registro de erro na data e hora: " + DateTime.Now;
+
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
+                MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void TsmiOcultar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Hide();
+                WindowState = FormWindowState.Minimized;
+                tsmiOcultar.Enabled = false;
+                tsmiExibir.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                lblInformacaoid.Text = "Aplicativo em execução - Registro de erro na data e hora: " + DateTime.Now;
+
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
+                MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void TsmiFechar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Close();
+            }
+            catch (Exception ex)
+            {
+                lblInformacaoid.Text = "Aplicativo em execução - Registro de erro na data e hora: " + DateTime.Now;
+
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
+                MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void TsmiParar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnPararenviords_Click(null, null);
+            }
+            catch (Exception ex)
+            {
+                lblInformacaoid.Text = "Aplicativo em execução - Registro de erro na data e hora: " + DateTime.Now;
+
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
+                MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void TsmiIniciar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnEnviardadosrds_Click(null, null);
+            }
+            catch (Exception ex)
+            {
+                lblInformacaoid.Text = "Aplicativo em execução - Registro de erro na data e hora: " + DateTime.Now;
+
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
+                MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void TsmiAppdata_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnAbrirappdata_Click(null, null);
+            }
+            catch (Exception ex)
+            {
+                lblInformacaoid.Text = "Aplicativo em execução - Registro de erro na data e hora: " + DateTime.Now;
+
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
+                MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void TsmiApagalog_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BtnApagalogerro_Click(null, null);
             }
             catch (Exception ex)
             {

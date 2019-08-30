@@ -68,6 +68,17 @@
             this.btnEnviardadosrds = new System.Windows.Forms.Button();
             this.chkDadossensiveis = new System.Windows.Forms.CheckBox();
             this.ntfIcone = new System.Windows.Forms.NotifyIcon(this.components);
+            this.cmsIconenotif = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsmiExibir = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiOcultar = new System.Windows.Forms.ToolStripMenuItem();
+            this.tssParainicia = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmiParar = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiIniciar = new System.Windows.Forms.ToolStripMenuItem();
+            this.tssLogs = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmiAppdata = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiApagalog = new System.Windows.Forms.ToolStripMenuItem();
+            this.tssFecha = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmiFechar = new System.Windows.Forms.ToolStripMenuItem();
             this.ofdCca = new System.Windows.Forms.OpenFileDialog();
             this.lblInformacaoid = new System.Windows.Forms.Label();
             this.lblTextodobotao = new System.Windows.Forms.Label();
@@ -105,6 +116,8 @@
             this.txtTitulodesom = new System.Windows.Forms.TextBox();
             this.lblTextobtnapaglog = new System.Windows.Forms.Label();
             this.btnApagalogerro = new System.Windows.Forms.Button();
+            this.ttInfo = new System.Windows.Forms.ToolTip(this.components);
+            this.cmsIconenotif.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbFront)).BeginInit();
             this.SuspendLayout();
             // 
@@ -148,6 +161,7 @@
             this.chkNaominimsystray.TabIndex = 4;
             this.chkNaominimsystray.Text = "Não minimizar o aplicativo na bandeja do sistema";
             this.chkNaominimsystray.UseVisualStyleBackColor = true;
+            this.chkNaominimsystray.CheckedChanged += new System.EventHandler(this.ChkNaominimsystray_CheckedChanged);
             // 
             // chkNaonotificarsomtray
             // 
@@ -508,10 +522,101 @@
             // 
             // ntfIcone
             // 
+            this.ntfIcone.ContextMenuStrip = this.cmsIconenotif;
             this.ntfIcone.Icon = ((System.Drawing.Icon)(resources.GetObject("ntfIcone.Icon")));
             this.ntfIcone.Text = "Update RDS";
             this.ntfIcone.Visible = true;
-            this.ntfIcone.Click += new System.EventHandler(this.NtfIcone_Click);
+            this.ntfIcone.DoubleClick += new System.EventHandler(this.NtfIcone_Click);
+            // 
+            // cmsIconenotif
+            // 
+            this.cmsIconenotif.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmsIconenotif.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiExibir,
+            this.tsmiOcultar,
+            this.tssParainicia,
+            this.tsmiParar,
+            this.tsmiIniciar,
+            this.tssLogs,
+            this.tsmiAppdata,
+            this.tsmiApagalog,
+            this.tssFecha,
+            this.tsmiFechar});
+            this.cmsIconenotif.Name = "cmsIconenotif";
+            this.cmsIconenotif.Size = new System.Drawing.Size(245, 204);
+            // 
+            // tsmiExibir
+            // 
+            this.tsmiExibir.Enabled = false;
+            this.tsmiExibir.Image = ((System.Drawing.Image)(resources.GetObject("tsmiExibir.Image")));
+            this.tsmiExibir.Name = "tsmiExibir";
+            this.tsmiExibir.Size = new System.Drawing.Size(244, 26);
+            this.tsmiExibir.Text = "Exibir o aplicativo";
+            this.tsmiExibir.Click += new System.EventHandler(this.TsmiExibir_Click);
+            // 
+            // tsmiOcultar
+            // 
+            this.tsmiOcultar.Image = ((System.Drawing.Image)(resources.GetObject("tsmiOcultar.Image")));
+            this.tsmiOcultar.Name = "tsmiOcultar";
+            this.tsmiOcultar.Size = new System.Drawing.Size(244, 26);
+            this.tsmiOcultar.Text = "Ocultar o aplicativo";
+            this.tsmiOcultar.Click += new System.EventHandler(this.TsmiOcultar_Click);
+            // 
+            // tssParainicia
+            // 
+            this.tssParainicia.Name = "tssParainicia";
+            this.tssParainicia.Size = new System.Drawing.Size(241, 6);
+            // 
+            // tsmiParar
+            // 
+            this.tsmiParar.Enabled = false;
+            this.tsmiParar.Image = ((System.Drawing.Image)(resources.GetObject("tsmiParar.Image")));
+            this.tsmiParar.Name = "tsmiParar";
+            this.tsmiParar.Size = new System.Drawing.Size(244, 26);
+            this.tsmiParar.Text = "Parar o envio de dados";
+            this.tsmiParar.Click += new System.EventHandler(this.TsmiParar_Click);
+            // 
+            // tsmiIniciar
+            // 
+            this.tsmiIniciar.Image = ((System.Drawing.Image)(resources.GetObject("tsmiIniciar.Image")));
+            this.tsmiIniciar.Name = "tsmiIniciar";
+            this.tsmiIniciar.Size = new System.Drawing.Size(244, 26);
+            this.tsmiIniciar.Text = "Iniciar o envio de dados";
+            this.tsmiIniciar.Click += new System.EventHandler(this.TsmiIniciar_Click);
+            // 
+            // tssLogs
+            // 
+            this.tssLogs.Name = "tssLogs";
+            this.tssLogs.Size = new System.Drawing.Size(241, 6);
+            // 
+            // tsmiAppdata
+            // 
+            this.tsmiAppdata.Image = ((System.Drawing.Image)(resources.GetObject("tsmiAppdata.Image")));
+            this.tsmiAppdata.Name = "tsmiAppdata";
+            this.tsmiAppdata.Size = new System.Drawing.Size(244, 26);
+            this.tsmiAppdata.Text = "Abrir a pasta de LOG";
+            this.tsmiAppdata.Click += new System.EventHandler(this.TsmiAppdata_Click);
+            // 
+            // tsmiApagalog
+            // 
+            this.tsmiApagalog.Image = ((System.Drawing.Image)(resources.GetObject("tsmiApagalog.Image")));
+            this.tsmiApagalog.Name = "tsmiApagalog";
+            this.tsmiApagalog.Size = new System.Drawing.Size(244, 26);
+            this.tsmiApagalog.Text = "Apagar os logs de erros";
+            this.tsmiApagalog.Click += new System.EventHandler(this.TsmiApagalog_Click);
+            // 
+            // tssFecha
+            // 
+            this.tssFecha.Name = "tssFecha";
+            this.tssFecha.Size = new System.Drawing.Size(241, 6);
+            // 
+            // tsmiFechar
+            // 
+            this.tsmiFechar.Image = ((System.Drawing.Image)(resources.GetObject("tsmiFechar.Image")));
+            this.tsmiFechar.Name = "tsmiFechar";
+            this.tsmiFechar.Size = new System.Drawing.Size(244, 26);
+            this.tsmiFechar.Text = "Encerrar o aplicativo";
+            this.tsmiFechar.Click += new System.EventHandler(this.TsmiFechar_Click);
             // 
             // lblInformacaoid
             // 
@@ -892,15 +997,19 @@
             this.btnApagalogerro.UseVisualStyleBackColor = true;
             this.btnApagalogerro.Click += new System.EventHandler(this.BtnApagalogerro_Click);
             // 
+            // ttInfo
+            // 
+            this.ttInfo.IsBalloon = true;
+            // 
             // UpdateRDS
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(884, 612);
+            this.Controls.Add(this.lblInfo);
             this.Controls.Add(this.btnApagalogerro);
             this.Controls.Add(this.lblTextobtnapaglog);
             this.Controls.Add(this.txtTitulodesom);
-            this.Controls.Add(this.lblInfo);
             this.Controls.Add(this.btnNomeemialt);
             this.Controls.Add(this.txtNomeemi);
             this.Controls.Add(this.btnNomeemi);
@@ -981,6 +1090,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.UpdateRDS_FormClosing);
             this.Load += new System.EventHandler(this.UpdateRDS_Load);
             this.Resize += new System.EventHandler(this.UpdateRDS_Resize);
+            this.cmsIconenotif.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbFront)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -1064,5 +1174,17 @@
         private System.Windows.Forms.TextBox txtTitulodesom;
         private System.Windows.Forms.Label lblTextobtnapaglog;
         private System.Windows.Forms.Button btnApagalogerro;
+        private System.Windows.Forms.ContextMenuStrip cmsIconenotif;
+        private System.Windows.Forms.ToolStripMenuItem tsmiExibir;
+        private System.Windows.Forms.ToolStripMenuItem tsmiOcultar;
+        private System.Windows.Forms.ToolStripMenuItem tsmiFechar;
+        private System.Windows.Forms.ToolStripMenuItem tsmiParar;
+        private System.Windows.Forms.ToolStripMenuItem tsmiIniciar;
+        private System.Windows.Forms.ToolStripSeparator tssParainicia;
+        private System.Windows.Forms.ToolStripSeparator tssFecha;
+        private System.Windows.Forms.ToolStripSeparator tssLogs;
+        private System.Windows.Forms.ToolStripMenuItem tsmiAppdata;
+        private System.Windows.Forms.ToolStripMenuItem tsmiApagalog;
+        private System.Windows.Forms.ToolTip ttInfo;
     }
 }

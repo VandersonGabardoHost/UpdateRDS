@@ -28,7 +28,7 @@
     <PublisherName>Vanderson GabardoHost</PublisherName>
     <SuiteName>Update RDS</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>0.1.0.0</ApplicationVersion>
+    <ApplicationVersion>0.1.1.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>false</BootstrapperEnabled>
   </PropertyGroup>
@@ -57,6 +57,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>antena.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
