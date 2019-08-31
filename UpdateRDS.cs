@@ -18,9 +18,9 @@ namespace UpdateRDS
     {
         static readonly WebProxy servidorproxydoaplicativo = new WebProxy();
         static bool errodoaplicativo = false;
-        static readonly string useragentdef = "Update RDS By GabardoHost v0.2 Beta - Mozilla/50MIL.0 (Windows NeanderThal) KHTML like Gecko Chrome Opera Safari Netscape Internet Exploit Firefox Godzilla Giroflex Alex Marques Print";
+        static readonly string useragentdef = "Update RDS By GabardoHost v0.3 Beta - Mozilla/50MIL.0 (Windows NeanderThal) KHTML like Gecko Chrome Opera Safari Netscape Internet Exploit Firefox Godzilla Giroflex Alex Marques Print";
         static bool versaonova = false;
-        static readonly string versaoappcurrent = "Versao 0.2";
+        static readonly string versaoappcurrent = "Versao " + Application.ProductVersion;
         static string conteudotexto;
         static string conteudotextoantigo;
         static int arquivoerrocontanext = -1;
@@ -36,8 +36,42 @@ namespace UpdateRDS
 
         public UpdateRDS()
         {
-            CarregarInterfacesPersonalizadas();
-            ttInfo.SetToolTip(pbFront, "Ícone do servidor definido no momento, nenhum servidor definido é o ícone da antena parabólica");
+            try
+            {
+                InitializeComponent();
+
+                string identificadorproc = processodoaplicativo.Id.ToString();
+
+                ntfIcone.ShowBalloonTip(60000, "Update RDS - Bem vindo!", "Aqui você pode receber notificações se quiser!", ToolTipIcon.Info);
+
+                cbCaracteres.SelectedIndex = 1;
+                cbTiposervidor.SelectedIndex = 1;
+
+                lblTextotitulo.Text = "Update RDS By GabardoHost";
+                lblInformacaoid.Text = "Para prosseguir com o envio dos dados, preencha corretamente a tela de cadastro e clique em enviar RDS!";
+                chkEnviatitulosom.Text = "Enviar título\nde som\nSOMENTE de\nforma manual";
+
+                try
+                {
+                    UpdateAppRDS(null);
+                }
+                catch (Exception exup)
+                {
+                    InfoErroAplic(exup.Message, exup.StackTrace, true);
+
+                    MessageBox.Show($"Infelizmente não foi possível verificar se o aplicativo precisa de atualização!\nNão foi possível verificar devido ao seguinte problema:\n{exup.Message}", "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
+                CarregaInfoTelaCadBal(true);
+
+                VerifArqConfig(null);
+            }
+            catch (Exception ex)
+            {
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
+
+                MessageBox.Show($"Infelizmente não foi possível carregar corretamente o aplicativo!\nNão foi possível carregar devido ao seguinte problema:\n{ex.Message}", "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private void Temporizacao_Tick(object Sender, EventArgs e)
@@ -1043,7 +1077,7 @@ namespace UpdateRDS
         {
             try
             {
-                if (Regex.IsMatch(txtPorta.Text, @"^[0-9]+$"))
+                if (Regex.IsMatch(txtPorta.Text, @"^[0-9]+$") && Convert.ToInt32(txtPorta.Text) < 65535 && Convert.ToInt32(txtPorta.Text) > 0)
                 {
                     txtPorta.BackColor = Color.LightGreen;
                 }
@@ -1062,7 +1096,7 @@ namespace UpdateRDS
         {
             try
             {
-                if (Regex.IsMatch(txtTempoexec.Text, @"^[0-9]+$"))
+                if (Regex.IsMatch(txtTempoexec.Text, @"^[0-9]+$") && Convert.ToInt32(txtTempoexec.Text) > 0)
                 {
                     txtTempoexec.BackColor = Color.LightGreen;
                 }
@@ -1170,7 +1204,7 @@ namespace UpdateRDS
         {
             try
             {
-                if (Regex.IsMatch(txtPortaproxy.Text, @"^[0-9]+$"))
+                if (Regex.IsMatch(txtPortaproxy.Text, @"^[0-9]+$") && Convert.ToInt32(txtPortaproxy.Text) < 65535 && Convert.ToInt32(txtPortaproxy.Text) > 0)
                 {
                     txtPortaproxy.BackColor = Color.LightGreen;
                 }

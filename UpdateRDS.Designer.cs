@@ -105,7 +105,7 @@
             this.lblTitulobotabform = new System.Windows.Forms.Label();
             this.btnEnviatitulosom = new System.Windows.Forms.Button();
             this.temporizadorgeral = new System.Windows.Forms.Timer(this.components);
-            this.lblNomeemissora = new System.Windows.Forms.Label();
+            this.lblTextonomemi = new System.Windows.Forms.Label();
             this.cbCaracteres = new System.Windows.Forms.ComboBox();
             this.cbTiposervidor = new System.Windows.Forms.ComboBox();
             this.lblTextocodif = new System.Windows.Forms.Label();
@@ -211,6 +211,7 @@
             this.txtTempoexec.BackColor = System.Drawing.Color.LightYellow;
             this.txtTempoexec.Location = new System.Drawing.Point(368, 247);
             this.txtTempoexec.Margin = new System.Windows.Forms.Padding(4);
+            this.txtTempoexec.MaxLength = 7;
             this.txtTempoexec.Name = "txtTempoexec";
             this.txtTempoexec.Size = new System.Drawing.Size(150, 22);
             this.txtTempoexec.TabIndex = 16;
@@ -417,6 +418,7 @@
             this.txtPorta.BackColor = System.Drawing.Color.LightYellow;
             this.txtPorta.Location = new System.Drawing.Point(63, 440);
             this.txtPorta.Margin = new System.Windows.Forms.Padding(4);
+            this.txtPorta.MaxLength = 5;
             this.txtPorta.Name = "txtPorta";
             this.txtPorta.Size = new System.Drawing.Size(50, 22);
             this.txtPorta.TabIndex = 25;
@@ -685,6 +687,7 @@
             this.txtPortaproxy.Enabled = false;
             this.txtPortaproxy.Location = new System.Drawing.Point(223, 217);
             this.txtPortaproxy.Margin = new System.Windows.Forms.Padding(4);
+            this.txtPortaproxy.MaxLength = 5;
             this.txtPortaproxy.Name = "txtPortaproxy";
             this.txtPortaproxy.Size = new System.Drawing.Size(200, 22);
             this.txtPortaproxy.TabIndex = 13;
@@ -877,14 +880,14 @@
             this.btnEnviatitulosom.UseVisualStyleBackColor = true;
             this.btnEnviatitulosom.Click += new System.EventHandler(this.BtnAbretelainfo_Click);
             // 
-            // lblNomeemissora
+            // lblTextonomemi
             // 
-            this.lblNomeemissora.AutoSize = true;
-            this.lblNomeemissora.Location = new System.Drawing.Point(15, 10);
-            this.lblNomeemissora.Name = "lblNomeemissora";
-            this.lblNomeemissora.Size = new System.Drawing.Size(101, 16);
-            this.lblNomeemissora.TabIndex = 0;
-            this.lblNomeemissora.Text = "Nome da rádio:";
+            this.lblTextonomemi.AutoSize = true;
+            this.lblTextonomemi.Location = new System.Drawing.Point(15, 10);
+            this.lblTextonomemi.Name = "lblTextonomemi";
+            this.lblTextonomemi.Size = new System.Drawing.Size(101, 16);
+            this.lblTextonomemi.TabIndex = 0;
+            this.lblTextonomemi.Text = "Nome da rádio:";
             // 
             // cbCaracteres
             // 
@@ -1016,7 +1019,7 @@
             this.Controls.Add(this.lblTextocodif);
             this.Controls.Add(this.cbTiposervidor);
             this.Controls.Add(this.cbCaracteres);
-            this.Controls.Add(this.lblNomeemissora);
+            this.Controls.Add(this.lblTextonomemi);
             this.Controls.Add(this.btnEnviatitulosom);
             this.Controls.Add(this.lblTitulobotabform);
             this.Controls.Add(this.chkEnviatitulosom);
@@ -1163,7 +1166,7 @@
         private System.Windows.Forms.Label lblArquivotextosom;
         private System.Windows.Forms.Button btnEnviatitulosom;
         private System.Windows.Forms.Timer temporizadorgeral;
-        private System.Windows.Forms.Label lblNomeemissora;
+        private System.Windows.Forms.Label lblTextonomemi;
         private System.Windows.Forms.ComboBox cbCaracteres;
         private System.Windows.Forms.ComboBox cbTiposervidor;
         private System.Windows.Forms.Label lblTextocodif;

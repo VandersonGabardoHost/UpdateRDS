@@ -28,7 +28,8 @@ namespace UpdateRDS
 
                 if (btnEnviardadosrds.Visible == false)
                 {
-                    lblInfo.Text = errogeral;
+                    lblInfo.Text = $"\n{errogeral}";
+                    lblInfo.BackColor = Color.Red;
                 }
                 else
                 {
@@ -236,41 +237,61 @@ namespace UpdateRDS
             throw new Exception(mensagemerro);
         }
 
-        private void CarregarInterfacesPersonalizadas()
+        private void CarregaInfoTelaCadBal(bool carregarinformacoes)
         {
-            try
+            if (carregarinformacoes == true)
             {
-                InitializeComponent();
-
-                string identificadorproc = processodoaplicativo.Id.ToString();
-
-                ntfIcone.ShowBalloonTip(60000, "Update RDS - Bem vindo!", "Aqui você pode receber notificações se quiser!", ToolTipIcon.Info);
-
-                cbCaracteres.SelectedIndex = 1;
-                cbTiposervidor.SelectedIndex = 1;
-
-                lblTextotitulo.Text = "Update RDS By GabardoHost";
-                lblInformacaoid.Text = "Para prosseguir com o envio dos dados, preencha corretamente a tela de cadastro e clique em enviar RDS!";
-                chkEnviatitulosom.Text = "Enviar título\nde som\nSOMENTE de\nforma manual";
-
-                try
-                {
-                    UpdateAppRDS(null);
-                }
-                catch (Exception exup)
-                {
-                    InfoErroAplic(exup.Message, exup.StackTrace, true);
-
-                    MessageBox.Show($"Infelizmente não foi possível verificar se o aplicativo precisa de atualização!\nNão foi possível verificar devido ao seguinte problema:\n{exup.Message}", "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-
-                VerifArqConfig(null);
+                ttInfo.SetToolTip(lblTextotitulo, "Título do programa ou o nome da rádio");
+                ttInfo.SetToolTip(chkNaominimsystray, "Selecione para não minimizar o aplicativo na bandeja do sistema sempre que minimizar o aplicativo");
+                ttInfo.SetToolTip(chkNaonotificarsomtray, "Não exibe o balão de notificações na bandeja do sistema caso selecionado");
+                ttInfo.SetToolTip(chkAcentospalavras, "Caso queira remover a acentuação das palavras a serem transmitidas para o servidor, marque essa caixa");
+                ttInfo.SetToolTip(chkCaracteresespeciais, "Marque essa opção para não transmitir para o servidor, nomes que contenham caracteres especiais, ele remove os caracteres antes de enviar");
+                ttInfo.SetToolTip(txtTempoexec, "Tempo de execução do aplicativo, no tempo definido nessa caixa de texto, o aplicativo vai verificar por atualizações de arquivo ou URL");
+                ttInfo.SetToolTip(btnSalvadados, "Ao clicar, tudo o que foi cadastrado aqui vai ser salvo em um arquivo XML para que se possa carregar novamente as informações mais tarde, quando executar o aplicativo novamente, caso não queira salvar, tudo o que é preenchido, é perdido no fechamento do aplicativo");
+                ttInfo.SetToolTip(btnCarregadados, "Abre o arquivo XML com as informações para carregar nessa tela");
+                ttInfo.SetToolTip(btnLocalizatxtsom, "Localizar o arquivo de texto com o nome do som gerado pelo automatizador da rádio");
+                ttInfo.SetToolTip(chkUrlsom, "Marque essa opção para transmitir os nomes das músicas através de uma URL");
+                ttInfo.SetToolTip(txtUrlsom, "Preencha a URL completa do arquivo de texto exemplo: http://meuserver.com/arquivotexto.txt");
+                ttInfo.SetToolTip(btnLocalizatxtsomnext, "Localizar o arquivo de texto com o nome do próximo som gerado pelo automatizador da rádio");
+                ttInfo.SetToolTip(chkUrlsomnext, "Marque essa opção para transmitir os nomes das músicas de próximo som através de uma URL");
+                ttInfo.SetToolTip(txtUrlsomnext, "Preencha a URL completa do arquivo de texto de próximo som exemplo: http://meuserver.com/arquivotexto.txt");
+                ttInfo.SetToolTip(chkTransmproxsom, "Ao selecionar, o aplicativo vai transmitir as informações de próximo som - next song para o servidor shoutcast");
+                ttInfo.SetToolTip(txtDominioip, "Digite um endereço de IP exemplo 192.168.10.10 ou um domínio exemplo meuserver.com");
+                ttInfo.SetToolTip(btnResolvernomeip, "Converte o nome digitado em um endereço de IP - igual a ferramenta nslookup para saber o IP do domínio digitado");
+                ttInfo.SetToolTip(txtPorta, "Digite a porta do servidor somente com números entre 1 - 65535");
+                ttInfo.SetToolTip(txtIdoumont, "Preencha com um número de ID - Shoutcast Server versão 2 ou preencha com o ponto de montagem exemplo: stream - Icecast Server versão 2");
+                ttInfo.SetToolTip(txtLoginserver, "Login do servidor, pode ser o administrativo ou de ID para shoutcast e somente administrativo para Icecast");
+                ttInfo.SetToolTip(txtSenhaserver, "Senha do servidor que corresponde ao usuário informado");
+                ttInfo.SetToolTip(btnPararenviords, "Para o envio de RDS para o servidor");
+                ttInfo.SetToolTip(btnEnviardadosrds, "Inicia o processo de envio de dados do RDS para o servidor configurado");
+                ttInfo.SetToolTip(chkDadossensiveis, "Exibe nessa tela as senhas digitadas, altera de asterisco para o texto digitado");
+                ttInfo.SetToolTip(txtDoproxy, "Endereço de IP exemplo: 192.168.10.10 ou domínio exemplo: meuservidor.proxy.com do servidor proxy");
+                ttInfo.SetToolTip(txtPortaproxy, "Porta do servidor proxy - números no intervalo entre 1 - 65535");
+                ttInfo.SetToolTip(chkUsoproxy, "Caso dependa de um servidor proxy para se conectar a internet, marque essa opção");
+                ttInfo.SetToolTip(chkAutenticaproxy, "Se o servidor proxy precisa de uma autenticação por login e senha, marque essa opção");
+                ttInfo.SetToolTip(txtLoginproxy, "Login ou nome de usuário do servidor proxy");
+                ttInfo.SetToolTip(txtSenhaproxy, "Senha do servidor proxy para acesso");
+                ttInfo.SetToolTip(lblVersaoapp, "Versão do aplicativo instalada e executando nesse momento");
+                ttInfo.SetToolTip(btnVerupdate, "Ao clicar, o aplicativo verifica se existe uma nova versão para baixar, se houver, baixa e inicia a instalação da nova versão");
+                ttInfo.SetToolTip(btnAbrirappdata, "Abre a pasta com os logs do aplicativo");
+                ttInfo.SetToolTip(lblArquivotextosomnext, "Arquivo de texto de próximo som que deseja carregar e enviar os dados apartir deste arquivo");
+                ttInfo.SetToolTip(chkEnviatitulosom, "Caso marcado, envia os títulos de som somente de forma manual, sem nenhuma possibilidade de enviar de forma automática");
+                ttInfo.SetToolTip(lblArquivotextosom, "Arquivo de texto com o nome do som que deseja carregar e enviar os dados apartir deste arquivo");
+                ttInfo.SetToolTip(btnEnviatitulosom, "Enviar o título do som manualmente para o servidor");
+                ttInfo.SetToolTip(cbCaracteres, "Define a codificação de caracteres do arquivo texto ou URL lida, se verificar que o nome de som carrega desfigurado, alterar a opção para ajustar a codificação dos caracteres");
+                ttInfo.SetToolTip(cbTiposervidor, "Escolha o tipo de servidor a enviar os dados");
+                ttInfo.SetToolTip(btnNomeemi, "Grava o título do aplicativo para o nome da emissora desejado");
+                ttInfo.SetToolTip(txtNomeemi, "Define o título do aplicativo para o nome da emissora desejado ao preencher essa informação aqui");
+                ttInfo.SetToolTip(btnNomeemialt, "Altera o título do aplicativo para o nome da emissora desejado");
+                ttInfo.SetToolTip(txtTitulodesom, "Ao preencher, define o título do som a ser enviado manualmente para o servidor");
+                ttInfo.SetToolTip(btnApagalogerro, "Apaga log de erro e de som do aplicativo");
+                ttInfo.SetToolTip(lblInfo, "Dados que o aplicativo está enviando aparecem aqui");
+                ttInfo.SetToolTip(pbFront, "Ícone do servidor definido no momento, nenhum servidor definido é o ícone da antena parabólica");
+                ttInfo.SetToolTip(lblInformacaoid, "Informações sobre a execução do aplicativo");
             }
-            catch (Exception ex)
+            else
             {
-                InfoErroAplic(ex.Message, ex.StackTrace, false);
-
-                MessageBox.Show($"Infelizmente não foi possível carregar corretamente o aplicativo!\nNão foi possível carregar devido ao seguinte problema:\n{ex.Message}", "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                throw new NotImplementedException();
             }
         }
 
@@ -408,7 +429,7 @@ namespace UpdateRDS
             if (!Directory.Exists(diretoriodoaplicativo))
                 Directory.CreateDirectory(diretoriodoaplicativo);
 
-            lblVersaoapp.Text = "Versão 0.2 Beta\n(Sem verificar nova versão)";
+            lblVersaoapp.Text = "Versão 0.3 Beta\n(Sem verificar nova versão)";
             lblVersaoapp.ForeColor = Color.Yellow;
 
             // string urlcompletaversao = "http://localhost/updaterds/versao.txt";
@@ -445,7 +466,7 @@ namespace UpdateRDS
             {
                 versaonova = true;
 
-                lblVersaoapp.Text = "Versão 0.2 Beta\n(DESATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.3 Beta\n(DESATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Red;
 
                 if (MessageBox.Show($"Há uma nova versão do aplicativo disponível para download, gostaria de baixar a nova versão do aplicativo? a sua versão de aplicativo instalada atualmente é {versaoappcurrent} e a nova versão do aplicativo para baixar é {versaonovadoapp} sendo a nova versão com correções de problemas e outras correções de interface.", "Pergunta", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -487,7 +508,7 @@ namespace UpdateRDS
             }
             else
             {
-                lblVersaoapp.Text = "Versão 0.2 Beta\n(ATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.3 Beta\n(ATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Green;
                 versaonova = false;
             }
@@ -543,6 +564,18 @@ namespace UpdateRDS
 
             if (!Regex.IsMatch(portaserver, @"^[0-9]+$"))
                 throw new Exception("Preencha a caixa de texto porta apenas com números!");
+
+            if (Convert.ToInt32(portaserver) > 65535)
+            {
+                txtPorta.BackColor = Color.Red;
+                throw new Exception("Preencha a caixa de texto porta apenas com números inferiores a 65535!");
+            }
+
+            if (Convert.ToInt32(portaserver) < 1)
+            {
+                txtPorta.BackColor = Color.Red;
+                throw new Exception("Preencha a caixa de texto porta apenas com números superiores a 1!");
+            }
 
             if (string.IsNullOrEmpty(txtLoginserver.Text))
             {
@@ -631,6 +664,18 @@ namespace UpdateRDS
 
                 if (!Regex.IsMatch(txtPortaproxy.Text, @"^[0-9]+$"))
                     throw new Exception("Preencha a caixa de texto porta do servidor proxy apenas com números!");
+
+                if (Convert.ToInt32(txtPortaproxy.Text) > 65535)
+                {
+                    txtPortaproxy.BackColor = Color.Red;
+                    throw new Exception("Preencha a caixa de texto porta do servidor proxy apenas com números inferiores a 65535!");
+                }
+
+                if (Convert.ToInt32(txtPortaproxy.Text) < 1)
+                {
+                    txtPortaproxy.BackColor = Color.Red;
+                    throw new Exception("Preencha a caixa de texto porta do servidor proxy apenas com números superiores a 1!");
+                }
 
                 if (chkAutenticaproxy.Checked == true)
                 {
@@ -762,18 +807,20 @@ namespace UpdateRDS
 
             if (erroconta == 0)
             {
-                lblInfo.Text = "Nome do som conectado no servidor! Aguarde atualização de título...";
+                lblInfo.Text = "\nNome do som conectado no servidor! Aguarde atualização de título...";
+                lblInfo.BackColor = Color.Green;
                 if (chkNaonotificarsomtray.Checked == false)
-                    ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", lblInfo.Text, ToolTipIcon.Info);
+                    ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", "Nome do som conectado no servidor! Aguarde atualização de título...", ToolTipIcon.Info);
 
                 erroconta = -1;
             }
 
             if (errocontanext == 0)
             {
-                lblInfo.Text = "Nome do próximo som conectado no servidor! Aguarde atualização de título...";
+                lblInfo.Text = "\nNome do próximo som conectado no servidor! Aguarde atualização de título...";
+                lblInfo.BackColor = Color.Green;
                 if (chkNaonotificarsomtray.Checked == false)
-                    ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", lblInfo.Text, ToolTipIcon.Info);
+                    ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", "Nome do próximo som conectado no servidor! Aguarde atualização de título...", ToolTipIcon.Info);
 
                 errocontanext = -1;
             }
@@ -876,18 +923,20 @@ namespace UpdateRDS
 
             if (arquivoerroconta == 0)
             {
-                lblInfo.Text = "Arquivo de nome do som corrigido com sucesso! Aguarde atualização de título...";
+                lblInfo.Text = "\nArquivo de nome do som corrigido com sucesso! Aguarde atualização de título...";
+                lblInfo.BackColor = Color.Green;
                 if (chkNaonotificarsomtray.Checked == false)
-                    ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", lblInfo.Text, ToolTipIcon.Info);
+                    ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", "Arquivo de nome do som corrigido com sucesso! Aguarde atualização de título...", ToolTipIcon.Info);
 
                 arquivoerroconta = -1;
             }
 
             if (arquivoerrocontanext == 0)
             {
-                lblInfo.Text = "Arquivo de nome do próximo som corrigido com sucesso! Aguarde atualização de título...";
+                lblInfo.Text = "\nArquivo de nome do próximo som corrigido com sucesso! Aguarde atualização de título...";
+                lblInfo.BackColor = Color.Green;
                 if (chkNaonotificarsomtray.Checked == false)
-                    ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", lblInfo.Text, ToolTipIcon.Info);
+                    ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", "Arquivo de nome do próximo som corrigido com sucesso! Aguarde atualização de título...", ToolTipIcon.Info);
 
                 arquivoerrocontanext = -1;
             }
@@ -1377,10 +1426,13 @@ namespace UpdateRDS
                 if (arquivotextolog.Length > 10485760)
                     File.Move(arquivodelog, $"{arquivodelog}{DateTime.Now.ToString().Replace(":", "").Replace("/", "")}.csv");
 
-                lblInfo.Text = $"O RDS Está transmitindo agora o seguinte nome para o servidor: \n{conteudoarquivotexto} \nNa data e hora: {DateTime.Now.ToString()}";
-
+                lblInfo.Text = $"\nO RDS Está transmitindo agora o seguinte nome para o servidor: \n{conteudoarquivotexto} \nNa data e hora: {DateTime.Now.ToString()}";
+                lblInfo.BackColor = Color.Green;
                 if (chkTransmproxsom.Checked == true)
-                    lblInfo.Text = $"O RDS Está transmitindo agora o seguinte nome para o servidor: \n{conteudoarquivotexto} \nPróximo som: {conteudoarquivotextonextsong} \nNa data e hora: {DateTime.Now.ToString()}";
+                {
+                    lblInfo.Text = $"\nO RDS Está transmitindo agora o seguinte nome para o servidor: \n{conteudoarquivotexto} \nPróximo som: {conteudoarquivotextonextsong} \nNa data e hora: {DateTime.Now.ToString()}";
+                    lblInfo.BackColor = Color.Green;
+                }
 
                 dadosadicionais = $"No ar o som: {conteudoarquivotexto} \nNa data e hora: {DateTime.Now.ToString()}";
 
