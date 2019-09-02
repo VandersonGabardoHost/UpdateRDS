@@ -34,7 +34,6 @@
             this.lblTextotipo = new System.Windows.Forms.Label();
             this.lblTextoselec = new System.Windows.Forms.Label();
             this.chkNaominimsystray = new System.Windows.Forms.CheckBox();
-            this.chkNaonotificarsomtray = new System.Windows.Forms.CheckBox();
             this.chkAcentospalavras = new System.Windows.Forms.CheckBox();
             this.chkCaracteresespeciais = new System.Windows.Forms.CheckBox();
             this.lblTextotempo = new System.Windows.Forms.Label();
@@ -117,6 +116,7 @@
             this.lblTextobtnapaglog = new System.Windows.Forms.Label();
             this.btnApagalogerro = new System.Windows.Forms.Button();
             this.ttInfo = new System.Windows.Forms.ToolTip(this.components);
+            this.cbNotificacoes = new System.Windows.Forms.ComboBox();
             this.cmsIconenotif.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbFront)).BeginInit();
             this.SuspendLayout();
@@ -157,22 +157,11 @@
             this.chkNaominimsystray.Location = new System.Drawing.Point(133, 90);
             this.chkNaominimsystray.Margin = new System.Windows.Forms.Padding(4);
             this.chkNaominimsystray.Name = "chkNaominimsystray";
-            this.chkNaominimsystray.Size = new System.Drawing.Size(324, 20);
+            this.chkNaominimsystray.Size = new System.Drawing.Size(488, 20);
             this.chkNaominimsystray.TabIndex = 4;
-            this.chkNaominimsystray.Text = "Não minimizar o aplicativo na bandeja do sistema";
+            this.chkNaominimsystray.Text = "Não minimizar o aplicativo na bandeja do sistema   Notif. bandeja do sistema:";
             this.chkNaominimsystray.UseVisualStyleBackColor = true;
             this.chkNaominimsystray.CheckedChanged += new System.EventHandler(this.ChkNaominimsystray_CheckedChanged);
-            // 
-            // chkNaonotificarsomtray
-            // 
-            this.chkNaonotificarsomtray.AutoSize = true;
-            this.chkNaonotificarsomtray.Location = new System.Drawing.Point(468, 90);
-            this.chkNaonotificarsomtray.Margin = new System.Windows.Forms.Padding(4);
-            this.chkNaonotificarsomtray.Name = "chkNaonotificarsomtray";
-            this.chkNaonotificarsomtray.Size = new System.Drawing.Size(407, 20);
-            this.chkNaonotificarsomtray.TabIndex = 5;
-            this.chkNaonotificarsomtray.Text = "Não notificar sobre atualizações de som na bandeja do sistema";
-            this.chkNaonotificarsomtray.UseVisualStyleBackColor = true;
             // 
             // chkAcentospalavras
             // 
@@ -1004,11 +993,26 @@
             // 
             this.ttInfo.IsBalloon = true;
             // 
+            // cbNotificacoes
+            // 
+            this.cbNotificacoes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbNotificacoes.FormattingEnabled = true;
+            this.cbNotificacoes.Items.AddRange(new object[] {
+            "Não notificar nenhuma informação",
+            "Notificar somente erros do aplicativo",
+            "Notificar somente atualizações de som",
+            "Exibir todas as notificações na bandeja"});
+            this.cbNotificacoes.Location = new System.Drawing.Point(617, 89);
+            this.cbNotificacoes.Name = "cbNotificacoes";
+            this.cbNotificacoes.Size = new System.Drawing.Size(255, 24);
+            this.cbNotificacoes.TabIndex = 42;
+            // 
             // UpdateRDS
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(884, 612);
+            this.Controls.Add(this.cbNotificacoes);
             this.Controls.Add(this.lblInfo);
             this.Controls.Add(this.btnApagalogerro);
             this.Controls.Add(this.lblTextobtnapaglog);
@@ -1076,7 +1080,6 @@
             this.Controls.Add(this.lblTextotempo);
             this.Controls.Add(this.chkCaracteresespeciais);
             this.Controls.Add(this.chkAcentospalavras);
-            this.Controls.Add(this.chkNaonotificarsomtray);
             this.Controls.Add(this.chkNaominimsystray);
             this.Controls.Add(this.lblTextoselec);
             this.Controls.Add(this.lblTextotipo);
@@ -1106,7 +1109,6 @@
         private System.Windows.Forms.Label lblTextotipo;
         private System.Windows.Forms.Label lblTextoselec;
         private System.Windows.Forms.CheckBox chkNaominimsystray;
-        private System.Windows.Forms.CheckBox chkNaonotificarsomtray;
         private System.Windows.Forms.CheckBox chkAcentospalavras;
         private System.Windows.Forms.CheckBox chkCaracteresespeciais;
         private System.Windows.Forms.Label lblTextotempo;
@@ -1189,5 +1191,6 @@
         private System.Windows.Forms.ToolStripMenuItem tsmiAppdata;
         private System.Windows.Forms.ToolStripMenuItem tsmiApagalog;
         private System.Windows.Forms.ToolTip ttInfo;
+        private System.Windows.Forms.ComboBox cbNotificacoes;
     }
 }

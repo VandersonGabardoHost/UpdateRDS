@@ -18,7 +18,7 @@ namespace UpdateRDS
     {
         static readonly WebProxy servidorproxydoaplicativo = new WebProxy();
         static bool errodoaplicativo = false;
-        static readonly string useragentdef = "Update RDS By GabardoHost v0.3 Beta - Mozilla/50MIL.0 (Windows NeanderThal) KHTML like Gecko Chrome Opera Safari Netscape Internet Exploit Firefox Godzilla Giroflex Alex Marques Print";
+        static readonly string useragentdef = "Update RDS By GabardoHost v0.4 Beta - Mozilla/50MIL.0 (Windows NeanderThal) KHTML like Gecko Chrome Opera Safari Netscape Internet Exploit Firefox Godzilla Giroflex Alex Marques Print";
         static bool versaonova = false;
         static readonly string versaoappcurrent = "Versao " + Application.ProductVersion;
         static string conteudotexto;
@@ -43,7 +43,7 @@ namespace UpdateRDS
                 string identificadorproc = processodoaplicativo.Id.ToString();
 
                 ntfIcone.ShowBalloonTip(60000, "Update RDS - Bem vindo!", "Aqui você pode receber notificações se quiser!", ToolTipIcon.Info);
-
+                cbNotificacoes.SelectedIndex = 2;
                 cbCaracteres.SelectedIndex = 1;
                 cbTiposervidor.SelectedIndex = 1;
 
@@ -78,7 +78,9 @@ namespace UpdateRDS
         {
             try
             {
-                RecInfoDosDadosCad();
+                string senhadoserver = $"{txtLoginserver.Text}:{txtSenhaserver.Text}";
+
+                RecInfoDosDadosCad(txtDominioip.Text, txtPorta.Text, senhadoserver, txtIdoumont.Text);
             }
             catch (Exception ex)
             {
@@ -284,7 +286,10 @@ namespace UpdateRDS
 
                 ValidarInformacoes();
 
-                RecInfoDosDadosCad();
+                string senhadoserver = $"{txtLoginserver.Text}:{txtSenhaserver.Text}";
+
+                RecInfoDosDadosCad(txtDominioip.Text, txtPorta.Text, senhadoserver, txtIdoumont.Text);
+
                 tsmiParar.Enabled = true;
                 tsmiIniciar.Enabled = false;
                 btnEnviardadosrds.Visible = false;
@@ -432,7 +437,7 @@ namespace UpdateRDS
                     File.Delete(caminhoarquivoantigo);
                     File.Delete(caminhoarquivoantigonext);
 
-                    if (chkNaonotificarsomtray.Checked == false)
+                    if (cbNotificacoes.SelectedIndex > 2)
                         ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", "O RDS Não está sendo transmitido para o servidor!", ToolTipIcon.Info);
                 }
                 else
@@ -480,7 +485,7 @@ namespace UpdateRDS
                                 xtw.WriteElementString("TIPOSERVERSELECIONADO", cbTiposervidor.SelectedIndex.ToString());
                                 xtw.WriteElementString("ENVTITLEMANUAL", chkEnviatitulosom.Checked.ToString());
                                 xtw.WriteElementString("NAOMINIMIZARSYSTRAY", chkNaominimsystray.Checked.ToString());
-                                xtw.WriteElementString("NAONOTIFICARSYSTRAY", chkNaonotificarsomtray.Checked.ToString());
+                                xtw.WriteElementString("NOTIFICARSYSTRAY", cbNotificacoes.SelectedIndex.ToString());
                                 xtw.WriteElementString("REMOVERACENTOSPALAVRAS", chkAcentospalavras.Checked.ToString());
                                 xtw.WriteElementString("REMOVERCARACTERESESPECIAIS", chkCaracteresespeciais.Checked.ToString());
                                 xtw.WriteElementString("DADOSSENSIVEISEXIBIR", chkDadossensiveis.Checked.ToString());
@@ -722,12 +727,12 @@ namespace UpdateRDS
                     Show();
                     WindowState = FormWindowState.Normal;
 
-                    if (chkNaonotificarsomtray.Checked == false)
+                    if (cbNotificacoes.SelectedIndex > 2)
                         ntfIcone.ShowBalloonTip(60000, "Update RDS - Você clicou em mim", "E eu abri :D", ToolTipIcon.Info);
                 }
                 else
                 {
-                    if (chkNaonotificarsomtray.Checked == false)
+                    if (cbNotificacoes.SelectedIndex > 2)
                         ntfIcone.ShowBalloonTip(60000, "Update RDS - Você clicou em mim", "E eu já estou aberto, não está me vendo? :D", ToolTipIcon.Info);
 
                     if (chkNaominimsystray.Checked == false && MessageBox.Show("Você gostaria de minimizar na bandeja do sistema?", "Pergunta", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)

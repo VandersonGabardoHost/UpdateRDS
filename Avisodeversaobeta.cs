@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-/// Update RDS By GabardoHost - Versão 0.3 Beta build
+/// Update RDS By GabardoHost - Versão 0.4 Beta build
 /// @file Avisodeversaobeta.cs
 /// <summary>
 /// Este arquivo é o código de inicialização principal do aplicativo
@@ -16,8 +16,8 @@ using System.Windows.Forms;
 /// Mas resolvi criar um para disponibilizar para todos, pois esse programa ou vem associado a um encoder ou não tem para download, então fiz um!
 /// Minha ideia é essa, se uma coisa não existe e você precisa muito, então crie você mesmo! pode ser carro, casa, transmissor de FM, programa de PC, celular etc... CRIE VOCÊ MESMO!!!
 /// @author Vanderson Gabardo <vanderson@vanderson.net.br>
-/// @date 31/08/2019
-/// $Id: UpdateRDS.cs, v0.3 2019/08/31 20:30:00 Vanderson Gabardo $
+/// @date 01/09/2019
+/// $Id: UpdateRDS.cs, v0.4 2019/09/01 23:30:00 Vanderson Gabardo $
 
 namespace UpdateRDS
 {

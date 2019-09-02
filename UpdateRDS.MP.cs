@@ -70,7 +70,7 @@ namespace UpdateRDS
                         errfilecnext = errogeral;
                     }
 
-                    if (chkNaonotificarsomtray.Checked == false)
+                    if (cbNotificacoes.SelectedIndex > 0)
                     {
                         if (weberro == true)
                         {
@@ -101,9 +101,7 @@ namespace UpdateRDS
                         xtwerr.WriteElementString("p", $"Codificação de caracteres: {cbCaracteres.SelectedItem}. Item selecionado: {cbCaracteres.SelectedIndex}");
                         xtwerr.WriteElementString("p", $"Tipo de servidor: {cbTiposervidor.SelectedItem}. Item selecionado: {cbTiposervidor.SelectedIndex}");
                         VerTrueFalse(chkNaominimsystray.Checked);
-                        xtwerr.WriteElementString("p", "Não minimizar no system tray: ");
-                        xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
-                        VerTrueFalse(chkNaonotificarsomtray.Checked);
+                        xtwerr.WriteElementString("p", $"Notificação na bandeja do sistema: {cbNotificacoes.SelectedItem}. Item selecionado: {cbNotificacoes.SelectedIndex}");
                         xtwerr.WriteElementString("p", "Não notificar no system tray: ");
                         xtwerr.WriteElementString($"input type='checkbox' {htmltestado}", "");
                         VerTrueFalse(chkAcentospalavras.Checked);
@@ -243,7 +241,7 @@ namespace UpdateRDS
             {
                 ttInfo.SetToolTip(lblTextotitulo, "Título do programa ou o nome da rádio");
                 ttInfo.SetToolTip(chkNaominimsystray, "Selecione para não minimizar o aplicativo na bandeja do sistema sempre que minimizar o aplicativo");
-                ttInfo.SetToolTip(chkNaonotificarsomtray, "Não exibe o balão de notificações na bandeja do sistema caso selecionado");
+                ttInfo.SetToolTip(cbNotificacoes, "Selecione a opção que exibe o balão de notificações na bandeja do sistema");
                 ttInfo.SetToolTip(chkAcentospalavras, "Caso queira remover a acentuação das palavras a serem transmitidas para o servidor, marque essa caixa");
                 ttInfo.SetToolTip(chkCaracteresespeciais, "Marque essa opção para não transmitir para o servidor, nomes que contenham caracteres especiais, ele remove os caracteres antes de enviar");
                 ttInfo.SetToolTip(txtTempoexec, "Tempo de execução do aplicativo, no tempo definido nessa caixa de texto, o aplicativo vai verificar por atualizações de arquivo ou URL");
@@ -369,7 +367,7 @@ namespace UpdateRDS
                 }
                 else
                     chkNaominimsystray.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[4].InnerText);
-                chkNaonotificarsomtray.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[5].InnerText);
+                cbNotificacoes.SelectedIndex = int.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[5].InnerText);
                 chkAcentospalavras.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[6].InnerText);
                 chkCaracteresespeciais.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[7].InnerText);
                 chkDadossensiveis.Checked = Boolean.Parse(oXML.SelectSingleNode("Configuracao").ChildNodes[8].InnerText);
@@ -429,13 +427,16 @@ namespace UpdateRDS
             if (!Directory.Exists(diretoriodoaplicativo))
                 Directory.CreateDirectory(diretoriodoaplicativo);
 
-            lblVersaoapp.Text = "Versão 0.3 Beta\n(Sem verificar nova versão)";
+            string diretorioexecucaoap = AppDomain.CurrentDomain.BaseDirectory.ToString();
+
+            lblVersaoapp.Text = "Versão 0.4 Beta\n(Sem verificar nova versão)";
             lblVersaoapp.ForeColor = Color.Yellow;
 
             // string urlcompletaversao = "http://localhost/updaterds/versao.txt";
             string urlcompletaversao = "http://www.vanderson.net.br/updaterds/versao.txt";
 
-            string urlcompletadownload = "http://www.vanderson.net.br/updaterds/UpdateRDSInstaller.exe";
+            // string urlcompletadownload = "http://localhost/updaterds/updaterds.update";
+            string urlcompletadownload = "http://www.vanderson.net.br/updaterds/updaterds.update";
 
             try
             {
@@ -466,12 +467,12 @@ namespace UpdateRDS
             {
                 versaonova = true;
 
-                lblVersaoapp.Text = "Versão 0.3 Beta\n(DESATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.4 Beta\n(DESATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Red;
 
                 if (MessageBox.Show($"Há uma nova versão do aplicativo disponível para download, gostaria de baixar a nova versão do aplicativo? a sua versão de aplicativo instalada atualmente é {versaoappcurrent} e a nova versão do aplicativo para baixar é {versaonovadoapp} sendo a nova versão com correções de problemas e outras correções de interface.", "Pergunta", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    if (!File.Exists($"{diretoriodoaplicativo}UpdateRDSInstaller.exe"))
+                    if (!File.Exists($"{diretoriodoaplicativo}Update RDSN exe"))
                     {
                         using (WebClient wcurlcompletadownload = new WebClient())
                         {
@@ -483,22 +484,27 @@ namespace UpdateRDS
                                 wcurlcompletadownload.Proxy = servidorproxydoaplicativo;
                             }
 
-                            wcurlcompletadownload.DownloadFile(urlcompletadownload, $"{diretoriodoaplicativo}UpdateRDSInstaller.exe");
+                            wcurlcompletadownload.DownloadFile(urlcompletadownload, $"{diretoriodoaplicativo}Update RDSN exe");
                         }
                     }
 
-                    if (MessageBox.Show($"O aplicativo foi baixado com sucesso! Gostaria de instalar agora?", "Pergunta", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    if (MessageBox.Show($"O aplicativo foi baixado com sucesso e encerrará todas as instâncias abertas! Gostaria de instalar agora?", "Pergunta", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
-                        Process.Start($"{diretoriodoaplicativo}UpdateRDSInstaller.exe");
-
-                        foreach (Process processodoaplicativo in Process.GetProcessesByName("Update RDS"))
+                        if (File.Exists($"{diretorioexecucaoap}ATUpdate.exe"))
                         {
-                            // processodoaplicativo.Kill();
+                            Process.Start($"{diretorioexecucaoap}ATUpdate.exe", "-u");
+
+                            foreach (Process processodoaplicativo in Process.GetProcessesByName("Update RDS"))
+                            {
+                                processodoaplicativo.Kill();
+                            }
                         }
+                        else
+                            MessageBox.Show("O arquivo de atualização do aplicativo não foi encontrado! para que o aplicativo atualize, verifique se no diretório de instalação o ATUpdate existe!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
                     else
                     {
-                        MessageBox.Show($"O Aplicativo não foi instalado automáticamente!\nPara instalar manualmente a nova versão do aplicativo, entre no diretório {diretoriodoaplicativo} e execute o aplicativo 'UpdateRDSInstaller.exe' para instalar!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show($"O Aplicativo não foi instalado automáticamente!\nPara instalar manualmente a nova versão do aplicativo, entre no diretório {diretoriodoaplicativo} mova o aplicativo 'Update RDSN exe' para {diretorioexecucaoap} e renomeie para Update RDS.exe para instalar!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
                 }
                 else
@@ -508,7 +514,7 @@ namespace UpdateRDS
             }
             else
             {
-                lblVersaoapp.Text = "Versão 0.3 Beta\n(ATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.4 Beta\n(ATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Green;
                 versaonova = false;
             }
@@ -809,7 +815,7 @@ namespace UpdateRDS
             {
                 lblInfo.Text = "\nNome do som conectado no servidor! Aguarde atualização de título...";
                 lblInfo.BackColor = Color.Green;
-                if (chkNaonotificarsomtray.Checked == false)
+                if (cbNotificacoes.SelectedIndex > 2)
                     ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", "Nome do som conectado no servidor! Aguarde atualização de título...", ToolTipIcon.Info);
 
                 erroconta = -1;
@@ -819,7 +825,7 @@ namespace UpdateRDS
             {
                 lblInfo.Text = "\nNome do próximo som conectado no servidor! Aguarde atualização de título...";
                 lblInfo.BackColor = Color.Green;
-                if (chkNaonotificarsomtray.Checked == false)
+                if (cbNotificacoes.SelectedIndex > 2)
                     ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", "Nome do próximo som conectado no servidor! Aguarde atualização de título...", ToolTipIcon.Info);
 
                 errocontanext = -1;
@@ -925,7 +931,7 @@ namespace UpdateRDS
             {
                 lblInfo.Text = "\nArquivo de nome do som corrigido com sucesso! Aguarde atualização de título...";
                 lblInfo.BackColor = Color.Green;
-                if (chkNaonotificarsomtray.Checked == false)
+                if (cbNotificacoes.SelectedIndex > 2)
                     ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", "Arquivo de nome do som corrigido com sucesso! Aguarde atualização de título...", ToolTipIcon.Info);
 
                 arquivoerroconta = -1;
@@ -935,7 +941,7 @@ namespace UpdateRDS
             {
                 lblInfo.Text = "\nArquivo de nome do próximo som corrigido com sucesso! Aguarde atualização de título...";
                 lblInfo.BackColor = Color.Green;
-                if (chkNaonotificarsomtray.Checked == false)
+                if (cbNotificacoes.SelectedIndex > 2)
                     ntfIcone.ShowBalloonTip(60000, "Update RDS - Informação", "Arquivo de nome do próximo som corrigido com sucesso! Aguarde atualização de título...", ToolTipIcon.Info);
 
                 arquivoerrocontanext = -1;
@@ -1225,17 +1231,13 @@ namespace UpdateRDS
             }
         }
 
-        private void RecInfoDosDadosCad()
+        private void RecInfoDosDadosCad(string ipserver, string portaserver, string senhaserver, string idoupontomont)
         {
             string identificadorproc = processodoaplicativo.Id.ToString();
             string urlparacarregar;
             string dadosadicionais;
             string conteudoarquivotextonextsong = "Update RDS By GabardoHost - Vanderson Gabardo";
             string dadosarquivotexto = null;
-            string ipserver = txtDominioip.Text;
-            string portaserver = txtPorta.Text;
-            string senhaserver = $"{txtLoginserver.Text}:{txtSenhaserver.Text}";
-            string idoupontomont = txtIdoumont.Text;
             string arquivodelog = $@"{diretoriodoaplicativo}LOGS\SOM{identificadorproc}LOG.csv";
             string urlshoutcastv1 = $"http://{ipserver}:{portaserver}/admin.cgi?mode=updinfo&song=";
             string urlshoutcastv2 = $"http://{ipserver}:{portaserver}/admin.cgi?sid={idoupontomont}&mode=updinfo&song=";
@@ -1426,20 +1428,32 @@ namespace UpdateRDS
                 if (arquivotextolog.Length > 10485760)
                     File.Move(arquivodelog, $"{arquivodelog}{DateTime.Now.ToString().Replace(":", "").Replace("/", "")}.csv");
 
+                if (conteudoarquivotexto.Length > 250)
+                    conteudoarquivotexto = conteudoarquivotexto.Substring(0, 250) + "...";
+
+                if (conteudoarquivotextonextsong.Length > 250)
+                    conteudoarquivotextonextsong = conteudoarquivotextonextsong.Substring(0, 250) + "...";
+
                 lblInfo.Text = $"\nO RDS Está transmitindo agora o seguinte nome para o servidor: \n{conteudoarquivotexto} \nNa data e hora: {DateTime.Now.ToString()}";
                 lblInfo.BackColor = Color.Green;
                 if (chkTransmproxsom.Checked == true)
                 {
-                    lblInfo.Text = $"\nO RDS Está transmitindo agora o seguinte nome para o servidor: \n{conteudoarquivotexto} \nPróximo som: {conteudoarquivotextonextsong} \nNa data e hora: {DateTime.Now.ToString()}";
+                    lblInfo.Text = $"\nO RDS Está transmitindo agora o seguinte nome para o servidor: \n{conteudoarquivotexto} \n\nPróximo som: {conteudoarquivotextonextsong} \nNa data e hora: {DateTime.Now.ToString()}";
                     lblInfo.BackColor = Color.Green;
                 }
+
+                if (conteudoarquivotexto.Length > 15)
+                    conteudoarquivotexto = conteudoarquivotexto.Substring(0, 15) + "...";
+
+                if (conteudoarquivotextonextsong.Length > 15)
+                    conteudoarquivotextonextsong = conteudoarquivotextonextsong.Substring(0, 15) + "...";
 
                 dadosadicionais = $"No ar o som: {conteudoarquivotexto} \nNa data e hora: {DateTime.Now.ToString()}";
 
                 if (chkTransmproxsom.Checked == true)
                     dadosadicionais = $"No ar o som: {conteudoarquivotexto} \nPróximo som: {conteudoarquivotextonextsong} \nNa data e hora: {DateTime.Now.ToString()}";
 
-                if (chkNaonotificarsomtray.Checked == false)
+                if (cbNotificacoes.SelectedIndex > 1)
                     ntfIcone.ShowBalloonTip(60000, "Update RDS - Atualização de título de som", dadosadicionais, ToolTipIcon.Info);
             }
         }
