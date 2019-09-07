@@ -225,7 +225,7 @@ namespace UpdateRDS
 
             if (btnEnviardadosrds.Visible == false)
             {
-                mensagemerro = $"{mensagemerro} \nData e hora do erro: {DateTime.Now.ToString()} - Por favor, Verifique a conexão com o servidor! ";
+                // mensagemerro = $"{mensagemerro} \nData e hora do erro: {DateTime.Now.ToString()} - Por favor, Verifique a conexão com o servidor! ";
             }
             else
             {
@@ -429,7 +429,7 @@ namespace UpdateRDS
 
             string diretorioexecucaoap = AppDomain.CurrentDomain.BaseDirectory.ToString();
 
-            lblVersaoapp.Text = "Versão 0.4 Beta\n(Sem verificar nova versão)";
+            lblVersaoapp.Text = "Versão 0.5 Beta\n(Sem verificar nova versão)";
             lblVersaoapp.ForeColor = Color.Yellow;
 
             // string urlcompletaversao = "http://localhost/updaterds/versao.txt";
@@ -467,7 +467,7 @@ namespace UpdateRDS
             {
                 versaonova = true;
 
-                lblVersaoapp.Text = "Versão 0.4 Beta\n(DESATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.5 Beta\n(DESATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Red;
 
                 if (MessageBox.Show($"Há uma nova versão do aplicativo disponível para download, gostaria de baixar a nova versão do aplicativo? a sua versão de aplicativo instalada atualmente é {versaoappcurrent} e a nova versão do aplicativo para baixar é {versaonovadoapp} sendo a nova versão com correções de problemas e outras correções de interface.", "Pergunta", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -514,7 +514,7 @@ namespace UpdateRDS
             }
             else
             {
-                lblVersaoapp.Text = "Versão 0.4 Beta\n(ATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.5 Beta\n(ATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Green;
                 versaonova = false;
             }

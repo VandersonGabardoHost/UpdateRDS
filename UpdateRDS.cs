@@ -18,7 +18,7 @@ namespace UpdateRDS
     {
         static readonly WebProxy servidorproxydoaplicativo = new WebProxy();
         static bool errodoaplicativo = false;
-        static readonly string useragentdef = "Update RDS By GabardoHost v0.4 Beta - Mozilla/50MIL.0 (Windows NeanderThal) KHTML like Gecko Chrome Opera Safari Netscape Internet Exploit Firefox Godzilla Giroflex Alex Marques Print";
+        static readonly string useragentdef = "Update RDS By GabardoHost v0.5 Beta - Mozilla/50MIL.0 (Windows NeanderThal) KHTML like Gecko Chrome Opera Safari Netscape Internet Exploit Firefox Godzilla Giroflex Alex Marques Print";
         static bool versaonova = false;
         static readonly string versaoappcurrent = "Versao " + Application.ProductVersion;
         static string conteudotexto;
@@ -33,7 +33,7 @@ namespace UpdateRDS
         static string htmltestado;
         static readonly Process processodoaplicativo = Process.GetCurrentProcess();
         static readonly UpdateRDSManutencao manutencaodoaplicativo = new UpdateRDSManutencao();
-
+        static bool alternarcor = true;
         public UpdateRDS()
         {
             try
@@ -65,12 +65,45 @@ namespace UpdateRDS
                 CarregaInfoTelaCadBal(true);
 
                 VerifArqConfig(null);
+
+                temporizador.Interval = 1000;
+                temporizador.Tick += new EventHandler(Temp_Tick);
+                temporizador.Start();
             }
             catch (Exception ex)
             {
                 InfoErroAplic(ex.Message, ex.StackTrace, false);
 
                 MessageBox.Show($"Infelizmente não foi possível carregar corretamente o aplicativo!\nNão foi possível carregar devido ao seguinte problema:\n{ex.Message}", "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void Temp_Tick(object Sender, EventArgs e)
+        {
+            try
+            {
+                if (btnEnviardadosrds.Visible == false)
+                {
+                    if (alternarcor == true)
+                    {
+                        alternarcor = false;
+                        btnEnviatitulosom.BackColor = Color.LightCyan;
+                    }
+                    else
+                    {
+                        alternarcor = true;
+                        btnEnviatitulosom.BackColor = Color.LightGreen;
+                    }
+                }
+                else
+                {
+                    btnEnviatitulosom.BackColor = Color.Empty;
+                }
+            }
+            catch (Exception ex)
+            {
+                InfoErroAplic(ex.Message, ex.StackTrace, false);
+                MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

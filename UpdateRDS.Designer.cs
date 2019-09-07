@@ -117,6 +117,7 @@
             this.btnApagalogerro = new System.Windows.Forms.Button();
             this.ttInfo = new System.Windows.Forms.ToolTip(this.components);
             this.cbNotificacoes = new System.Windows.Forms.ComboBox();
+            this.temporizador = new System.Windows.Forms.Timer(this.components);
             this.cmsIconenotif.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbFront)).BeginInit();
             this.SuspendLayout();
@@ -991,7 +992,11 @@
             // 
             // ttInfo
             // 
-            this.ttInfo.IsBalloon = true;
+            this.ttInfo.AutoPopDelay = 10000;
+            this.ttInfo.InitialDelay = 250;
+            this.ttInfo.ReshowDelay = 100;
+            this.ttInfo.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.ttInfo.ToolTipTitle = "Informação:";
             // 
             // cbNotificacoes
             // 
@@ -1192,5 +1197,6 @@
         private System.Windows.Forms.ToolStripMenuItem tsmiApagalog;
         private System.Windows.Forms.ToolTip ttInfo;
         private System.Windows.Forms.ComboBox cbNotificacoes;
+        private System.Windows.Forms.Timer temporizador;
     }
 }
