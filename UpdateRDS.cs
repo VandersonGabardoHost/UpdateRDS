@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -16,24 +13,6 @@ namespace UpdateRDS
 {
     public partial class UpdateRDS
     {
-        static readonly WebProxy servidorproxydoaplicativo = new WebProxy();
-        static bool errodoaplicativo = false;
-        static readonly string useragentdef = "Update RDS By GabardoHost v0.5 Beta - Mozilla/50MIL.0 (Windows NeanderThal) KHTML like Gecko Chrome Opera Safari Netscape Internet Exploit Firefox Godzilla Giroflex Alex Marques Print";
-        static bool versaonova = false;
-        static readonly string versaoappcurrent = "Versao " + Application.ProductVersion;
-        static string conteudotexto;
-        static string conteudotextoantigo;
-        static int arquivoerrocontanext = -1;
-        static int arquivoerroconta = -1;
-        static int errocontanext = -1;
-        static int erroconta = -1;
-        static string errfilecnext = null;
-        static string errfilec = null;
-        static readonly string diretoriodoaplicativo = $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Update RDS\";
-        static string htmltestado;
-        static readonly Process processodoaplicativo = Process.GetCurrentProcess();
-        static readonly UpdateRDSManutencao manutencaodoaplicativo = new UpdateRDSManutencao();
-        static bool alternarcor = true;
         public UpdateRDS()
         {
             try
@@ -103,7 +82,6 @@ namespace UpdateRDS
             catch (Exception ex)
             {
                 InfoErroAplic(ex.Message, ex.StackTrace, false);
-                MessageBox.Show(ex.Message, "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

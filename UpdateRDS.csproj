@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{1B030EDD-678F-4874-B1E9-5F739F574FA0}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>UpdateRDS</RootNamespace>
     <AssemblyName>Update RDS</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
@@ -28,7 +28,7 @@
     <PublisherName>Vanderson GabardoHost</PublisherName>
     <SuiteName>Update RDS</SuiteName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>0.5.0.0</ApplicationVersion>
+    <ApplicationVersion>0.6.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>false</BootstrapperEnabled>
   </PropertyGroup>
@@ -70,12 +70,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Avisodeversaobeta.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Avisodeversaobeta.Designer.cs">
-      <DependentUpon>Avisodeversaobeta.cs</DependentUpon>
-    </Compile>
     <Compile Include="UpdateRDS.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -87,9 +81,8 @@
     <Compile Include="UpdateRDS.MP.cs">
       <SubType>Form</SubType>
     </Compile>
-    <EmbeddedResource Include="Avisodeversaobeta.resx">
-      <DependentUpon>Avisodeversaobeta.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="UpdateRDSTextMode.cs" />
+    <Compile Include="UpdateRDSTextModeDec.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

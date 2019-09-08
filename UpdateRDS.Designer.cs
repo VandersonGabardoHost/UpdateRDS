@@ -1017,8 +1017,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(884, 612);
-            this.Controls.Add(this.cbNotificacoes);
             this.Controls.Add(this.lblInfo);
+            this.Controls.Add(this.cbNotificacoes);
             this.Controls.Add(this.btnApagalogerro);
             this.Controls.Add(this.lblTextobtnapaglog);
             this.Controls.Add(this.txtTitulodesom);

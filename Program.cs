@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace UpdateRDS
@@ -8,18 +8,53 @@ namespace UpdateRDS
     static class Program
     {
         static readonly UpdateRDSManutencao manutencaodoaplicativo = new UpdateRDSManutencao();
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         /// <summary>
         /// Ponto de entrada principal para o aplicativo.
         /// </summary>
         [STAThread]
         static void Main()
         {
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Title = "Update RDS - Modo Texto";
             try
             {
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new Avisodeversaobeta());
-                Application.Run(new UpdateRDS());
+                bool modotexto = false;
+
+                string[] comandosdados = Environment.GetCommandLineArgs();
+
+                foreach (string comando in comandosdados)
+                {
+                    if (!comando.Contains("Update RDS.exe"))
+                    {
+                        if (comando.Contains("-T"))
+                        {
+                            modotexto = true;
+                        }
+                    }
+                }
+
+                if (modotexto == false)
+                {
+                    IntPtr h = Process.GetCurrentProcess().MainWindowHandle;
+                    ShowWindow(h, 0);
+
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+                    Application.Run(new UpdateRDS());
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Bem vindo! Estamos carregando... aguarde!");
+                    Console.WriteLine();
+                    UpdateRDSTextMode execucaotexto = new UpdateRDSTextMode();
+                    execucaotexto.InicTxtMode(true);
+                    Console.WriteLine("O Aplicativo está em execução! Para encerrar a execução do aplicativo pressione ENTER");
+                    Console.ReadLine();
+                    execucaotexto.EncerrarExecucao();
+                }
             }
             catch (Exception ex)
             {
