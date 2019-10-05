@@ -10,7 +10,7 @@ namespace UpdateRDS
     public partial class UpdateRDSTextMode
     {
         static readonly WebProxy servidorproxydoaplicativo = new WebProxy();
-        static readonly string useragentdef = "Update RDS By GabardoHost v0.6 Pré RC - Mozilla/50MIL.0 (Windows NeanderThal) KHTML like Gecko Chrome Opera Safari Netscape Internet Exploit Firefox Godzilla Giroflex Alex Marques Print";
+        static readonly string useragentdef = "Update RDS By GabardoHost v0.7 RC - Mozilla/50MIL.0 (Windows NeanderThal) KHTML like Gecko Chrome Opera Safari Netscape Internet Exploit Firefox Godzilla Giroflex Alex Marques Print";
         static readonly string versaoappcurrent = "Versao " + System.Windows.Forms.Application.ProductVersion;
         static string conteudotexto;
         static string conteudotextoantigo;
@@ -156,7 +156,7 @@ namespace UpdateRDS
             if (!Directory.Exists(diretoriodoaplicativo))
                 Directory.CreateDirectory(diretoriodoaplicativo);
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Carregando Versão 0.6 Pré RC (A verificar nova versão...)");
+            Console.WriteLine("Carregando Versão 0.7 RC (A verificar nova versão...)");
             Console.WriteLine();
             // string urlcompletaversao = "http://localhost/updaterds/versao.txt";
             string urlcompletaversao = "http://www.vanderson.net.br/updaterds/versao.txt";
@@ -189,7 +189,7 @@ namespace UpdateRDS
             if (versaonovadoapp != versaoappcurrent)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("A Versão 0.6 Pré RC está DESATUALIZADA!");
+                Console.WriteLine("A Versão 0.7 RC está DESATUALIZADA!");
 
                 if (System.Windows.Forms.MessageBox.Show($"Há uma nova versão do aplicativo disponível para download, gostaria de baixar a nova versão do aplicativo? a sua versão de aplicativo instalada atualmente é {versaoappcurrent} e a nova versão do aplicativo para baixar é {versaonovadoapp} sendo a nova versão com correções de problemas e outras correções de interface.", "Pergunta", System.Windows.Forms.MessageBoxButtons.YesNo, System.Windows.Forms.MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
                 {
@@ -210,7 +210,7 @@ namespace UpdateRDS
             else
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("A Versão 0.6 Pré RC está ATUALIZADA!");
+                Console.WriteLine("A Versão 0.7 RC está ATUALIZADA!");
             }
         }
     }

@@ -467,6 +467,9 @@ namespace UpdateRDS
         {
             try
             {
+                string versaoframework = Environment.Version.ToString();
+                int versaodoframe = Convert.ToInt16(versaoframework.Substring(0,1));
+
                 Stream nomedoarquivoxml;
                 erroconta = -1;
                 errocontanext = -1;
@@ -527,22 +530,34 @@ namespace UpdateRDS
                                 xtw.WriteEndDocument();
                             }
                             MessageBox.Show("As informações preenchidas aqui foram salvas com sucesso!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            //if (MessageBox.Show("Você gostaria de executar o aplicativo como um serviço do sistema usando a configuração salva?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                            //{
+                            //    Process p = new Process();
+                            //    p.StartInfo.CreateNoWindow = true;
+                            //    p.StartInfo.FileName = "sc.exe";
+                            //    p.StartInfo.Arguments = $"create \"Update RDS {nomedoarquivo}\" binPath= \"{AppDomain.CurrentDomain.BaseDirectory.ToString()}MyNewService.exe {salvardadosdexml.FileName}\"";
+                            //    p.StartInfo.UseShellExecute = false;
+                            //    p.StartInfo.RedirectStandardOutput = true;
+                            //    p.StartInfo.RedirectStandardError = true;
+                            //    p.Start();
 
-                            if (MessageBox.Show("Você gostaria de criar um atalho na área de trabalho para essa configuração?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                            //    MessageBox.Show("Serviço criado com sucesso! quando o sistema iniciar, sempre estabelecerá conexão com o servidor", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            //}
+                            //else
+                            //{
+                            //    MessageBox.Show("Nenhum serviço será criado conforme solicitado, para iniciar a execução, execute apenas via aplicativo", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            //}
+                            if (versaodoframe >= 4)
                             {
-                                string nomedoarquivo = Path.GetFileName(salvardadosdexml.FileName.Replace(".xml", ""));
-                                IWshRuntimeLibrary.WshShell wsh = new IWshRuntimeLibrary.WshShell();
-                                IWshRuntimeLibrary.IWshShortcut shortcut = wsh.CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\Update RDS " + nomedoarquivo + ".lnk") as IWshRuntimeLibrary.IWshShortcut;
-                                shortcut.Arguments = $"\"{salvardadosdexml.FileName}\"";
-                                shortcut.TargetPath = AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\Update RDS.exe";
-                                shortcut.Description = "Update RDS - Configurações Personalizadas";
-                                shortcut.WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory.ToString();
-                                shortcut.Save();
+                                if (MessageBox.Show("Você gostaria de criar um atalho na área de trabalho para essa configuração?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                                {
+                                    CriaAtalhoApp(salvardadosdexml);
 
-                                MessageBox.Show("O atalho foi criado na área de trabalho conforme solicitado!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    MessageBox.Show("O atalho foi criado na área de trabalho conforme solicitado!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                }
+                                else
+                                    MessageBox.Show("O atalho não foi criado, se preferir, pode criar um atalho manualmente com as configurações", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }
-                            else
-                                MessageBox.Show("O atalho não foi criado, se preferir, pode criar um atalho manualmente com as configurações", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                     else
@@ -577,7 +592,7 @@ namespace UpdateRDS
                     MessageBox.Show("As informações foram carregadas com sucesso!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
-                    MessageBox.Show("Não foi possível carregar a configuração pois houve o cancelamento da abertura do arquivo XML!");
+                    MessageBox.Show("Não foi possível carregar a configuração pois houve o cancelamento da abertura do arquivo XML!", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {

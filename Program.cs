@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -35,6 +36,21 @@ namespace UpdateRDS
                     }
                 }
 
+                if (!File.Exists("Update RDS.exe"))
+                {
+                    throw new Exception("O aplicativo principal está com um nome diferente do padrão, renomeie o aplicativo para Update RDS.exe e execute novamente!");
+                }
+
+                if (!File.Exists("ATUpdate.exe"))
+                {
+                    throw new Exception("Um componente do aplicativo está faltando, o ATUpdate.exe e sem ele, o aplicativo encerrará a execução. Reinstale o aplicativo e tente executar novamente!");
+                }
+
+                if (!File.Exists("wget.exe"))
+                {
+                    throw new Exception("Um componente do aplicativo está faltando, o wget.exe e sem ele, o aplicativo encerrará a execução. Reinstale o aplicativo e tente executar novamente!");
+                }
+
                 if (modotexto == false)
                 {
                     IntPtr h = Process.GetCurrentProcess().MainWindowHandle;
@@ -59,6 +75,7 @@ namespace UpdateRDS
             catch (Exception ex)
             {
                 manutencaodoaplicativo.ErroGenerico(ex.Message, ex.StackTrace, ex.Source);
+                MessageBox.Show($"Ocorreu um erro irrecuperável do aplicativo, o aplicativo encontrou o seguinte problema:\n{ex.Message}", "Aviso do sistema!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

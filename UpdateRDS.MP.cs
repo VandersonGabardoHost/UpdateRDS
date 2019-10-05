@@ -15,7 +15,7 @@ namespace UpdateRDS
     {
         static readonly WebProxy servidorproxydoaplicativo = new WebProxy();
         static bool errodoaplicativo = false;
-        static readonly string useragentdef = "Update RDS By GabardoHost v0.6 Pré RC - Mozilla/50MIL.0 (Windows NeanderThal) KHTML like Gecko Chrome Opera Safari Netscape Internet Exploit Firefox Godzilla Giroflex Alex Marques Print";
+        static readonly string useragentdef = "Update RDS By GabardoHost v0.7 RC - Mozilla/50MIL.0 (Windows NeanderThal) KHTML like Gecko Chrome Opera Safari Netscape Internet Exploit Firefox Godzilla Giroflex Alex Marques Print";
         static bool versaonova = false;
         static readonly string versaoappcurrent = "Versao " + Application.ProductVersion;
         static string conteudotexto;
@@ -420,6 +420,18 @@ namespace UpdateRDS
             }
         }
 
+        private void CriaAtalhoApp(SaveFileDialog salvardadosdexml)
+        {
+            string nomedoarquivo = Path.GetFileName(salvardadosdexml.FileName.Replace(".xml", ""));
+            IWshRuntimeLibrary.WshShell wsh = new IWshRuntimeLibrary.WshShell();
+            IWshRuntimeLibrary.IWshShortcut shortcut = wsh.CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\Update RDS " + nomedoarquivo + ".lnk") as IWshRuntimeLibrary.IWshShortcut;
+            shortcut.Arguments = $"\"{salvardadosdexml.FileName}\"";
+            shortcut.TargetPath = AppDomain.CurrentDomain.BaseDirectory.ToString() + "\\Update RDS.exe";
+            shortcut.Description = "Update RDS - Configurações Personalizadas";
+            shortcut.WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory.ToString();
+            shortcut.Save();
+        }
+
         private void VerTrueFalse(bool infofalseoutrue)
         {
             try
@@ -444,7 +456,7 @@ namespace UpdateRDS
             if (!Directory.Exists(diretoriodoaplicativo))
                 Directory.CreateDirectory(diretoriodoaplicativo);
 
-            lblVersaoapp.Text = "Versão 0.6 Pré RC\n(Sem verificar nova versão)";
+            lblVersaoapp.Text = "Versão 0.7 RC\n(Sem verificar nova versão)";
             lblVersaoapp.ForeColor = Color.Yellow;
 
             // string urlcompletaversao = "http://localhost/updaterds/versao.txt";
@@ -479,7 +491,7 @@ namespace UpdateRDS
             {
                 versaonova = true;
 
-                lblVersaoapp.Text = "Versão 0.6 Pré RC\n(DESATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.7 RC\n(DESATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Red;
 
                 if (MessageBox.Show($"Há uma nova versão do aplicativo disponível para download, gostaria de baixar a nova versão do aplicativo? a sua versão de aplicativo instalada atualmente é {versaoappcurrent} e a nova versão do aplicativo para baixar é {versaonovadoapp} sendo a nova versão com correções de problemas e outras correções de interface.", "Pergunta", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -500,7 +512,7 @@ namespace UpdateRDS
             }
             else
             {
-                lblVersaoapp.Text = "Versão 0.6 Pré RC\n(ATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.7 RC\n(ATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Green;
                 versaonova = false;
             }
@@ -1225,7 +1237,7 @@ namespace UpdateRDS
             string conteudoarquivotextonextsong = "Update RDS By GabardoHost - Vanderson Gabardo";
             string dadosarquivotexto = null;
             string arquivodelog = $@"{diretoriodoaplicativo}LOGS\SOM{identificadorproc}LOG.csv";
-            string urlshoutcastv1 = $"http://{ipserver}:{portaserver}/admin.cgi?mode=updinfo&song=";
+            string urlshoutcastv1 = "REMOVIDO";
             string urlshoutcastv2 = $"http://{ipserver}:{portaserver}/admin.cgi?sid={idoupontomont}&mode=updinfo&song=";
             string urlicecast = $"http://{ipserver}:{portaserver}/admin/metadata?mount=/{idoupontomont}&mode=updinfo&song=";
 
@@ -1340,45 +1352,45 @@ namespace UpdateRDS
                 }
                 try
                 {
-                    HttpWebRequest webreqshouticecast = (HttpWebRequest)WebRequest.Create(urlparacarregar);
-                    webreqshouticecast.UserAgent = useragentdef;
-                    senhaserver = Convert.ToBase64String(Encoding.Default.GetBytes(senhaserver));
-                    webreqshouticecast.Headers.Add("Authorization", "Basic " + senhaserver);
-                    webreqshouticecast.Credentials = new NetworkCredential("username", "password");
-                    webreqshouticecast.Method = WebRequestMethods.Http.Get;
-                    webreqshouticecast.AllowAutoRedirect = true;
-
-                    if (chkUsoproxy.Checked == true)
-                    {
-                        DadosProxy();
-                        webreqshouticecast.Proxy = servidorproxydoaplicativo;
-                    }
-                    else
-                        webreqshouticecast.Proxy = null;
-
                     if (cbTiposervidor.SelectedIndex == 0)
                     {
-                        try
+                        string saidadowget = "";
+                        Process processowget = new Process();
+                        processowget.StartInfo.CreateNoWindow = true;
+                        processowget.StartInfo.FileName = "wget.exe";
+                        processowget.StartInfo.Arguments = $"--server-response -t 1 --user-agent=\"{useragentdef}\" \"http://{ipserver}:{portaserver}/admin.cgi?pass={txtSenhaserver.Text}&mode=updinfo&song={conteudoarquivotexto}\" -O \"{diretoriodoaplicativo}arquivo.txt\"";
+                        processowget.StartInfo.UseShellExecute = false;
+                        processowget.StartInfo.RedirectStandardOutput = true;
+                        processowget.StartInfo.RedirectStandardError = true;
+                        processowget.Start();
+                        saidadowget = processowget.StandardOutput.ReadToEnd() + processowget.StandardError.ReadToEnd();
+                        if (!saidadowget.Contains("No data received") && !saidadowget.Contains("Saving to"))
                         {
-                            HttpWebResponse webrespshouticecast = (HttpWebResponse)webreqshouticecast.GetResponse();
-                            webrespshouticecast.Close();
+                            throw new WebException("Impossível conectar-se ao servidor");
                         }
-                        catch (WebException erroverificar)
+                        if (File.Exists(diretoriodoaplicativo + "arquivo.txt"))
                         {
-                            if (chkUsoproxy.Checked == true)
-                            {
-                                if (erroverificar.Message != "O servidor remoto retornou um erro: (502) Gateway Incorreto.")
-                                    throw new WebException(erroverificar.Message);
-                            }
-                            else
-                            {
-                                if (erroverificar.Message != "A conexão subjacente estava fechada: A conexão foi fechada de modo inesperado.")
-                                    throw new WebException(erroverificar.Message);
-                            }
+                            File.Delete(diretoriodoaplicativo + "arquivo.txt");
                         }
                     }
                     else
                     {
+                        HttpWebRequest webreqshouticecast = (HttpWebRequest)WebRequest.Create(urlparacarregar);
+                        webreqshouticecast.UserAgent = useragentdef;
+                        senhaserver = Convert.ToBase64String(Encoding.Default.GetBytes(senhaserver));
+                        webreqshouticecast.Headers.Add("Authorization", "Basic " + senhaserver);
+                        webreqshouticecast.Credentials = new NetworkCredential("username", "password");
+                        webreqshouticecast.Method = WebRequestMethods.Http.Get;
+                        webreqshouticecast.AllowAutoRedirect = true;
+
+                        if (chkUsoproxy.Checked == true)
+                        {
+                            DadosProxy();
+                            webreqshouticecast.Proxy = servidorproxydoaplicativo;
+                        }
+                        else
+                            webreqshouticecast.Proxy = null;
+
                         HttpWebResponse webrespshouticecast = (HttpWebResponse)webreqshouticecast.GetResponse();
                         webrespshouticecast.Close();
                     }
