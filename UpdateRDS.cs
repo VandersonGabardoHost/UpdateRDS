@@ -747,6 +747,7 @@ namespace UpdateRDS
                 if (ShowInTaskbar == false)
                 {
                     ShowInTaskbar = true;
+                    WindowState = FormWindowState.Minimized;
                 }
                 if (WindowState != FormWindowState.Normal)
                 {

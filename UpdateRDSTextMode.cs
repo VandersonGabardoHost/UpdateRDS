@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -1034,6 +1035,47 @@ namespace UpdateRDS
             throw new Exception(mensagemerro);
         }
 
+        private void ChecarServerSC(string urlcompletasc)
+        {
+            string status = "";
+            try
+            {
+                using (WebClient wcurlcompletasc = new WebClient())
+                {
+                    wcurlcompletasc.Headers.Add(HttpRequestHeader.UserAgent, useragentdef);
+                    if (chkUsoproxy == true)
+                    {
+                        DadosProxy();
+                        wcurlcompletasc.Proxy = servidorproxydoaplicativo;
+                    }
+                    Stream strurlcompleta = wcurlcompletasc.OpenRead(urlcompletasc);
+
+                    using (StreamReader rdrurlcompleta = new StreamReader(strurlcompleta, Encoding.Default))
+                    {
+                        XmlDocument oXML = new XmlDocument();
+                        oXML.Load(rdrurlcompleta);
+                        XmlElement root = oXML.DocumentElement;
+                        XmlNodeList xnList = root.GetElementsByTagName("STREAMSTATUS");
+
+                        for (int i = 0; i < xnList.Count; i++)
+                        {
+                            status = xnList[i].InnerText;
+                        }
+
+                        if (status == "0")
+                        {
+                            erroconta = -3;
+                            throw new Exception("Não há transmissão de áudio para o servidor, o encoder não está conectado no servidor shoutcast!");
+                        }
+                    }
+                }
+            }
+            catch (WebException wexc)
+            {
+                status = wexc.Message;
+            }
+        }
+
         private void RecInfoDosDadosCad(string ipserver, string portaserver, string senhaserver, string idoupontomont)
         {
             string identificadorproc = processodoaplicativo.Id.ToString();
@@ -1041,7 +1083,7 @@ namespace UpdateRDS
             string conteudoarquivotextonextsong = "Update RDS By GabardoHost - Vanderson Gabardo";
             string dadosarquivotexto = null;
             string arquivodelog = $@"{diretoriodoaplicativo}LOGS\SOM{identificadorproc}LOG.csv";
-            string urlshoutcastv1 = $"http://{ipserver}:{portaserver}/admin.cgi?mode=updinfo&song=";
+            string urlshoutcastv1 = "REMOVIDO";
             string urlshoutcastv2 = $"http://{ipserver}:{portaserver}/admin.cgi?sid={idoupontomont}&mode=updinfo&song=";
             string urlicecast = $"http://{ipserver}:{portaserver}/admin/metadata?mount=/{idoupontomont}&mode=updinfo&song=";
 
@@ -1140,51 +1182,52 @@ namespace UpdateRDS
                 if (cbTiposervidor == 1)
                 {
                     urlparacarregar = urlshoutcastv2 + conteudoarquivotexto;
-
+                    ChecarServerSC($"http://{ipserver}:{portaserver}/stats?sid={idoupontomont}");
                     if (chkTransmproxsom == true)
                         urlparacarregar = urlshoutcastv2 + conteudoarquivotexto + "&next=" + conteudoarquivotextonextsong;
                 }
+
                 try
                 {
-                    HttpWebRequest webreqshouticecast = (HttpWebRequest)WebRequest.Create(urlparacarregar);
-                    webreqshouticecast.UserAgent = useragentdef;
-                    senhaserver = Convert.ToBase64String(Encoding.Default.GetBytes(senhaserver));
-                    webreqshouticecast.Headers.Add("Authorization", "Basic " + senhaserver);
-                    webreqshouticecast.Credentials = new NetworkCredential("username", "password");
-                    webreqshouticecast.Method = WebRequestMethods.Http.Get;
-                    webreqshouticecast.AllowAutoRedirect = true;
-
-                    if (chkUsoproxy == true)
-                    {
-                        DadosProxy();
-                        webreqshouticecast.Proxy = servidorproxydoaplicativo;
-                    }
-                    else
-                        webreqshouticecast.Proxy = null;
-
                     if (cbTiposervidor == 0)
                     {
-                        try
+                        string saidadowget = "";
+                        Process processowget = new Process();
+                        processowget.StartInfo.CreateNoWindow = true;
+                        processowget.StartInfo.FileName = "wget.exe";
+                        processowget.StartInfo.Arguments = $"--server-response -t 1 --user-agent=\"{useragentdef}\" \"http://{ipserver}:{portaserver}/admin.cgi?pass={txtSenhaserver}&mode=updinfo&song={conteudoarquivotexto}\" -O \"{diretoriodoaplicativo}{identificadorproc}txt.txt\"";
+                        processowget.StartInfo.UseShellExecute = false;
+                        processowget.StartInfo.RedirectStandardOutput = true;
+                        processowget.StartInfo.RedirectStandardError = true;
+                        processowget.Start();
+                        saidadowget = processowget.StandardOutput.ReadToEnd() + processowget.StandardError.ReadToEnd();
+                        if (!saidadowget.Contains("No data received") && !saidadowget.Contains("Saving to"))
                         {
-                            HttpWebResponse webrespshouticecast = (HttpWebResponse)webreqshouticecast.GetResponse();
-                            webrespshouticecast.Close();
+                            throw new WebException("Impossível conectar-se ao servidor");
                         }
-                        catch (WebException erroverificar)
+                        if (File.Exists($"{diretoriodoaplicativo}{identificadorproc}txt.txt"))
                         {
-                            if (chkUsoproxy == true)
-                            {
-                                if (erroverificar.Message != "O servidor remoto retornou um erro: (502) Gateway Incorreto.")
-                                    throw new WebException(erroverificar.Message);
-                            }
-                            else
-                            {
-                                if (erroverificar.Message != "A conexão subjacente estava fechada: A conexão foi fechada de modo inesperado.")
-                                    throw new WebException(erroverificar.Message);
-                            }
+                            File.Delete($"{diretoriodoaplicativo}{identificadorproc}txt.txt");
                         }
                     }
                     else
                     {
+                        HttpWebRequest webreqshouticecast = (HttpWebRequest)WebRequest.Create(urlparacarregar);
+                        webreqshouticecast.UserAgent = useragentdef;
+                        senhaserver = Convert.ToBase64String(Encoding.Default.GetBytes(senhaserver));
+                        webreqshouticecast.Headers.Add("Authorization", "Basic " + senhaserver);
+                        webreqshouticecast.Credentials = new NetworkCredential("username", "password");
+                        webreqshouticecast.Method = WebRequestMethods.Http.Get;
+                        webreqshouticecast.AllowAutoRedirect = true;
+
+                        if (chkUsoproxy == true)
+                        {
+                            DadosProxy();
+                            webreqshouticecast.Proxy = servidorproxydoaplicativo;
+                        }
+                        else
+                            webreqshouticecast.Proxy = null;
+
                         HttpWebResponse webrespshouticecast = (HttpWebResponse)webreqshouticecast.GetResponse();
                         webrespshouticecast.Close();
                     }

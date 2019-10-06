@@ -15,7 +15,7 @@ namespace UpdateRDS
     {
         static readonly WebProxy servidorproxydoaplicativo = new WebProxy();
         static bool errodoaplicativo = false;
-        static readonly string useragentdef = "Update RDS By GabardoHost v0.7 RC - Mozilla/50MIL.0 (Windows NeanderThal) KHTML like Gecko Chrome Opera Safari Netscape Internet Exploit Firefox Godzilla Giroflex Alex Marques Print";
+        static readonly string useragentdef = "Update RDS By GabardoHost v0.8 RC Final - Mozilla/50MIL.0 (Windows NeanderThal) KHTML like Gecko Chrome Opera Safari Netscape Internet Exploit Firefox Godzilla Giroflex Alex Marques Print";
         static bool versaonova = false;
         static readonly string versaoappcurrent = "Versao " + Application.ProductVersion;
         static string conteudotexto;
@@ -456,7 +456,7 @@ namespace UpdateRDS
             if (!Directory.Exists(diretoriodoaplicativo))
                 Directory.CreateDirectory(diretoriodoaplicativo);
 
-            lblVersaoapp.Text = "Versão 0.7 RC\n(Sem verificar nova versão)";
+            lblVersaoapp.Text = "Versão 0.8 RC Final\n(Sem verificar nova versão)";
             lblVersaoapp.ForeColor = Color.Yellow;
 
             // string urlcompletaversao = "http://localhost/updaterds/versao.txt";
@@ -491,7 +491,7 @@ namespace UpdateRDS
             {
                 versaonova = true;
 
-                lblVersaoapp.Text = "Versão 0.7 RC\n(DESATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.8 RC Final\n(DESATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Red;
 
                 if (MessageBox.Show($"Há uma nova versão do aplicativo disponível para download, gostaria de baixar a nova versão do aplicativo? a sua versão de aplicativo instalada atualmente é {versaoappcurrent} e a nova versão do aplicativo para baixar é {versaonovadoapp} sendo a nova versão com correções de problemas e outras correções de interface.", "Pergunta", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -512,7 +512,7 @@ namespace UpdateRDS
             }
             else
             {
-                lblVersaoapp.Text = "Versão 0.7 RC\n(ATUALIZADO)";
+                lblVersaoapp.Text = "Versão 0.8 RC Final\n(ATUALIZADO)";
                 lblVersaoapp.ForeColor = Color.Green;
                 versaonova = false;
             }
@@ -1229,6 +1229,47 @@ namespace UpdateRDS
             }
         }
 
+        private void ChecarServerSC(string urlcompletasc)
+        {
+            string status = "";
+            try
+            {
+                using (WebClient wcurlcompletasc = new WebClient())
+                {
+                    wcurlcompletasc.Headers.Add(HttpRequestHeader.UserAgent, useragentdef);
+                    if (chkUsoproxy.Checked == true)
+                    {
+                        DadosProxy();
+                        wcurlcompletasc.Proxy = servidorproxydoaplicativo;
+                    }
+                    Stream strurlcompleta = wcurlcompletasc.OpenRead(urlcompletasc);
+
+                    using (StreamReader rdrurlcompleta = new StreamReader(strurlcompleta, Encoding.Default))
+                    {
+                        XmlDocument oXML = new XmlDocument();
+                        oXML.Load(rdrurlcompleta);
+                        XmlElement root = oXML.DocumentElement;
+                        XmlNodeList xnList = root.GetElementsByTagName("STREAMSTATUS");
+
+                        for (int i = 0; i < xnList.Count; i++)
+                        {
+                            status = xnList[i].InnerText;
+                        }
+
+                        if (status == "0")
+                        {
+                            erroconta = -3;
+                            throw new Exception("Não há transmissão de áudio para o servidor, o encoder não está conectado no servidor shoutcast!");
+                        }
+                    }
+                }
+            }
+            catch (WebException wexc)
+            {
+                status = wexc.Message;
+            }
+        }
+
         private void RecInfoDosDadosCad(string ipserver, string portaserver, string senhaserver, string idoupontomont)
         {
             string identificadorproc = processodoaplicativo.Id.ToString();
@@ -1346,10 +1387,11 @@ namespace UpdateRDS
                 if (cbTiposervidor.SelectedIndex == 1)
                 {
                     urlparacarregar = urlshoutcastv2 + conteudoarquivotexto;
-
+                    ChecarServerSC($"http://{ipserver}:{portaserver}/stats?sid={idoupontomont}");
                     if (chkTransmproxsom.Checked == true)
                         urlparacarregar = urlshoutcastv2 + conteudoarquivotexto + "&next=" + conteudoarquivotextonextsong;
                 }
+
                 try
                 {
                     if (cbTiposervidor.SelectedIndex == 0)
@@ -1358,7 +1400,7 @@ namespace UpdateRDS
                         Process processowget = new Process();
                         processowget.StartInfo.CreateNoWindow = true;
                         processowget.StartInfo.FileName = "wget.exe";
-                        processowget.StartInfo.Arguments = $"--server-response -t 1 --user-agent=\"{useragentdef}\" \"http://{ipserver}:{portaserver}/admin.cgi?pass={txtSenhaserver.Text}&mode=updinfo&song={conteudoarquivotexto}\" -O \"{diretoriodoaplicativo}arquivo.txt\"";
+                        processowget.StartInfo.Arguments = $"--server-response -t 1 --user-agent=\"{useragentdef}\" \"http://{ipserver}:{portaserver}/admin.cgi?pass={txtSenhaserver.Text}&mode=updinfo&song={conteudoarquivotexto}\" -O \"{diretoriodoaplicativo}{identificadorproc}txt.txt\"";
                         processowget.StartInfo.UseShellExecute = false;
                         processowget.StartInfo.RedirectStandardOutput = true;
                         processowget.StartInfo.RedirectStandardError = true;
@@ -1368,9 +1410,9 @@ namespace UpdateRDS
                         {
                             throw new WebException("Impossível conectar-se ao servidor");
                         }
-                        if (File.Exists(diretoriodoaplicativo + "arquivo.txt"))
+                        if (File.Exists($"{diretoriodoaplicativo}{identificadorproc}txt.txt"))
                         {
-                            File.Delete(diretoriodoaplicativo + "arquivo.txt");
+                            File.Delete($"{diretoriodoaplicativo}{identificadorproc}txt.txt");
                         }
                     }
                     else
